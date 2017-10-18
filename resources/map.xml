@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<railroad>
+    <pos id="0">
+        <component>station:A</component>
+    </pos>
+    <pos id="1">
+        <component>track</component>
+    </pos>
+    <pos id="2">
+        <component>track</component>
+    </pos>
+    <pos id="3">
+        <component>track</component>
+    </pos>
+    <pos id="4">
+        <component>track</component>
+    </pos>
+    <pos id="5">
+        <component>track</component>
+    </pos>
+    <pos id="6">
+        <component>track</component>
+    </pos>
+    <pos id="7">
+        <component>station:B</component>
+    </pos>
+</railroad>
