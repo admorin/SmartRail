@@ -1,3 +1,5 @@
+import components.Station;
+import components.Track;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -13,19 +15,39 @@ public class Main extends Application
     @Override
     public void start(Stage primaryStage) throws Exception
     {
-        Station test = new Station("A", 0);
-        Track track = new Track(100, 100, false);
-        pane.getChildren().addAll(test, track);
-        test.run();
         root.getChildren().add(pane);
-        primaryStage.setTitle("Hello World");
-        primaryStage.setScene(new Scene(root, 1000, 1000));
+        primaryStage.setTitle("Train Sim 2018");
+        primaryStage.setScene(new Scene(root, 1280, 720));
         primaryStage.show();
-
+        initializeMap();
         //Test new XML reader class
-        new MapFromXML();
     }
 
+    private void initializeMap()
+    {
+        System.out.println("Initializing map...");
+        MapFromXML map = new MapFromXML();
+        for (int i = 0; i < map.getMap().length; i++)
+        {
+            if (map.getMap()[i].contains("station"))
+            {
+                String[] name = map.getMap()[i].split(":");
+                Station station = new Station(name[1]);
+                pane.getChildren().add(station);
+                station.setTranslateX((i * 85) + 100);
+                station.setTranslateY(50);
+                station.run();
+            }
+            if (map.getMap()[i].equals("track"))
+            {
+                Track track = new Track();
+                track.setTranslateX((i * 85) + 100);
+                track.setTranslateY(50);
+                pane.getChildren().add(track);
+                //track.run();
+            }
+        }
+    }
 
     public static void main(String[] args)
     {
