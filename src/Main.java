@@ -1,10 +1,12 @@
 import components.Component;
 import components.Station;
 import components.Track;
+import components.Train;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import util.MapFromXML;
 
@@ -43,7 +45,24 @@ public class Main extends Application
                 pane.getChildren().add(station);
                 station.setTranslateX((i * 85) + 100);
                 station.setTranslateY(50);
+                station.setOnMousePressed(event ->
+                {
+                    //TODO somehow spawn a train from here.
+                    station.setFill(Color.BLUE);
+                    Train train = new Train();
+                    train.run();
+                    pane.getChildren().add(train);
+                    train.setTranslateX(((1 * 85) + 100));
+                    train.setTranslateY(35);
+                    System.out.println("Spawning train from station " + station.getName());
+                });
+
+                station.setOnMouseReleased(event ->
+                {
+                    station.setFill(Color.RED);
+                });
             }
+
             map[i].run();
         }
     }
