@@ -4,6 +4,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
@@ -19,6 +20,9 @@ import java.io.File;
  */
 public class MapFromXML
 {
+    //TODO find a max size or somehow allocate appropriate space
+    private String[] railroad = new String[8];
+
     public MapFromXML()
     {
         try
@@ -30,11 +34,11 @@ public class MapFromXML
 
             doc.getDocumentElement().normalize();
 
-            System.out.println("Root element : " + doc.getDocumentElement().getNodeName());
+            //System.out.println("Root element : " + doc.getDocumentElement().getNodeName());
 
             NodeList nList = doc.getElementsByTagName("pos");
 
-            System.out.println("----------------------------");
+            //  System.out.println("----------------------------");
 
             for (int temp = 0; temp < nList.getLength(); temp++)
             {
@@ -43,13 +47,20 @@ public class MapFromXML
                 if (nNode.getNodeType() == Node.ELEMENT_NODE)
                 {
                     Element eElement = (Element) nNode;
-                    System.out.println("Pos: " + eElement.getAttribute("id") + " | Component : " + eElement.getElementsByTagName("component").item(0).getTextContent());
+                    int rrIndex = Integer.parseInt(eElement.getAttribute("id"));
+                    railroad[rrIndex] = eElement.getElementsByTagName("component").item(0).getTextContent();
+                    //System.out.println("Pos: " + eElement.getAttribute("id") + " | Component : " + eElement.getElementsByTagName("component").item(0).getTextContent());
                 }
             }
         } catch (Exception e)
         {
             e.printStackTrace();
         }
+    }
+
+    public String[] getMap()
+    {
+        return railroad;
     }
 
 }
