@@ -1,5 +1,8 @@
 package util;
 
+import components.Component;
+import components.Station;
+import components.Track;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -21,7 +24,7 @@ import java.io.File;
 public class MapFromXML
 {
     //TODO find a max size or somehow allocate appropriate space
-    private String[] railroad = new String[8];
+    private Component[] railroad = new Component[8];
 
     public MapFromXML()
     {
@@ -48,8 +51,15 @@ public class MapFromXML
                 {
                     Element eElement = (Element) nNode;
                     int rrIndex = Integer.parseInt(eElement.getAttribute("id"));
-                    railroad[rrIndex] = eElement.getElementsByTagName("component").item(0).getTextContent();
-                    //System.out.println("Pos: " + eElement.getAttribute("id") + " | Component : " + eElement.getElementsByTagName("component").item(0).getTextContent());
+                    if (eElement.getElementsByTagName("component").item(0).getTextContent().equals("track"))
+                    {
+                        railroad[rrIndex] = new Track();
+                    } else if (eElement.getElementsByTagName("component").item(0).getTextContent().contains("station"))
+                    {
+                        String[] name = eElement.getElementsByTagName("component").item(0).getTextContent().split(":");
+                        railroad[rrIndex] = new Station(name[1]);
+                    }
+                    //System.out.println("Pos: " + eElement.getAttribute("id") + " | components.Component : " + eElement.getElementsByTagName("component").item(0).getTextContent());
                 }
             }
         } catch (Exception e)
@@ -58,7 +68,7 @@ public class MapFromXML
         }
     }
 
-    public String[] getMap()
+    public Component[] getMap()
     {
         return railroad;
     }

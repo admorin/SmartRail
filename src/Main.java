@@ -1,3 +1,4 @@
+import components.Component;
 import components.Station;
 import components.Track;
 import javafx.application.Application;
@@ -11,6 +12,7 @@ public class Main extends Application
 {
     private Group root = new Group();
     private GridPane pane = new GridPane();
+    private Component[] map;
 
     @Override
     public void start(Stage primaryStage) throws Exception
@@ -26,26 +28,23 @@ public class Main extends Application
     private void initializeMap()
     {
         System.out.println("Initializing map...");
-        MapFromXML map = new MapFromXML();
-        for (int i = 0; i < map.getMap().length; i++)
+        map = new MapFromXML().getMap();
+        for (int i = 0; i < map.length; i++)
         {
-            if (map.getMap()[i].contains("station"))
+            if (map[i].getClass().getSimpleName().equals("Track"))
             {
-                String[] name = map.getMap()[i].split(":");
-                Station station = new Station(name[1]);
+                Track track = (Track) map[i];
+                pane.getChildren().add(track);
+                track.setTranslateX((i * 85) + 100);
+                track.setTranslateY(50);
+            } else if (map[i].getClass().getSimpleName().equals("Station"))
+            {
+                Station station = (Station) map[i];
                 pane.getChildren().add(station);
                 station.setTranslateX((i * 85) + 100);
                 station.setTranslateY(50);
-                station.run();
             }
-            if (map.getMap()[i].equals("track"))
-            {
-                Track track = new Track();
-                track.setTranslateX((i * 85) + 100);
-                track.setTranslateY(50);
-                pane.getChildren().add(track);
-                //track.run();
-            }
+            map[i].run();
         }
     }
 
