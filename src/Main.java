@@ -49,7 +49,7 @@ public class Main extends Application
                 {
                     //TODO somehow spawn a train from here.
                     station.setFill(Color.BLUE);
-                    Train train = new Train();
+                    Train train = new Train(station, null);
                     train.run();
                     pane.getChildren().add(train);
                     train.setTranslateX(((1 * 85) + 100));
