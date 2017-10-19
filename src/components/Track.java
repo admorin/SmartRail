@@ -5,9 +5,12 @@ import javafx.scene.shape.Rectangle;
 
 public class Track extends Rectangle implements Component
 {
+    static private int width = 75;
+    static private int height = 2;
+
     public Track()
     {
-        super(75, 2);
+        super(width, height);
         setFill(Color.BLACK);
     }
 
