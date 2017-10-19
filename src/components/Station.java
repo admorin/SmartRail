@@ -5,7 +5,8 @@ import javafx.scene.shape.Circle;
 
 public class Station extends Circle implements Component
 {
-    public String name;
+    private String name;
+    private boolean isLeft;
 
     public Station(String name)
     {
