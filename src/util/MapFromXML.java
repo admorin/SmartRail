@@ -3,6 +3,7 @@ package util;
 import components.Component;
 import components.Station;
 import components.Track;
+import components.Train;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -30,7 +31,7 @@ public class MapFromXML
     {
         try
         {
-            File xmlFile = new File("resources\\map.xml");
+            File xmlFile = new File("/Users/alexschmidt-gonzales/IdeaProjects/Project-3-CS351/resources/map.xml");
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
             Document doc = dBuilder.parse(xmlFile);
