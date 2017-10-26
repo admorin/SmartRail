@@ -38,10 +38,10 @@ public class Main extends Application
 
         //track3.setOccupied();
         track1.start();
-        track2.start();
-        track3.start();
-        track4.start();
-        track5.start();
+//        track2.start();
+//        track3.start();
+//        track4.start();
+//        track5.start();
 
 
 

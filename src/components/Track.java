@@ -23,14 +23,14 @@ public class Track extends Thread implements Component
 
     public Track(Track next, String name, TrainPrinter print)
     {
-            this.NAME = name;
-            setName(name);
+        this.NAME = name;
+        setName(name);
         printer = print;
-            train = new Train(null, this, null, null, "ALEX");
-            this.next = next;
-            //super(width, height);
-            //setFill(Color.BLACK);
-            hasTrain = false;
+        train = new Train(null, this, null, null, "ALEX");
+        this.next = next;
+        //super(width, height);
+        //setFill(Color.BLACK);
+        hasTrain = false;
 
 
     }
@@ -40,14 +40,14 @@ public class Track extends Thread implements Component
         try {
 
             isOpen = false;
-                train.changeTrack(this);
-                System.out.println("Train is on track "+ this.getName());
-                Thread.sleep(1000);
-//                System.out.println("Current Track = " +
-//                        Thread.currentThread().getName() +
-//                        " Next Track = " + next.getName());
-                System.out.println("Attempting to move Train from Track " + getName() +
-                " to Track " + next.getName());
+            train.changeTrack(this);
+            System.out.println("Train is on track "+ this.getName());
+            Thread.sleep(1000);
+//               System.out.println("Current Track = " +
+//                       Thread.currentThread().getName() +
+//                       " Next Track = " + next.getName());
+            System.out.println("Attempting to move Train from Track " + getName() +
+                    " to Track " + next.getName());
 
 
 
@@ -74,17 +74,13 @@ public class Track extends Thread implements Component
     {
         while(isOpen) {
             try {
-
                 if (this.next.isOpen) {
                     moveTrain();
-                    synchronized (printer) {
-                        //printer.moveTrain(index+1);
-                        Thread.sleep(1000);
-
-
-                    }
+                    //printer.moveTrain(index+1);
+                    next.start();
+                    isOpen = false;
+                    Thread.sleep(1000);
                 }
-
                 else{
 
                     System.out.println("Track " + getName() + " is occupied...");
@@ -96,7 +92,8 @@ public class Track extends Thread implements Component
                 }
             }
             catch(Exception e){
-
+                isOpen = false;
+                System.exit(0);
             }
         }
 
