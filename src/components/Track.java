@@ -80,6 +80,7 @@ public class Track extends Thread implements Component
                     synchronized (printer) {
                         //printer.moveTrain(index+1);
                         Thread.sleep(1000);
+                        System.out.println("sdfasdf");
 
                     }
                 }
