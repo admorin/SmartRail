@@ -38,7 +38,7 @@ public class Main extends Application
 
 
 
-        track2.start();
+        track3.start();
         track4.start();
 
 
