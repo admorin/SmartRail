@@ -36,7 +36,6 @@ public class Main extends Application
 
 
 
-        //track3.setOccupied();
         track2.start();
         track4.start();
 //        track2.start();
