@@ -34,13 +34,16 @@ public class Track extends Thread implements Component
 
     }
 
-    public void moveTrain()
-    {
+    public void moveTrain(){
 
         try {
             train.changeTrack(this);
+            isOpen = false;
             System.out.println("Train is on track "+ this.getName());
             Thread.sleep(1000);
+//               System.out.println("Current Track = " +
+//                       Thread.currentThread().getName() +
+//                       " Next Track = " + next.getName());
             System.out.println("Attempting to move Train from Track " + getName() +
                     " to Track " + next.getName());
 
