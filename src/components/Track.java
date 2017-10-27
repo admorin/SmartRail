@@ -59,8 +59,8 @@ public class Track extends Thread implements Component
     public void moveTrain(){
 
         try {
-            isOpen = false;
             train.changeTrack(this);
+            isOpen = false;
             System.out.println("Train is on track "+ this.getName());
             Thread.sleep(1000);
 //               System.out.println("Current Track = " +
@@ -120,10 +120,7 @@ public class Track extends Thread implements Component
             try {
                 if (this.next.isOpen) {
                     moveTrain();
-                    //printer.moveTrain(index+1);
                     next.start();
-                    isOpen = false;
-                    Thread.sleep(1000);
                 }
                 else{
 
@@ -145,6 +142,7 @@ public class Track extends Thread implements Component
         isOpen = false;
 
     }
+
 
 
 }
