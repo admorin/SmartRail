@@ -21,11 +21,10 @@ public class Track extends Thread implements Component
     }
 
 
-    public Track(Track next, String name, TrainPrinter print)
+    public Track(Track next, String name)
     {
         this.NAME = name;
         setName(name);
-        printer = print;
         train = new Train(null, this, null, null, "ALEX");
         this.next = next;
         //super(width, height);
