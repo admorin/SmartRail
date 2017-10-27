@@ -101,6 +101,12 @@ public class Track extends Thread implements Component
         display.setFill(Color.BLACK);
     }
 
+
+    public void setOccupied(){
+        this.next.isOpen = false;
+
+    }
+
     public void run()
     {
         findNext();
@@ -125,6 +131,8 @@ public class Track extends Thread implements Component
                     System.out.println("Waiting...");
                     Thread.sleep(2000);
 
+
+
                 }
             }
             catch(Exception e){
@@ -134,6 +142,7 @@ public class Track extends Thread implements Component
                 System.exit(0);
             }
         }
+        isOpen = false;
 
     }
 
