@@ -34,17 +34,13 @@ public class Track extends Thread implements Component
 
     }
 
-    public void moveTrain(){
+    public void moveTrain()
+    {
 
         try {
-
-            isOpen = false;
             train.changeTrack(this);
             System.out.println("Train is on track "+ this.getName());
             Thread.sleep(1000);
-//               System.out.println("Current Track = " +
-//                       Thread.currentThread().getName() +
-//                       " Next Track = " + next.getName());
             System.out.println("Attempting to move Train from Track " + getName() +
                     " to Track " + next.getName());
 
@@ -77,8 +73,6 @@ public class Track extends Thread implements Component
                     moveTrain();
                     //printer.moveTrain(index+1);
                     next.start();
-                    isOpen = false;
-                    Thread.sleep(1000);
                 }
                 else{
 
@@ -95,6 +89,7 @@ public class Track extends Thread implements Component
                 System.exit(0);
             }
         }
+        isOpen = false;
 
     }
 
