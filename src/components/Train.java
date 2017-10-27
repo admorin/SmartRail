@@ -8,6 +8,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
 import util.Logger;
 
+import java.util.LinkedList;
 import java.util.concurrent.CountDownLatch;
 
 public class Train extends Thread
@@ -22,6 +23,8 @@ public class Train extends Thread
     static private int height = 20;
     public volatile boolean allClear = true;
     public String NAME;
+    private LinkedList<String> directions = new LinkedList<>();
+    private char direction;
 
     public Rectangle train = new Rectangle(width, height);
     private int secsPassed;
@@ -37,6 +40,38 @@ public class Train extends Thread
         endDest = (Station) endComp;
 
 
+    }
+
+    public Station getStartStation(){
+        return startDest;
+    }
+
+    public Train(Station startDest, Station endDest, int dir){
+        this.startDest = startDest;
+        //TODO Search algorithm.
+        if(dir == 1) {
+            directions.add("Right");
+            directions.add("Right");
+            directions.add("Right");
+            directions.add("Right");
+            directions.add("Right");
+            directions.add("Right");
+        } else {
+            directions.add("Left");
+            directions.add("Left");
+            directions.add("Left");
+            directions.add("Left");
+            directions.add("Left");
+            directions.add("Left");
+        }
+    }
+
+    public void popDirection(){
+        directions.pop();
+    }
+
+    public String peekDirection(){
+        return directions.peek();
     }
 
     public Rectangle returnTrain(){

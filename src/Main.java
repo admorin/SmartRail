@@ -24,28 +24,27 @@ public class Main extends Application
     }
 
 
-    //Comment
-
     public static void main(String[] args)
     {
+        Track track1 = new Track();
+        Track track2 = new Track();
+        Track track3 = new Track();
+        Track track4 = new Track();
+        Track track5 = new Track();
+
+        Station stationB = new Station("EndsHere", track5);
+        Station stationA = new Station("AlexCantGithub", track1);
+
         TrainPrinter printer = new TrainPrinter(5, 0);
         printer.printTracks();
-        Track track5 = new Track(null, "5", printer);
-        Track track4 = new Track(track5, "4", printer);
-        Track track3 = new Track(track4, "3", printer);
-        Track track2 = new Track(track3,"2", printer);
-        Track track1 = new Track(track2, "1", printer);
+        track5.setTrackRStation(stationB, track4, "5", printer);
+        track4.setTrack(track5, track3, "4", printer);
+        track3.setTrack(track4, track2, "3", printer);
+        track2.setTrack(track3, track1, "2", printer);
+        track1.setTrackLStation(track2, stationA, "1", printer);
 
-
-
-        track3.start();
-        track4.start();
-
-
-
-
-        //Comment Andrew
-
+        stationA.finishLine(stationB);
+        stationA.start();
 
         //launch(args);
     }
