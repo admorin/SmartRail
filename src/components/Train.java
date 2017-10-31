@@ -49,6 +49,7 @@ public class Train extends Thread
     public Train(Station startDest, Station endDest, int dir){
         this.startDest = startDest;
         //TODO Search algorithm.
+
         if(dir == 1) {
             directions.add("Right");
             directions.add("Right");

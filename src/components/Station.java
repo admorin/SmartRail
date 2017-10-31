@@ -37,7 +37,6 @@ public class Station extends Thread implements Component
         }
     }
 
-    @Override
     public void run()
     {
         Train train;

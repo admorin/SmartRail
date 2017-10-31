@@ -30,28 +30,28 @@ public class Track extends Thread implements Component
     }
 
 
-    public void setTrack(Track nextR, Track nextL, String name, TrainPrinter print)
+    public void setTrack(Track nextR, Track nextL, String name)
     {
         this.NAME = name;
         setName(name);
-        printer = print;
+        //printer = print;
         this.nextR = nextR;
         this.nextL = nextL;
     }
-    public void setTrackRStation(Station nextR, Track nextL, String name, TrainPrinter print)
+    public void setTrackRStation(Station nextR, Track nextL, String name)
     {
         this.NAME = name;
         setName(name);
-        printer = print;
+        //printer = print;
         this.nextR = null;
         this.station = nextR;
         this.nextL = nextL;
     }
-    public void setTrackLStation(Track nextR, Station nextL, String name, TrainPrinter print)
+    public void setTrackLStation(Track nextR, Station nextL, String name)
     {
         this.NAME = name;
         setName(name);
-        printer = print;
+        //printer = print;
         this.nextR = nextR;
         this.nextL = null;
         this.station = nextL;
