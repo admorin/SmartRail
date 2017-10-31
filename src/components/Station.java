@@ -8,9 +8,14 @@ public class Station extends Thread implements Component
     private boolean isStart;
     private String name;
     private boolean isLeft;
+    private Train train;
     private Track next;
     private Station endStation;
     private boolean returning = false;
+
+    public Station(){
+
+    }
 
     public Station(String name, Track firstTrack)
     {
@@ -22,6 +27,14 @@ public class Station extends Thread implements Component
         this.endStation = endHere;
         //TODO run a search algorithm to find a path to the destination.
         //TODO somehow store the directions. (Queue?)
+    }
+
+    public boolean isEnd(){
+        if(endStation == null){
+            return false;
+        } else {
+            return true;
+        }
     }
 
     @Override
@@ -50,6 +63,7 @@ public class Station extends Thread implements Component
     }
 
     public void getTrain(Train train){
-        System.out.println("Station got train.");
+        this.train = train;
+        System.out.println(name + " got train.");
     }
 }
