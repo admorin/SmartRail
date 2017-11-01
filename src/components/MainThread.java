@@ -5,11 +5,12 @@ package components;
  */
 public class MainThread extends Thread {
     public Track[][] trackMap = new Track[2][5];
+    public Object[][] test = new Object[2][5];
     public MainThread(){
 
     }
 
-    public Component[] initialize(){
+    public Component[][] initialize(){
 //        Station station1 = new Station();
 //        Track track1 = new Track();
 //        Track track2 = new Track();
@@ -50,21 +51,23 @@ public class MainThread extends Thread {
 
 
 
-        Component[] myMap = new Component[10];
+
+        Component[][] myMap = new Component[5][2];
         //myMap[0] = A;
-        myMap[0] = T1;
-        myMap[1] = T2;
-        myMap[2] = T3;
-        myMap[3] = T4;
-        myMap[4] = T5;
+        myMap[0][0] = T1;
+        myMap[1][0] = T2;
+        myMap[2][0] = T3;
+        myMap[3][0] = T4;
+        myMap[4][0] = T5;
        // myMap[6] = X;
         //myMap[7] = B;
-        myMap[5] = B1;
-        myMap[6] = B2;
-        myMap[7] = B3;
-        myMap[8] = B4;
-        myMap[9] = B5;
+        myMap[0][1] = B1;
+        myMap[1][1]= B2;
+        myMap[2][1] = B3;
+        myMap[3][1] = B4;
+        myMap[4][1] = B5;
         //myMap[13] = Y;
+
 
         A.finishLine(X);
         A.start();
