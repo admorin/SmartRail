@@ -48,8 +48,8 @@ public class Station extends Thread implements Component
             train = new Train(this, endStation, 2);
         }
         //TODO add a timer so it can't be spam clicked
-        next.getTrain(train);
         next.start();
+        next.getTrain(train);
     }
 
     public boolean isStation(){

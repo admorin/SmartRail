@@ -52,8 +52,8 @@ public class Train extends Thread
 
         if(dir == 1) {
             directions.add("Right");
-            directions.add("Right");
-            directions.add("Right");
+            directions.add("Down");
+            directions.add("Down");
             directions.add("Right");
             directions.add("Right");
             directions.add("Right");

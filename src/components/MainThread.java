@@ -39,15 +39,15 @@ public class MainThread extends Thread {
 
         T5.setTrackRStation(X, T5, "5");
         T4.setTrack(T5, T3, "4");
-        T3.setTrack(T4, T2, "3");
+        T3.setTrack2Switch(T4, T2, B4,"3");
         T2.setTrack(T3, T1, "2");
         T1.setTrackLStation(T2, A, "1");
 
-        B5.setTrackRStation(Y, B5, "5");
-        B4.setTrack(B5, B3, "4");
-        B3.setTrack(B4, B2, "3");
-        B2.setTrack(B3, B1, "2");
-        B1.setTrackLStation(B2, B, "1");
+        B5.setTrackRStation(Y, B5, "B5");
+        B4.setTrack(B5, B3, "B4");
+        B3.setTrack(B4, B2, "B3");
+        B2.setTrack(B3, B1, "B2");
+        B1.setTrackLStation(B2, B, "B1");
 
 
 

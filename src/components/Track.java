@@ -21,6 +21,7 @@ public class Track extends Thread implements Component
     public boolean isOpen = true;
     public int isReserved = 0;
     private boolean atEnd = false;
+    private boolean trainHere = false;
     public String NAME;
     int index = 1;
     TrainPrinter printer;
@@ -56,6 +57,13 @@ public class Track extends Thread implements Component
         this.nextL = null;
         this.station = nextL;
     }
+    public void setTrack2Switch(Track nextR, Track nextL, Track nextD, String name){
+        this.NAME = name;
+        setName(name);
+        this.nextR = nextR;
+        this.nextD = nextD;
+        this.nextL = nextL;
+    }
 
     public void moveTrain(){
 
@@ -71,6 +79,7 @@ public class Track extends Thread implements Component
             System.out.println("Attempting to move Train from Track " + getName() +
                     " to Track " + next.getName());
             next.getTrain(train);
+            trainHere = false;
             hasTrain = false;
 
 
@@ -87,6 +96,10 @@ public class Track extends Thread implements Component
         {
             next = nextR;
         }
+        else if(train.peekDirection().equals("Down"))
+        {
+            next = nextD;
+        }
         else
         {
             next = nextL;
@@ -96,6 +109,7 @@ public class Track extends Thread implements Component
     public void getTrain(Train train){
         this.train = train;
         this.startStation = train.getStartStation();
+        trainHere = true;
     }
 
     public void setDisplay(){
@@ -110,6 +124,10 @@ public class Track extends Thread implements Component
 
     }
 
+    public boolean hasTrain(){
+        return trainHere;
+    }
+
     public void run()
     {
         findNext();
@@ -118,7 +136,6 @@ public class Track extends Thread implements Component
             {
 //                System.out.println("Arrived at " + station.returnName());
                 station.getTrain(train);
-                isOpen = false;
                 atEnd = true;
                 moveTrain();
             }
