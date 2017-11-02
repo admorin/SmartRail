@@ -1,12 +1,26 @@
 package components;
 
+import javafx.scene.layout.Pane;
+
+import java.util.ArrayList;
+import java.util.LinkedList;
+
 /**
  * Created by alexschmidt-gonzales on 10/31/17.
  */
 public class MainThread extends Thread {
     public Track[][] trackMap = new Track[2][7];
     public Object[][] trainMap = new Object[7][2];
-    public MainThread(){
+    public Station A;
+    public Station X;
+    public Station B;
+    public Station Y;
+    public Pane pane;
+    public ArrayList<Station> stationList = new ArrayList<>();
+    public ArrayList<Track> trackList = new ArrayList<>();
+    public boolean beenClicked = false;
+    public MainThread(Pane pane){
+        this.pane = pane;
 
     }
 
@@ -31,18 +45,22 @@ public class MainThread extends Thread {
         Track B4 = new Track();
         Track B5 = new Track();
 
-        TrackSwitch TS3 = new TrackSwitch();
 
 
-        Station X = new Station("Station X", T5);
-        Station A = new Station("Station A", T1);
 
-        Station Y = new Station("Station Y", B5);
-        Station B = new Station("Station B", B1);
+
+
+
+
+        X = new Station("Station X", T5);
+        A = new Station("Station A", T1);
+
+        Y = new Station("Station Y", B5);
+        B = new Station("Station B", B1);
 
         T5.setTrackRStation(X, T5, "T5");
         T4.setTrack(T5, T3, "T4");
-        T3.setSwicthTrackD(T4, T2, B2, "Switch1");
+        T3.setSwitchTrackD(T4, T2, B4, "Switch1");
         T2.setTrack(T3, T1, "T2");
         T1.setTrackLStation(T2, A, "T1");
 
@@ -70,13 +88,31 @@ public class MainThread extends Thread {
         myMap[5][1] = B5;
         myMap[6][1] = Y;
 
-
-        A.finishLine(Y);
-        A.start();
+//
+        stationList.add(X);
+        stationList.add(A);
+        //A.finishLine(Y);
+        //A.start();
 
 
 
         return myMap;
+    }
+
+
+
+    public void setStartStation(LinkedList<Station> stations){
+        Station start = stations.getFirst();
+        Station end = stations.getLast();
+        start = A;
+        end = X;
+        start.start();
+    }
+
+    public void selected(){
+        {
+            A.start();
+        }
     }
 
 }

@@ -32,93 +32,18 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
 
-        MainThread mainT = new MainThread();
+        MainThread mainT = new MainThread(pane);
 
         root.getChildren().add(pane);
-        DisplayGUI GUI = new DisplayGUI(pane,mainT );
-        GUI.start();
+
 
         primaryStage.setTitle("Train Sim 2018");
         primaryStage.setScene(new Scene(root, 1280, 720));
 
-//        train.setTranslateY(80);
-//        new AnimationTimer() {
-//            public void handle(long currentNanoTime) {
-//                for (int i = 0; i < WIDTH; i++) {
-//                    for (int j = 0; j < HEIGHT; j++) {
-//                        if (map[i][j].getClass().getSimpleName().equals("Track")) {
-//                            if (((Track) map[i][j]).isOpen) {
-////                                if (i >= 5) {
-////                                    guiMap[i].setTranslateX(((i - 5) * 60) + 50);
-////                                    guiMap[i].setTranslateY(200);
-////                                } else
-//
-//                                guiMap[i][j].setTranslateX((i * 60) + 50);
-//                                guiMap[i][j].setTranslateY((j+1) * 100);
-//
-//                            } else {
-//                                guiMap[i][j].setTranslateX((i * 60) + 50);
-//                                guiMap[i][j].setTranslateY(100);
-//                                train.setTranslateX((i * 60) + 50);
-//                                //train.setTranslateY((j+1) *100);
-//                            }
-//                            if (((Track) map[i][j]).hasTrain)
-//                                guiMap[i][j].setFill(Color.RED);
-//                            else
-//                                guiMap[i][j].setFill(Color.BLACK);
-//                        }
-//                        else {
-//                            if (((Station)map[i][j]).isEnd()) {
-////                            if(i == 7 || i == 13){
-////                                guiMap[i].setTranslateX((i * 60) + 50);
-////                                guiMap[i].setTranslateY(200);
-////                            }
-//
-//                                guiMap[i][j].setTranslateX((i * 60) + 50);
-//                                guiMap[i][j].setTranslateY((j+1) * 100);
-//                                station.setTranslateX(50);
-//                                station.setTranslateY((j+1) * 100);
-//
-//
-//                            } else {
-//                                guiMap[i][j].setTranslateX((i * 60) + 50);
-//                                guiMap[i][j].setTranslateY((j+1) * 100);
-//                            }
-//                            if (((Station) map[i][j]).isEnd())
-//                                guiMap[i][j].setFill(Color.RED);
-//                            else
-//                                guiMap[i][j].setFill(Color.BLACK);
-//                        }
-//                    }
-//
-//                }
-//                redraw();
-//            }
-//        }.start();
         primaryStage.show();
-//
-//    }
-//
-//    private void redraw() {
-//        pane.getChildren().removeAll(train, station);
-//        for (int i = 0; i < WIDTH; i++) {
-//            for (int j = 0; j < HEIGHT; j++) {
-//                pane.getChildren().remove(guiMap[i][j]);
-//            }
-//        }
-//        pane.getChildren().addAll(train, station);
-//        for (int i = 0; i < WIDTH; i++) {
-//            for (int j = 0; j < HEIGHT; j++) {
-//                pane.getChildren().add(guiMap[i][j]);
-//            }
-//        }
+        DisplayGUI GUI = new DisplayGUI(pane,mainT );
+        GUI.start();
 
-//        pane.getChildren().remove(train);
-//        for (int i = 0; i < guiMap.length; i++)
-//            pane.getChildren().remove(guiMap[i]);
-//        pane.getChildren().add(train);
-//        for (int j = 0; j < guiMap.length; j++)
-//            pane.getChildren().add(guiMap[j]);
     }
 
     public static void main(String[] args) {
@@ -149,13 +74,7 @@ public class Main extends Application {
 //        track2.setTrack(track3, track1, "2", printer);
 //        track1.setTrackLStation(track2, stationA, "1", printer);
 
-        MainThread mainT = new MainThread();
-        map = mainT.initialize();
-        for (int i = 0; i < WIDTH; i++) {
-            for (int j = 0; j < HEIGHT; j++) {
-                guiMap[i][j] = new Rectangle(50, 2);
-            }
-        }
+
 
 //        stationA.finishLine(stationB);
 //        stationA.start();

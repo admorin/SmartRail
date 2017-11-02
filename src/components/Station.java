@@ -12,6 +12,7 @@ public class Station extends Thread implements Component
     private Train train;
     private Track next;
     private Station endStation;
+    public boolean selectedStation = false;
     private boolean returning = false;
     public Rectangle displayStation = new Rectangle(30, 60);
 
@@ -56,6 +57,12 @@ public class Station extends Thread implements Component
 
     public boolean isStation(){
         return true;
+    }
+
+    public Rectangle getDisplayStation(){
+        Rectangle station = new Rectangle(30, 60);
+        station.setId(this.getName());
+        return station;
     }
 
     public String returnName()

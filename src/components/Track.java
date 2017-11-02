@@ -14,13 +14,14 @@ public class Track extends Thread implements Component
     public Track nextD;
     public Track nextU;
     public Track nextL;
-    public Rectangle display = new Rectangle();
+    public Rectangle display = new Rectangle(50, 2);
     public Train train;
     public Station station;
     public Station startStation;
     public boolean isOpen = true;
     public int isReserved = 0;
     private boolean atEnd = false;
+    public boolean isLight = false;
     public String NAME;
     int index = 1;
     TrainPrinter printer;
@@ -57,10 +58,11 @@ public class Track extends Thread implements Component
         this.nextL = null;
         this.station = nextL;
     }
-    public void setSwicthTrackD(Track nextR, Track nextL, Track nextD, String name){
+    public void setSwitchTrackD(Track nextR, Track nextL, Track nextD, String name){
         this.nextD = nextD;
         this.nextL = nextL;
         this.nextR = nextR;
+        this.isLight = true;
         setName(name);
     }
 
@@ -113,10 +115,10 @@ public class Track extends Thread implements Component
 
     }
 
-    public void setDisplay(){
-        display.setWidth(width);
-        display.setHeight(height);
+    public Rectangle setDisplay(){
+
         display.setFill(Color.BLACK);
+        return display;
     }
 
 
