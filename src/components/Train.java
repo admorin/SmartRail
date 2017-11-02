@@ -22,6 +22,7 @@ public class Train extends Thread
     static private int width = 75;
     static private int height = 20;
     public volatile boolean allClear = true;
+    public boolean finder;
     public String NAME;
     private LinkedList<String> directions = new LinkedList<>();
     private char direction;
@@ -42,17 +43,23 @@ public class Train extends Thread
 
     }
 
+    public void searchAlgorithim(Station start, Station end){
+        Train temp = new Train(start, end, 1);
+
+    }
+
     public Station getStartStation(){
         return startDest;
     }
 
     public Train(Station startDest, Station endDest, int dir){
         this.startDest = startDest;
+
         //TODO Search algorithm.
 
         if(dir == 1) {
             directions.add("Right");
-            directions.add("Down");
+            directions.add("Right");
             directions.add("Down");
             directions.add("Right");
             directions.add("Right");
@@ -72,7 +79,7 @@ public class Train extends Thread
     }
 
     public String peekDirection(){
-        return directions.peek();
+        return directions.poll();
     }
 
     public Rectangle returnTrain(){
@@ -91,34 +98,16 @@ public class Train extends Thread
         return myTrack.toString();
 
     }
-//    public void test() {
-//
-//        Task<Void> task = new Task<Void>() {
-//            @Override protected Void call() throws Exception {
-//                for (int i=0; i<100; i++) {
-//                    if (isCancelled()) break;
-//                    Rectangle r = new Rectangle(10, 10);
-//                    r.setTranslateX(10 * i);
-//                    Platform.runLater(new Runnable() {
-//                        @Override public void run() {
-//                            while(!allClear) pane.getChildren().add(r);
-//                            pane.getChildren().remove(r);
-//                        }
-//
-//                    });
-//                }
-//                return null;
-//            }
-//        };
-//        new Thread(task).start();
-//
-//
-//    }
 
+    public void run(){
+        while(!Thread.interrupted()){
+            if(finder){
+                Station startTemp = startDest;
+                Station endTemp = endDest;
 
-
-
-
+            }
+        }
+    }
 //        int step = 0;
 //        System.out.println("New route request : Train ID [0] from Station[" + startDest.getName() + "] to Station[B]");
 //
