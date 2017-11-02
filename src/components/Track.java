@@ -25,6 +25,7 @@ public class Track extends Thread implements Component
     int index = 1;
     TrainPrinter printer;
 
+
     public Track(){
 
     }
@@ -56,18 +57,24 @@ public class Track extends Thread implements Component
         this.nextL = null;
         this.station = nextL;
     }
+    public void setSwicthTrackD(Track nextR, Track nextL, Track nextD, String name){
+        this.nextD = nextD;
+        this.nextL = nextL;
+        this.nextR = nextR;
+        setName(name);
+    }
 
     public void moveTrain(){
 
         try {
+
+            if(this.isSwitch){
+                System.out.println("This is a switch track");
+            }
             train.changeTrack(this);
             isOpen = false;
-//            System.out.println(train.currentTrack());
             System.out.println("Train is on track "+ this.getName());
             Thread.sleep(1000);
-//               System.out.println("Current Track = " +
-//                       Thread.currentThread().getName() +
-//                       " Next Track = " + next.getName());
             System.out.println("Attempting to move Train from Track " + getName() +
                     " to Track " + next.getName());
             next.getTrain(train);
@@ -83,19 +90,27 @@ public class Track extends Thread implements Component
     }
 
     public void findNext(){
-        if(train.peekDirection().equals("Right"))
-        {
-            next = nextR;
-        }
-        else
-        {
-            next = nextL;
+        String direction = train.peekDirection();
+
+        if(direction != null) {
+            if (direction.equals("Right")) {
+                next = nextR;
+            } else if (direction.equals("Down")) {
+                next = nextD;
+                System.out.println("Switching Tracks");
+            } else {
+                next = nextL;
+            }
         }
     }
 
     public void getTrain(Train train){
         this.train = train;
         this.startStation = train.getStartStation();
+    }
+
+    public void trackSwitch(Track track){
+
     }
 
     public void setDisplay(){

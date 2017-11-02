@@ -2,6 +2,7 @@ package components;
 
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
 
 public class Station extends Thread implements Component
 {
@@ -12,6 +13,7 @@ public class Station extends Thread implements Component
     private Track next;
     private Station endStation;
     private boolean returning = false;
+    public Rectangle displayStation = new Rectangle(30, 60);
 
     public Station(){
 

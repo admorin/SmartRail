@@ -5,7 +5,10 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
@@ -14,85 +17,101 @@ import javafx.stage.Stage;
 
 public class Main extends Application {
     private Group root = new Group();
-    private static GridPane pane = new GridPane();
-    private static Component[][] map = new Component[5][2];
-    private static Shape[][] guiMap = new Shape[5][2];
+    private static final int WIDTH = 7;
+    private static final int HEIGHT = 2;
+    private static Pane pane = new Pane();
+    private static Component[][] map = new Component[WIDTH][HEIGHT];
+    private static Shape[][] guiMap = new Shape[WIDTH][HEIGHT];
     private static Rectangle train = new Rectangle(50, 10);
-    private static Circle station = new Circle(25);
+    private static Rectangle station = new Rectangle(30, 40);
+    private Canvas canvas = new Canvas();
+    private GraphicsContext gc = canvas.getGraphicsContext2D();
+   // private static Circle station = new Circle(25);
+
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+
+        MainThread mainT = new MainThread();
+
         root.getChildren().add(pane);
+        DisplayGUI GUI = new DisplayGUI(pane,mainT );
+        GUI.start();
+
         primaryStage.setTitle("Train Sim 2018");
         primaryStage.setScene(new Scene(root, 1280, 720));
-        train.setTranslateY(80);
-        new AnimationTimer() {
-            public void handle(long currentNanoTime) {
-                for (int i = 0; i < 5; i++) {
-                    for (int j = 0; j < 2; j++) {
-                        if (map[i][j].getClass().getSimpleName().equals("Track")) {
-                            if (((Track) map[i][j]).isOpen) {
-//                                if (i >= 5) {
-//                                    guiMap[i].setTranslateX(((i - 5) * 60) + 50);
-//                                    guiMap[i].setTranslateY(200);
-//                                } else
 
-                                guiMap[i][j].setTranslateX((i * 60) + 50);
-                                guiMap[i][j].setTranslateY((j+1) * 100);
-
-                            } else {
-                                guiMap[i][j].setTranslateX((i * 60) + 50);
-                                guiMap[i][j].setTranslateY(100);
-                                train.setTranslateX((i * 60) + 50);
-                                //train.setTranslateY((j+1) *100);
-                            }
-                            if (((Track) map[i][j]).hasTrain)
-                                guiMap[i][j].setFill(Color.RED);
-                            else
-                                guiMap[i][j].setFill(Color.BLACK);
-                        }
-                        else {
-                            if (((Station)map[i][j]).isEnd()) {
-//                            if(i == 7 || i == 13){
-//                                guiMap[i].setTranslateX((i * 60) + 50);
-//                                guiMap[i].setTranslateY(200);
+//        train.setTranslateY(80);
+//        new AnimationTimer() {
+//            public void handle(long currentNanoTime) {
+//                for (int i = 0; i < WIDTH; i++) {
+//                    for (int j = 0; j < HEIGHT; j++) {
+//                        if (map[i][j].getClass().getSimpleName().equals("Track")) {
+//                            if (((Track) map[i][j]).isOpen) {
+////                                if (i >= 5) {
+////                                    guiMap[i].setTranslateX(((i - 5) * 60) + 50);
+////                                    guiMap[i].setTranslateY(200);
+////                                } else
+//
+//                                guiMap[i][j].setTranslateX((i * 60) + 50);
+//                                guiMap[i][j].setTranslateY((j+1) * 100);
+//
+//                            } else {
+//                                guiMap[i][j].setTranslateX((i * 60) + 50);
+//                                guiMap[i][j].setTranslateY(100);
+//                                train.setTranslateX((i * 60) + 50);
+//                                //train.setTranslateY((j+1) *100);
 //                            }
-
-                                guiMap[i][j].setTranslateX((i * 60) + 50);
-                                guiMap[i][j].setTranslateY(100);
-
-                            } else {
-                                guiMap[i][j].setTranslateX((i * 60) + 50);
-                                guiMap[i][j].setTranslateY(100);
-                            }
-                            if (((Station) map[i][j]).isEnd())
-                                guiMap[i][j].setFill(Color.RED);
-                            else
-                                guiMap[i][j].setFill(Color.BLACK);
-                        }
-                    }
-
-                }
-                redraw();
-            }
-        }.start();
+//                            if (((Track) map[i][j]).hasTrain)
+//                                guiMap[i][j].setFill(Color.RED);
+//                            else
+//                                guiMap[i][j].setFill(Color.BLACK);
+//                        }
+//                        else {
+//                            if (((Station)map[i][j]).isEnd()) {
+////                            if(i == 7 || i == 13){
+////                                guiMap[i].setTranslateX((i * 60) + 50);
+////                                guiMap[i].setTranslateY(200);
+////                            }
+//
+//                                guiMap[i][j].setTranslateX((i * 60) + 50);
+//                                guiMap[i][j].setTranslateY((j+1) * 100);
+//                                station.setTranslateX(50);
+//                                station.setTranslateY((j+1) * 100);
+//
+//
+//                            } else {
+//                                guiMap[i][j].setTranslateX((i * 60) + 50);
+//                                guiMap[i][j].setTranslateY((j+1) * 100);
+//                            }
+//                            if (((Station) map[i][j]).isEnd())
+//                                guiMap[i][j].setFill(Color.RED);
+//                            else
+//                                guiMap[i][j].setFill(Color.BLACK);
+//                        }
+//                    }
+//
+//                }
+//                redraw();
+//            }
+//        }.start();
         primaryStage.show();
-
-    }
-
-    private void redraw() {
-        pane.getChildren().remove(train);
-        for (int i = 0; i < 5; i++) {
-            for (int j = 0; j < 2; j++) {
-                pane.getChildren().remove(guiMap[i][j]);
-            }
-        }
-        pane.getChildren().add(train);
-        for (int i = 0; i < 5; i++) {
-            for (int j = 0; j < 2; j++) {
-                pane.getChildren().add(guiMap[i][j]);
-            }
-        }
+//
+//    }
+//
+//    private void redraw() {
+//        pane.getChildren().removeAll(train, station);
+//        for (int i = 0; i < WIDTH; i++) {
+//            for (int j = 0; j < HEIGHT; j++) {
+//                pane.getChildren().remove(guiMap[i][j]);
+//            }
+//        }
+//        pane.getChildren().addAll(train, station);
+//        for (int i = 0; i < WIDTH; i++) {
+//            for (int j = 0; j < HEIGHT; j++) {
+//                pane.getChildren().add(guiMap[i][j]);
+//            }
+//        }
 
 //        pane.getChildren().remove(train);
 //        for (int i = 0; i < guiMap.length; i++)
@@ -132,8 +151,8 @@ public class Main extends Application {
 
         MainThread mainT = new MainThread();
         map = mainT.initialize();
-        for (int i = 0; i < 5; i++) {
-            for (int j = 0; j < 2; j++) {
+        for (int i = 0; i < WIDTH; i++) {
+            for (int j = 0; j < HEIGHT; j++) {
                 guiMap[i][j] = new Rectangle(50, 2);
             }
         }
