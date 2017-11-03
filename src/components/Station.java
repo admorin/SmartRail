@@ -12,6 +12,7 @@ public class Station extends Thread implements Component
     private Train train;
     private Track next;
     private Station endStation;
+    public boolean visited;
     public boolean selectedStation = false;
     private boolean returning = false;
     public Rectangle displayStation = new Rectangle(30, 60);
@@ -43,8 +44,9 @@ public class Station extends Thread implements Component
     public void run()
     {
         Train train;
-        if(returning == false) {
+        if(!returning) {
             train = new Train(this, endStation, 1);
+
         }
         else
         {

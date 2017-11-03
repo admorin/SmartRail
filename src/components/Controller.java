@@ -25,7 +25,7 @@ public class Controller extends ArrayList<Track> {
     public Track returnTrack(){
         Track current = get(0);
         current.hasTrain = true;
-        current.display.setId("true");
+        //current.display.setId("true");
         return current;
     }
 

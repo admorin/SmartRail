@@ -1,6 +1,7 @@
 package components;
 
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 
 public class Track extends Thread implements Component
@@ -14,7 +15,7 @@ public class Track extends Thread implements Component
     public Track nextD;
     public Track nextU;
     public Track nextL;
-    public Rectangle display = new Rectangle(50, 2);
+    public Circle light = new Circle(10);
     public Train train;
     public Station station;
     public Station startStation;
@@ -22,9 +23,11 @@ public class Track extends Thread implements Component
     public int isReserved = 0;
     private boolean atEnd = false;
     public boolean isLight = false;
+    public boolean visited = false;
     public String NAME;
     int index = 1;
     TrainPrinter printer;
+    //public Circle stopLight = new Circle(20);
 
 
     public Track(){
@@ -101,7 +104,7 @@ public class Track extends Thread implements Component
                 next = nextD;
                 System.out.println("Switching Tracks");
             } else {
-                next = nextL;
+                //next = nextL;
             }
         }
     }
@@ -115,10 +118,10 @@ public class Track extends Thread implements Component
 
     }
 
-    public Rectangle setDisplay(){
+    public Circle displayTrack(){
 
-        display.setFill(Color.BLACK);
-        return display;
+        light.setId(this.getName());
+        return this.light;
     }
 
 
