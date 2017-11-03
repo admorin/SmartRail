@@ -56,6 +56,12 @@ public class Station extends Thread implements Component
         return true;
     }
 
+    public Rectangle getDisplayStation(){
+        Rectangle station = new Rectangle(30, 60);
+        station.setId(this.getName());
+        return station;
+    }
+
     public String returnName()
     {
         return name;

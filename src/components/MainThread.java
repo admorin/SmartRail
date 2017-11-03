@@ -1,16 +1,35 @@
 package components;
 
+import javafx.scene.layout.Pane;
+
+import java.util.ArrayList;
+import java.util.LinkedList;
+
 /**
  * Created by alexschmidt-gonzales on 10/31/17.
  */
 public class MainThread extends Thread {
     public Track[][] trackMap = new Track[2][7];
     public Object[][] trainMap = new Object[7][2];
-    public MainThread(){
+    public int[] DX = {0, 1, 0, -1, 1};
+    public int[] DY = {0, 0, 1, 0, 1};
+    public Station A;
+    public Station X;
+    public Station B;
+    public Station Y;
+    public Pane pane;
+    public String[][] temp = new String[7][2];
+    public ArrayList<Station> stationList = new ArrayList<>();
+    public ArrayList<Station> pickedStations = new ArrayList<>();
+    public ArrayList<Track> trackList = new ArrayList<>();
+    public boolean beenClicked = false;
+    Object[][] myMap = new Object[7][2];
+    public MainThread(Pane pane){
+        this.pane = pane;
 
     }
 
-    public Component[][] initialize(){
+    public Object[][] initialize(){
 //        Station station1 = new Station();
 //        Track track1 = new Track();
 //        Track track2 = new Track();
@@ -31,14 +50,18 @@ public class MainThread extends Thread {
         Track B4 = new Track();
         Track B5 = new Track();
 
-        TrackSwitch TS3 = new TrackSwitch();
 
 
-        Station X = new Station("Station X", T5);
-        Station A = new Station("Station A", T1);
 
-        Station Y = new Station("Station Y", B5);
-        Station B = new Station("Station B", B1);
+
+
+
+
+        X = new Station("Station X", T5);
+        A = new Station("Station A", T1);
+
+        Y = new Station("Station Y", B5);
+        B = new Station("Station B", B1);
 
         T5.setTrackRStation(X, T4, "T5");
         T4.setTrack(T5, T3, "T4");
@@ -54,7 +77,8 @@ public class MainThread extends Thread {
 
 
 
-        Component[][] myMap = new Component[7][2];
+
+        myMap = new Object[7][2];
         myMap[0][0] = A;
         myMap[1][0] = T1;
         myMap[2][0] = T2;
@@ -70,15 +94,26 @@ public class MainThread extends Thread {
         myMap[5][1] = B5;
         myMap[6][1] = Y;
 
-
-        Y.finishLine(A);
-        Y.start();
-//        A.finishLine(X);
-//        A.start();
+//
+        stationList.add(X);
+        stationList.add(A);
+        //A.finishLine(Y);
+        //A.start();
 
 
 
         return myMap;
     }
 
+    public void setStartStation(ArrayList<Station> stations){
+
+        if(stations.size() == 2){
+            Station start =  stations.get(0);
+            Station end = stations.get(1);
+            start.start();
+            start.finishLine(end);
+
+        }
+
+    }
 }
