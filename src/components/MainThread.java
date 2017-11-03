@@ -40,14 +40,14 @@ public class MainThread extends Thread {
         Station Y = new Station("Station Y", B5);
         Station B = new Station("Station B", B1);
 
-        T5.setTrackRStation(X, T5, "T5");
+        T5.setTrackRStation(X, T4, "T5");
         T4.setTrack(T5, T3, "T4");
-        T3.setSwicthTrackD(T4, T2, B2, "Switch1");
+        T3.setSwitchTrackD(T4, T2, B4, "Switch1");
         T2.setTrack(T3, T1, "T2");
         T1.setTrackLStation(T2, A, "T1");
 
-        B5.setTrackRStation(Y, B5, "B5");
-        B4.setTrack(B5, B3, "B4");
+        B5.setTrackRStation(Y, B4, "B5");
+        B4.setSwitchTrackU(B5, B3, T3, "B4");
         B3.setTrack(B4, B2, "B3");
         B2.setTrack(B3, B1, "B2");
         B1.setTrackLStation(B2, B, "B1");
@@ -71,8 +71,10 @@ public class MainThread extends Thread {
         myMap[6][1] = Y;
 
 
-        A.finishLine(Y);
-        A.start();
+        Y.finishLine(A);
+        Y.start();
+//        A.finishLine(X);
+//        A.start();
 
 
 

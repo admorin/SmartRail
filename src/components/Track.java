@@ -57,13 +57,44 @@ public class Track extends Thread implements Component
         this.nextL = null;
         this.station = nextL;
     }
-    public void setSwicthTrackD(Track nextR, Track nextL, Track nextD, String name){
+    public void setSwitchTrackD(Track nextR, Track nextL, Track nextD, String name){
         this.nextD = nextD;
         this.nextL = nextL;
         this.nextR = nextR;
         setName(name);
     }
 
+    public void setSwitchTrackU(Track nextR, Track nextL, Track nextU, String name){
+        this.nextU = nextU;
+        this.nextL = nextL;
+        this.nextR = nextR;
+        setName(name);
+    }
+
+    public Track[] returnNeighbors(){
+        Track[] neighbors = new Track[]{nextU, nextR, nextD, nextL};
+        return neighbors;
+    }
+
+    public Station returnStation(){
+        return station;
+    }
+
+    public boolean hasStation(){
+        if(station == null){
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    public void setReserved(int trainNumber){
+        isReserved = trainNumber;
+    }
+
+    public int getReserved(){
+        return isReserved;
+    }
     public void moveTrain(){
 
         try {
@@ -97,6 +128,9 @@ public class Track extends Thread implements Component
                 next = nextR;
             } else if (direction.equals("Down")) {
                 next = nextD;
+                System.out.println("Switching Tracks");
+            } else if (direction.equals("Up")){
+                next = nextU;
                 System.out.println("Switching Tracks");
             } else {
                 next = nextL;

@@ -95,7 +95,7 @@ public class Main extends Application {
 //                redraw();
 //            }
 //        }.start();
-        primaryStage.show();
+//        primaryStage.show();
 //
 //    }
 //

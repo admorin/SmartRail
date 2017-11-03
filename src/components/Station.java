@@ -7,7 +7,7 @@ import javafx.scene.shape.Rectangle;
 public class Station extends Thread implements Component
 {
     private boolean isStart;
-    private String name;
+    private String name = "Blank";
     private boolean isLeft;
     private Train train;
     private Track next;
@@ -23,6 +23,10 @@ public class Station extends Thread implements Component
     {
         this.name = name;
         this.next = firstTrack;
+    }
+
+    public Track firstTrack(){
+        return next;
     }
 
     public void finishLine(Station endHere){
@@ -42,16 +46,10 @@ public class Station extends Thread implements Component
     public void run()
     {
         Train train;
-        if(returning == false) {
-            train = new Train(this, endStation, 1);
-        }
-        else
-        {
-            train = new Train(this, endStation, 2);
-        }
+        train = new Train(this, endStation, 1, true);
         //TODO add a timer so it can't be spam clicked
-        next.start();
         next.getTrain(train);
+        next.start();
     }
 
     public boolean isStation(){
