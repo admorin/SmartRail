@@ -138,7 +138,7 @@ public class Track extends Thread implements Component
                 next = nextU;
                 System.out.println("Switching Tracks");
             } else {
-                //next = nextL;
+                next = nextL;
             }
         }
     }

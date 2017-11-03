@@ -54,6 +54,7 @@ public class Train extends Thread
     }
 
     public void searchAlgorithm(Station end){
+        System.out.println(endDest.returnName() + " " + startDest.returnName());
         boolean endFound = false;
         Track[] neighbors = myTrack.returnNeighbors();
         Station trackStation = myTrack.returnStation();
@@ -121,7 +122,7 @@ public class Train extends Thread
 //                    trackStation = neighbors[1].returnStation();
                 }
             }
-//            for(String s : directions) System.out.println(s);
+            for(String s : directions) System.out.println(s);
         }
     }
 
@@ -138,7 +139,7 @@ public class Train extends Thread
     public String peekDirection(){
         instruction++;
         if(instruction > directions.size()){
-            return directions.get(0);
+            return directions.get(1);
         }
         return directions.get(instruction - 1);
     }

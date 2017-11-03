@@ -112,7 +112,7 @@ public class MainThread extends Thread {
             Station end = stations.get(1);
             start.start();
             start.finishLine(end);
-
+            System.out.println(start.returnName() + " " + end.returnName());
         }
 
     }
