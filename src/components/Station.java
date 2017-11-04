@@ -2,28 +2,73 @@ package components;
 
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
 
-public class Station extends Circle implements Component
+public class Station extends Thread implements Component
 {
-    private String name;
+    private boolean isStart;
+    private String name = "Blank";
     private boolean isLeft;
+    private Train train;
+    private Track next;
+    private Station endStation;
+    private boolean returning = false;
+    public Rectangle displayStation = new Rectangle(30, 60);
 
-    public Station(String name)
-    {
-        super(25);
-        this.name = name;
-        setFill(Color.RED);
+    public Station(){
+
     }
 
-    @Override
+    public Station(String name, Track firstTrack)
+    {
+        this.name = name;
+        this.next = firstTrack;
+    }
+
+    public Track firstTrack(){
+        return next;
+    }
+
+    public void finishLine(Station endHere){
+        this.endStation = endHere;
+        //TODO run a search algorithm to find a path to the destination.
+        //TODO somehow store the directions. (Queue?)
+    }
+
+    public boolean isEnd(){
+        if(endStation == null){
+            return false;
+        } else {
+            return true;
+        }
+    }
+
     public void run()
     {
+        Train train;
+        train = new Train(this, endStation, 1, true);
         //TODO add a timer so it can't be spam clicked
-
+        next.getTrain(train);
+        next.start();
     }
 
-    public String getName()
+    public boolean isStation(){
+        return true;
+    }
+
+    public Rectangle getDisplayStation(){
+        Rectangle station = new Rectangle(30, 60);
+        station.setId(this.getName());
+        return station;
+    }
+
+    public String returnName()
     {
         return name;
+    }
+
+    public void getTrain(Train train){
+        this.train = train;
+        System.out.println(name + " got train.");
     }
 }

@@ -1,74 +1,56 @@
-import components.Component;
-import components.Station;
-import components.Track;
-import components.Train;
+
+import components.*;
+import javafx.animation.AnimationTimer;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Shape;
 import javafx.stage.Stage;
-import util.MapFromXML;
 
-public class Main extends Application
-{
+public class Main extends Application {
     private Group root = new Group();
-    private GridPane pane = new GridPane();
-    private Component[] map;
+    private static final int WIDTH = 7;
+    private static final int HEIGHT = 2;
+    private static Pane pane = new Pane();
+    private static Component[][] map = new Component[WIDTH][HEIGHT];
+    private static Shape[][] guiMap = new Shape[WIDTH][HEIGHT];
+    private static Rectangle train = new Rectangle(50, 10);
+    private static Rectangle station = new Rectangle(30, 40);
+    private Canvas canvas = new Canvas();
+    private GraphicsContext gc = canvas.getGraphicsContext2D();
+   // private static Circle station = new Circle(25);
+
 
     @Override
-    public void start(Stage primaryStage) throws Exception
-    {
+    public void start(Stage primaryStage) throws Exception {
+
+        MainThread mainT = new MainThread(pane);
+
         root.getChildren().add(pane);
+
+
         primaryStage.setTitle("Train Sim 2018");
         primaryStage.setScene(new Scene(root, 1280, 720));
+        DisplayGUI GUI = new DisplayGUI(pane,mainT );
+        GUI.start();
+
         primaryStage.show();
-        initializeMap();
-        //Test new XML reader class
+
+
     }
 
-    private void initializeMap()
-    {
-        System.out.println("Initializing map...");
-        map = new MapFromXML().getMap();
-        for (int i = 0; i < map.length; i++)
-        {
-            if (map[i].getClass().getSimpleName().equals("Track"))
-            {
-                Track track = (Track) map[i];
-                pane.getChildren().add(track);
-                track.setTranslateX((i * 85) + 100);
-                track.setTranslateY(50);
-            } else if (map[i].getClass().getSimpleName().equals("Station"))
-            {
-                Station station = (Station) map[i];
-                pane.getChildren().add(station);
-                station.setTranslateX((i * 85) + 100);
-                station.setTranslateY(50);
-                station.setOnMousePressed(event ->
-                {
-                    //TODO somehow spawn a train from here.
-                    station.setFill(Color.BLUE);
-                    Train train = new Train(station, null);
-                    train.run();
-                    pane.getChildren().add(train);
-                    train.setTranslateX(((1 * 85) + 100));
-                    train.setTranslateY(35);
-                    System.out.println("Spawning train from station " + station.getName());
-                });
+    public static void main(String[] args) {
 
-                station.setOnMouseReleased(event ->
-                {
-                    station.setFill(Color.RED);
-                });
-            }
 
-            map[i].run();
-        }
-    }
-
-    public static void main(String[] args)
-    {
         launch(args);
     }
 }
+
