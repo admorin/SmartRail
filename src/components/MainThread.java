@@ -108,8 +108,9 @@ public class MainThread extends Thread {
     public void setStartStation(LinkedList<Station> stations){
 
         if(stations.size() == 2){
-            Station start = stations.get(0);
-            Station end = stations.get(1);
+            Station start = stations.getFirst();
+            start.isStarting = true;
+            Station end = stations.getLast();
             start.finishLine(end);
             start.start();
 

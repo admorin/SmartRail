@@ -46,8 +46,10 @@ public class DisplayGUI extends AnimationTimer {
                 guiMap[i][j] = new Rectangle(50, 2);
             }
         }
-        //pane.getChildren().add(train);
+        train.setVisible(false);
+        pane.getChildren().add(train);
         stationListener();
+        initTracks();
     }
 
 
@@ -58,6 +60,7 @@ public class DisplayGUI extends AnimationTimer {
                 if (map[i][j].getClass().getSimpleName().equals("Track")) {
 
                     if (((Track) map[i][j]).hasTrain) {
+                        train.setVisible(true);
                         guiMap[i][j].setFill(Color.RED);
                         train.setTranslateX((i * SIZEX) + 50);
                         train.setTranslateY((j + 1) * SIZEY);
@@ -116,6 +119,9 @@ public class DisplayGUI extends AnimationTimer {
                     Station t = (Station) map[i][j];
 
                     rect = t.getDisplayStation();
+                    train.setTranslateX(rect.getTranslateX());
+                    train.setTranslateY(rect.getTranslateY());
+                    train.setVisible(false);
                     System.out.println(map[i][j]);
                     rect.setTranslateX((i * SIZEX) + 50);
                     rect.setTranslateY((j + 1) * SIZEY);
@@ -124,7 +130,6 @@ public class DisplayGUI extends AnimationTimer {
                         rect.setFill(Color.RED);
                         pickedStations.add(t);
                         if(pickedStations.size() == 2) {
-
                             mainT.setStartStation(pickedStations);
                             pickedStations.clear();
                         }
@@ -148,14 +153,14 @@ public class DisplayGUI extends AnimationTimer {
 
 
     private void redraw() {
-        pane.getChildren().removeAll(train);
+        pane.getChildren().remove(train);
         for (int i = 0; i < WIDTH; i++) {
             for (int j = 0; j < HEIGHT; j++) {
                 pane.getChildren().remove(guiMap[i][j]);
             }
         }
 
-        pane.getChildren().addAll(train);
+        pane.getChildren().add(train);
         for (int i = 0; i < WIDTH; i++) {
             for (int j = 0; j < HEIGHT; j++) {
                 pane.getChildren().add(guiMap[i][j]);

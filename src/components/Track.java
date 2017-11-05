@@ -56,7 +56,6 @@ public class Track extends Thread implements Component
     {
         this.NAME = name;
         setName(name);
-        //printer = print;
         this.nextR = nextR;
         this.nextL = null;
         this.station = nextL;
@@ -104,19 +103,14 @@ public class Track extends Thread implements Component
 
         try {
 
-            if(this.isSwitch){
-                System.out.println("This is a switch track");
-            }
-            train.changeTrack(this);
-            isOpen = false;
-            System.out.println("Train is on track "+ this.getName());
-            Thread.sleep(1000);
-            System.out.println("Attempting to move Train from Track " + getName() +
-                    " to Track " + next.getName());
-            next.getTrain(train);
-            this.hasTrain = false;
-
-
+                train.changeTrack(this);
+                isOpen = false;
+                System.out.println("Train is on track " + this.getName());
+                Thread.sleep(1000);
+                System.out.println("Attempting to move Train from Track " + getName() +
+                        " to Track " + next.getName());
+                next.getTrain(train);
+                this.hasTrain = false;
 
         }
         catch (Exception e){
@@ -168,7 +162,8 @@ public class Track extends Thread implements Component
     {
         findNext();
         while(isOpen) {
-            if(station != null)
+            try {
+            if(station != null && !station.isStarting)
             {
 //                System.out.println("Arrived at " + station.returnName());
 
@@ -178,19 +173,21 @@ public class Track extends Thread implements Component
                 moveTrain();
                 hasTrain = false;
 
-            }
-            try {
-                if (this.next.isOpen) {
-                    moveTrain();
-                    next.start();
-                    next.hasTrain = true;
-                    Thread.currentThread().interrupt();
-                }
-                else{
 
-                    System.out.println("Track " + getName() + " is occupied...");
-                    System.out.println("Waiting...");
-                    Thread.sleep(2000);
+            }
+
+            else if (this.next.isOpen) {
+                hasTrain = true;
+                moveTrain();
+                next.start();
+                next.hasTrain = true;
+                Thread.currentThread().interrupt();
+            }
+
+            else{
+                System.out.println("Track " + getName() + " is occupied...");
+                System.out.println("Waiting...");
+                Thread.sleep(2000);
                 }
             }
             catch(Exception e){

@@ -15,6 +15,7 @@ public class Station extends Thread implements Component
     private Station endStation;
     private boolean startStation;
     private Rectangle station;
+    public boolean isStarting = false;
     private boolean returning = false;
     public Rectangle displayStation = new Rectangle(30, 60);
 
