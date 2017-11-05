@@ -114,7 +114,7 @@ public class Track extends Thread implements Component
             System.out.println("Attempting to move Train from Track " + getName() +
                     " to Track " + next.getName());
             next.getTrain(train);
-            hasTrain = false;
+            this.hasTrain = false;
 
 
 
@@ -171,10 +171,13 @@ public class Track extends Thread implements Component
             if(station != null)
             {
 //                System.out.println("Arrived at " + station.returnName());
+
                 station.getTrain(train);
                 isOpen = false;
                 atEnd = true;
                 moveTrain();
+                hasTrain = false;
+
             }
             try {
                 if (this.next.isOpen) {

@@ -19,7 +19,7 @@ public class MainThread extends Thread {
     public Station Y;
     public Pane pane;
     public String[][] temp = new String[7][2];
-    public ArrayList<Station> stationList = new ArrayList<>();
+    public LinkedList<Station> stationList = new LinkedList<>();
     public ArrayList<Station> pickedStations = new ArrayList<>();
     public ArrayList<Track> trackList = new ArrayList<>();
     public boolean beenClicked = false;
@@ -105,13 +105,14 @@ public class MainThread extends Thread {
         return myMap;
     }
 
-    public void setStartStation(ArrayList<Station> stations){
+    public void setStartStation(LinkedList<Station> stations){
 
         if(stations.size() == 2){
-            Station start =  stations.get(0);
+            Station start = stations.get(0);
             Station end = stations.get(1);
-            start.start();
             start.finishLine(end);
+            start.start();
+
             System.out.println(start.returnName() + " " + end.returnName());
         }
 

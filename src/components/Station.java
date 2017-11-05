@@ -10,8 +10,11 @@ public class Station extends Thread implements Component
     private String name = "Blank";
     private boolean isLeft;
     private Train train;
+    public boolean hasArrived = false;
     private Track next;
     private Station endStation;
+    private boolean startStation;
+    private Rectangle station;
     private boolean returning = false;
     public Rectangle displayStation = new Rectangle(30, 60);
 
@@ -22,7 +25,9 @@ public class Station extends Thread implements Component
     public Station(String name, Track firstTrack)
     {
         this.name = name;
+        setName(name);
         this.next = firstTrack;
+
     }
 
     public Track firstTrack(){
@@ -31,34 +36,35 @@ public class Station extends Thread implements Component
 
     public void finishLine(Station endHere){
         this.endStation = endHere;
-        //TODO run a search algorithm to find a path to the destination.
-        //TODO somehow store the directions. (Queue?)
+
+
     }
 
     public boolean isEnd(){
-        if(endStation == null){
-            return false;
-        } else {
-            return true;
-        }
+        return (endStation == null);
     }
 
     public void run()
     {
         Train train;
         train = new Train(this, endStation, 1, true);
-        //TODO add a timer so it can't be spam clicked
         next.getTrain(train);
         next.start();
-    }
+        train.start();
+        while(train.isAlive()){
 
-    public boolean isStation(){
-        return true;
+        }
+
+
+
     }
 
     public Rectangle getDisplayStation(){
-        Rectangle station = new Rectangle(30, 60);
-        station.setId(this.getName());
+        this.station = new Rectangle(30, 60);
+        station.setOnMousePressed(event -> {
+           System.out.println(this.getName());
+        });
+
         return station;
     }
 
@@ -70,5 +76,6 @@ public class Station extends Thread implements Component
     public void getTrain(Train train){
         this.train = train;
         System.out.println(name + " got train.");
+        System.out.println(this.isAlive());
     }
 }

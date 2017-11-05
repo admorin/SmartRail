@@ -32,14 +32,14 @@ public class Train extends Thread
     private int instruction = 0;
     public Track myTrack;
 
-    public Train(Component startComp, Track myTrack, Component endComp, Pane pane, String name)
+    public Train(Station start, Track myTrack, Station end, Pane pane, String name)
     {
 
         this.NAME = name;
         //this.pane = pane;
         this.myTrack = myTrack;
-        startDest = (Station) startComp;
-        endDest = (Station) endComp;
+        this.startDest = start;
+        this.endDest = end;
 
 
     }
@@ -127,7 +127,12 @@ public class Train extends Thread
     }
 
     public Station getStartStation(){
+
         return startDest;
+    }
+
+    public Station getEndStation(){
+        return endDest;
     }
 
     public Train(Station startDest, Station endDest){
@@ -162,27 +167,11 @@ public class Train extends Thread
     }
 
     public void run(){
-        while(!Thread.interrupted()){
-            if(finder){
-                Station startTemp = startDest;
-                Station endTemp = endDest;
+        while(!endDest.hasArrived) {
 
-            }
+
         }
     }
-//        int step = 0;
-//        System.out.println("New route request : Train ID [0] from Station[" + startDest.getName() + "] to Station[B]");
-//
-//        try {
-//            while (allClear) {
-//                train.setTranslateX(step += train.getLayoutX());
-//                step += 1000;
-//                pane.getChildren().add(train);
-//            }
-//        }
-//           catch(Exception e) {
-//           }
-//
-//       }
-    }
+
+}
 

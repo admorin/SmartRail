@@ -29,22 +29,25 @@ public class DisplayGUI extends AnimationTimer {
     private Rectangle station = new Rectangle(30, 40);
     private Circle light = new Circle(5);
     private MainThread mainT;
-    private ArrayList<Station> stations = new ArrayList<>();
+    //private ArrayList<Station> stations = new ArrayList<>();
+    private LinkedList<Station> pickedStations = new LinkedList<>();
+    private LinkedList<Station> stations = new LinkedList<>();
 
 
     public DisplayGUI(Pane pane, MainThread mainT) {
+
         this.pane = pane;
         this.mainT = mainT;
-        this.stations = mainT.stationList;
         map = mainT.initialize();
+        this.stations = mainT.stationList;
         for (int i = 0; i < WIDTH; i++) {
             for (int j = 0; j < HEIGHT; j++) {
 
-                 guiMap[i][j] = new Rectangle(50, 2);
+                guiMap[i][j] = new Rectangle(50, 2);
             }
         }
-        pane.getChildren().add(train);
-        initStation();
+        //pane.getChildren().add(train);
+        stationListener();
     }
 
 
@@ -57,29 +60,29 @@ public class DisplayGUI extends AnimationTimer {
                     if (((Track) map[i][j]).hasTrain) {
                         guiMap[i][j].setFill(Color.RED);
                         train.setTranslateX((i * SIZEX) + 50);
-                        train.setTranslateY((j+1) * SIZEY);
-                    }
-                    else if (((Track) map[i][j]).isOpen) {
+                        train.setTranslateY((j + 1) * SIZEY);
+                    } else if (((Track) map[i][j]).isOpen) {
                         guiMap[i][j].setTranslateX((i * SIZEX) + 50);
                         guiMap[i][j].setTranslateY((j + 1) * SIZEY);
-                    }
-                    else if(((Track)map[i][j]).isLight) {
+                    } else if (((Track) map[i][j]).isLight) {
+                        guiMap[i][j].setFill(Color.BLACK);
                         guiMap[i][j].setTranslateX((i * SIZEX) + 50);
                         guiMap[i][j].setTranslateY((j + 1) * SIZEY);
 
 
-                    }
-                    else{
+                    } else {
                         guiMap[i][j].setTranslateX((i * SIZEX) + 50);
                         guiMap[i][j].setTranslateY((j + 1) * SIZEY);
                         guiMap[i][j].setFill(Color.BLACK);
+                        pane.getChildren().remove(train);
                     }
-
 
                 }
             }
         }
     }
+
+
 
     public void lights() {
         for (int i = 0; i < WIDTH; i++) {
@@ -89,64 +92,56 @@ public class DisplayGUI extends AnimationTimer {
                     Line line = new Line();
                     if (((Track) map[i][j]).isLight) {
 
-                        line.setStartX((i+1)*70);
-                        line.setStartY((j+1) * 30);
-                        line.setEndX((i+1)*70);
-                        line.setEndY(i*30);
-                        light.setTranslateX((i+1)*70);
-                        light.setTranslateY((j+1) * 30);
+                        line.setStartX((i + 1) * 70);
+                        line.setStartY((j + 1) * 30);
+                        line.setEndX((i + 1) * 70);
+                        line.setEndY(i * 30);
+                        light.setTranslateX((i + 1) * 70);
+                        light.setTranslateY((j + 1) * 30);
                         pane.getChildren().addAll(light, line);
-                        if(!((Track) map[i][j]).nextR.isOpen){
+                        if (!((Track) map[i][j]).nextR.isOpen) {
                             light.setFill(Color.RED);
-                        }
-                        else light.setFill(Color.GREEN);
+                        } else light.setFill(Color.GREEN);
                     }
                 }
             }
         }
     }
 
+    public void stationListener() {
+        for (int i = 0; i < WIDTH; i++) {
+            for (int j = 0; j < HEIGHT; j++) {
+                Rectangle rect;
+                if (map[i][j].getClass().getSimpleName().equals("Station")) {
+                    Station t = (Station) map[i][j];
 
+                    rect = t.getDisplayStation();
+                    System.out.println(map[i][j]);
+                    rect.setTranslateX((i * SIZEX) + 50);
+                    rect.setTranslateY((j + 1) * SIZEY);
+                    rect.setFill(Color.BLACK);
+                    rect.setOnMousePressed(event -> {
+                        rect.setFill(Color.RED);
+                        pickedStations.add(t);
+                        if(pickedStations.size() == 2) {
 
-    public void initStation(){
-        ArrayList<Station> temp = new ArrayList<>();
-        for(int i = 0; i < WIDTH; i++){
-            for(int j = 0; j < HEIGHT; j++){
-                    for(Station r : stations) {
-                        Rectangle station = r.getDisplayStation();
-                        if (map[i][j].getClass().getSimpleName().equals("Station")) {
-
-
-                            //System.out.println(station.toString());
-
-
-                            station.setTranslateX((i * SIZEX) + 50);
-                            station.setTranslateY((j + 1) * SIZEY);
-
-                            station.setOnMouseClicked(event -> {
-                                station.setFill(Color.RED);
-                                temp.add(r);
-                                mainT.setStartStation(temp);
-
-                            });
-
-                            pane.getChildren().add(station);
-
+                            mainT.setStartStation(pickedStations);
+                            pickedStations.clear();
                         }
 
-                    }
+                    });
 
+                    guiMap[i][j] = rect;
 
+                }
             }
         }
     }
 
-
     public void handle(long currentNanoTime) {
 
+
         initTracks();
-        lights();
-        //initStations();
         redraw();
 
     }
@@ -159,6 +154,7 @@ public class DisplayGUI extends AnimationTimer {
                 pane.getChildren().remove(guiMap[i][j]);
             }
         }
+
         pane.getChildren().addAll(train);
         for (int i = 0; i < WIDTH; i++) {
             for (int j = 0; j < HEIGHT; j++) {
