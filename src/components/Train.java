@@ -87,7 +87,7 @@ public class Train extends Thread
     }
 
     public void searchAlgorithm(Station end){
-        System.out.println(endDest.returnName() + " " + startDest.returnName());
+        //System.out.println(endDest.returnName() + " " + startDest.returnName());
         boolean endFound = false;
         Track[] neighbors = myTrack.returnNeighbors();
         Station trackStation = myTrack.returnStation();

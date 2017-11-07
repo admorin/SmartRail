@@ -174,8 +174,6 @@ public class DisplayGUI extends AnimationTimer {
         line.setY(500);
 
 
-
-
         path.getElements().add(location);
         path.getElements().add(line);
         Circle c = new Circle(20);

@@ -144,9 +144,10 @@ public class MainThread extends Thread {
             start.next.begin = true;
             start.notify();
             test();
+
         }
         synchronized (end){
-            test();
+            //test();
         }
     }
 

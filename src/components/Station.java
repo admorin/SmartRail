@@ -56,7 +56,7 @@ public class Station extends Thread implements Component {
     }
 
     public void run() {
-        while (!Thread.currentThread().isInterrupted()) {
+        while (this.isAlive()) {
             synchronized (this){
                 try{
                     while(!selected1){
@@ -75,7 +75,6 @@ public class Station extends Thread implements Component {
                 synchronized (next) {
                     next.notify();
                     next.begin = true;
-                    this.selected1 = false;
 
                 }
 
