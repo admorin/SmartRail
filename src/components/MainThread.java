@@ -23,13 +23,14 @@ public class MainThread extends Thread {
     public ArrayList<Station> pickedStations = new ArrayList<>();
     public ArrayList<Track> trackList = new ArrayList<>();
     public boolean beenClicked = false;
-    Object[][] myMap = new Object[7][2];
+    public Object lock = new Object();
+    Thread[][] myMap = new Thread[7][2];
     public MainThread(Pane pane){
         this.pane = pane;
 
     }
 
-    public Object[][] initialize(){
+    public Thread[][] initialize(){
 //        Station station1 = new Station();
 //        Track track1 = new Track();
 //        Track track2 = new Track();
@@ -49,12 +50,6 @@ public class MainThread extends Thread {
         Track B3 = new Track();
         Track B4 = new Track();
         Track B5 = new Track();
-
-
-
-
-
-
 
 
         X = new Station("Station X", T5);
@@ -78,7 +73,7 @@ public class MainThread extends Thread {
 
 
 
-        myMap = new Object[7][2];
+        myMap = new Thread[7][2];
         myMap[0][0] = A;
         myMap[1][0] = T1;
         myMap[2][0] = T2;
@@ -97,6 +92,12 @@ public class MainThread extends Thread {
 //
         stationList.add(X);
         stationList.add(A);
+        for(int i = 0; i < 7; i++){
+            for(int j = 0; j < 2; j++){
+                myMap[i][j].start();
+
+            }
+        }
         //A.finishLine(Y);
         //A.start();
 
@@ -105,17 +106,26 @@ public class MainThread extends Thread {
         return myMap;
     }
 
-    public void setStartStation(LinkedList<Station> stations){
+    public synchronized void setStartStation(LinkedList<Station> stations){
 
+        Station start;
+        Station end;
         if(stations.size() == 2){
-            Station start = stations.getFirst();
+            start = stations.getFirst();
+            System.out.println(start.getState());
             start.isStarting = true;
-            Station end = stations.getLast();
+            end = stations.getLast();
             start.finishLine(end);
-            start.start();
+            start.selected1 = true;
 
-            System.out.println(start.returnName() + " " + end.returnName());
+            start.next.begin = true;
+            System.out.println(start.next.begin);
+
+            //System.out.println(start.returnName() + " " + end.returnName());
         }
+
+    }
+    public void run(){
 
     }
 }

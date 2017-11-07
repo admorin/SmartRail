@@ -24,9 +24,11 @@ public class Train extends Thread
     static private int height = 20;
     public volatile boolean allClear = true;
     public boolean finder;
+    public volatile boolean startTrain = false;
     public String NAME;
     private ArrayList<String> directions = new ArrayList<>();
     static private int trainNumber = 1;
+
 
     public Rectangle train = new Rectangle(width, height);
     private int instruction = 0;
@@ -153,11 +155,11 @@ public class Train extends Thread
 //                    trackStation = neighbors[1].returnStation();
                 }
             }
-            for(String s : directions) System.out.println(s);
+            //for(String s : directions) System.out.println(s);
         }
     }
 
-    public Station getStartStation(){
+    public  Station getStartStation(){
 
         return startDest;
     }
@@ -197,11 +199,8 @@ public class Train extends Thread
 
     }
 
-    public void run(){
-        while(!endDest.hasArrived) {
+    public void run() {
 
-
-        }
     }
 
 }
