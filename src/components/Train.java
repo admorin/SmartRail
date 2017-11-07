@@ -24,9 +24,11 @@ public class Train extends Thread
     static private int height = 20;
     public volatile boolean allClear = true;
     public boolean finder;
+    public volatile boolean startTrain = false;
     public String NAME;
     private ArrayList<String> directions = new ArrayList<>();
     static private int trainNumber = 1;
+
 
     public Rectangle train = new Rectangle(width, height);
     private int instruction = 0;
@@ -51,10 +53,11 @@ public class Train extends Thread
         searchAlgorithm(endDest);
         trainNumber++;
 
+
     }
 
-    public void searchAlgorithm(Station end){
-        System.out.println(endDest.returnName() + " " + startDest.returnName());
+    public  void searchAlgorithm(Station end){
+        //System.out.println(endDest.returnName() + " " + startDest.returnName());
         boolean endFound = false;
         Track[] neighbors = myTrack.returnNeighbors();
         Station trackStation = myTrack.returnStation();
@@ -122,11 +125,11 @@ public class Train extends Thread
 //                    trackStation = neighbors[1].returnStation();
                 }
             }
-            for(String s : directions) System.out.println(s);
+            //for(String s : directions) System.out.println(s);
         }
     }
 
-    public Station getStartStation(){
+    public  Station getStartStation(){
 
         return startDest;
     }
@@ -141,7 +144,7 @@ public class Train extends Thread
         this.directions = directions;
     }
 
-    public String peekDirection(){
+    public  String peekDirection(){
         instruction++;
         if(instruction > directions.size()){
             return directions.get(1);
@@ -154,7 +157,7 @@ public class Train extends Thread
         return train;
     }
 
-    public void changeTrack(Track newTrack){
+    public  void changeTrack(Track newTrack){
         this.myTrack = null;
         this.myTrack = newTrack;
 
@@ -166,11 +169,8 @@ public class Train extends Thread
 
     }
 
-    public void run(){
-        while(!endDest.hasArrived) {
+    public void run() {
 
-
-        }
     }
 
 }
