@@ -73,7 +73,7 @@ public class DisplayGUI extends AnimationTimer {
 
                     }
                     else if(((Track)map[i][j]).hasArrived){
-                        pane.getChildren().remove(train);
+                        //pane.getChildren().remove(train);
                         guiMap[i][j].setFill(Color.BLACK);
 
                     }
