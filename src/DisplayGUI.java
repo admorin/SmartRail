@@ -49,7 +49,7 @@ public class DisplayGUI extends AnimationTimer {
             }
         }
         train.setVisible(false);
-        //pane.getChildren().add(train);
+        pane.getChildren().add(train);
         stationListener();
         initTracks();
     }
@@ -240,7 +240,7 @@ public class DisplayGUI extends AnimationTimer {
                             mainT.setStartStation(pickedStations);
                             pathGuiTest(pickedStations.getFirst(), pickedStations.getLast());
                             pickedStations.clear();
-                            pane.getChildren().add(train);
+                            //pane.getChildren().add(train);
 
                         }
 

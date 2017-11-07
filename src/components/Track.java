@@ -161,12 +161,13 @@ public class Track extends Thread implements Component {
     public void run() {
 
         //while(isOpen) {
-        while (Thread.currentThread().isAlive()) {
+        while (!Thread.currentThread().isInterrupted()) {
 
             synchronized (this) {
                 try {
 
                     while (!begin) {
+                        //findNext();
                         this.wait();
 
                     }
@@ -184,9 +185,10 @@ public class Track extends Thread implements Component {
                     isOpen = false;
                     begin = false;
                     atEnd = true;
-                    //moveTrain();
+                    moveTrain();
                     hasTrain = false;
                     this.hasArrived = true;
+
                 } else if (this.next.isOpen) {
                     System.out.println("entered");
                     this.hasArrived = false;

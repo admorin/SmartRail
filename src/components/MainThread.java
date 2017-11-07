@@ -98,13 +98,22 @@ public class MainThread extends Thread {
 
             }
         }
-        //A.finishLine(Y);
-        //A.start();
+
+
 
 
 
         return myMap;
     }
+    public synchronized void test(){
+        for(int i = 0; i < 7; i++){
+            for(int j = 0; j < 2; j++){
+                System.out.println(myMap[i][j].getState());
+            }
+        }
+    }
+
+
 
     public synchronized void setStartStation(LinkedList<Station> stations){
 
@@ -112,18 +121,35 @@ public class MainThread extends Thread {
         Station end;
         if(stations.size() == 2){
             start = stations.getFirst();
-            System.out.println(start.getState());
-            start.isStarting = true;
+            System.out.println("Station = " + start.getState());
+            System.out.println("Next = " + start.next.getState());
+          //  start.isStarting = true;
             end = stations.getLast();
-            start.finishLine(end);
-            start.selected1 = true;
-            start.next.begin = true;
-            System.out.println(start.next.begin);
+            pickStation(start, end);
+//            start.finishLine(end);
+//            start.selected1 = true;
+//            start.next.begin = true;
+//            System.out.println(start.next.begin);
+//            test();
 
             //System.out.println(start.returnName() + " " + end.returnName());
         }
 
     }
+    public synchronized void pickStation(Station start, Station end){
+        start.isStarting = true;
+        start.finishLine(end);
+        synchronized (start){
+            start.selected1 = true;
+            start.next.begin = true;
+            start.notify();
+            test();
+        }
+        synchronized (end){
+            test();
+        }
+    }
+
     public void run(){
 
     }

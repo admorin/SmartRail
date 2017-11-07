@@ -56,15 +56,25 @@ public class Station extends Thread implements Component {
     }
 
     public void run() {
-        while (Thread.currentThread().isAlive()) {
+        while (!Thread.currentThread().isInterrupted()) {
+            synchronized (this){
+                try{
+                    while(!selected1){
+                        this.wait();
+                    }
+                }
+                catch(Exception e){
+
+                }
+            }
 
             if(this.selected1){
                 Train train = new Train(this, endStation, 1, true);
                 next.getTrain(train);
                 train.start();
-                next.begin = true;
                 synchronized (next) {
                     next.notify();
+                    next.begin = true;
                     this.selected1 = false;
 
                 }

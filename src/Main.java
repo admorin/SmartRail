@@ -36,7 +36,6 @@ public class Main extends Application {
 
         root.getChildren().add(pane);
 
-
         primaryStage.setTitle("Train Sim 2018");
         primaryStage.setScene(new Scene(root, 1280, 720));
         primaryStage.setResizable(false);
