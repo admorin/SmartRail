@@ -155,7 +155,7 @@ public class Train extends Thread
 //                    trackStation = neighbors[1].returnStation();
                 }
             }
-            //for(String s : directions) System.out.println(s);
+//            for(String s : directions) System.out.println(s);
         }
     }
 
@@ -180,6 +180,10 @@ public class Train extends Thread
             return directions.get(1);
         }
         return directions.get(instruction - 1);
+    }
+
+    public ArrayList<String> getDirections() {
+        return directions;
     }
 
     public Rectangle returnTrain(){

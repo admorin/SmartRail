@@ -41,7 +41,6 @@ public class Main extends Application {
         primaryStage.setResizable(false);
         DisplayGUI GUI = new DisplayGUI(pane,mainT );
         GUI.start();
-
         primaryStage.show();
 
 

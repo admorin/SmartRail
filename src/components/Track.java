@@ -68,6 +68,7 @@ public class Track extends Thread implements Component {
         this.nextL = nextL;
         this.nextR = nextR;
         //this.isLight = true;
+        this.NAME = name;
         setName(name);
     }
 
@@ -75,6 +76,7 @@ public class Track extends Thread implements Component {
         this.nextU = nextU;
         this.nextL = nextL;
         this.nextR = nextR;
+        this.NAME = name;
         setName(name);
     }
 
@@ -109,7 +111,7 @@ public class Track extends Thread implements Component {
         try {
             train.changeTrack(this);
             this.begin = false;
-            isOpen = false;
+            isOpen = true;
             System.out.println("Train is on track " + this.getName());
             Thread.sleep(1000);
             System.out.println("Attempting to move Train from Track " + getName() +
@@ -126,6 +128,11 @@ public class Track extends Thread implements Component {
     }
 
     public synchronized void findNext() {
+
+        for(int i = 0; i < train.getDirections().size(); i++){
+            System.out.println(train.getDirections().get(i));
+        }
+        System.out.println("------------");
 
 
         String direction = train.peekDirection();
@@ -161,13 +168,12 @@ public class Track extends Thread implements Component {
     public void run() {
 
         //while(isOpen) {
-        while (!Thread.currentThread().isInterrupted()) {
+        while (Thread.currentThread().isAlive()) {
 
             synchronized (this) {
                 try {
 
                     while (!begin) {
-                        //findNext();
                         this.wait();
 
                     }
@@ -177,7 +183,7 @@ public class Track extends Thread implements Component {
 
                 findNext();
                 //System.out.println(next);
-                if (station != null && !station.isStarting) {
+                if (station != null && !station.isStarting && station == train.endDest) {
 //                System.out.println("Arrived at " + station.returnName());
 
                     System.out.println("Train has ended");
@@ -188,11 +194,9 @@ public class Track extends Thread implements Component {
                     moveTrain();
                     hasTrain = false;
                     this.hasArrived = true;
-
                 } else if (this.next.isOpen) {
                     System.out.println("entered");
                     this.hasArrived = false;
-
                     hasTrain = true;
                     moveTrain();
                     this.next.begin = true;
