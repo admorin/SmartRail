@@ -117,7 +117,6 @@ public class MainThread extends Thread {
             end = stations.getLast();
             start.finishLine(end);
             start.selected1 = true;
-
             start.next.begin = true;
             System.out.println(start.next.begin);
 
