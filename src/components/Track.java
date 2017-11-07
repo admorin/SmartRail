@@ -163,7 +163,7 @@ public class Track extends Thread implements Component
         findNext();
         while(isOpen) {
             try {
-            if(station != null && !station.isStarting)
+            if(station != null && !station.isStarting && station == train.endDest)
             {
 //                System.out.println("Arrived at " + station.returnName());
 
@@ -181,7 +181,7 @@ public class Track extends Thread implements Component
                 moveTrain();
                 next.start();
                 next.hasTrain = true;
-                Thread.currentThread().interrupt();
+                this.isOpen = true;
             }
 
             else{

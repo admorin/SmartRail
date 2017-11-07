@@ -53,24 +53,49 @@ public class Train extends Thread
 
     }
 
+    public void turnAround(int directionStart, Track[] neighbors){
+        boolean turned = false;
+        boolean foundStation = false;
+        int moves = 0;
+        while(!turned){
+            if(directionStart == 2){
+                if(neighbors[3] != null){
+                    directions.add("Left");
+                    neighbors = neighbors[3].returnNeighbors();
+                    moves++;
+                } else {
+                    for(int i = 0; i < moves; i++){
+                        directions.add("Right");
+                    }
+                    turned = true;
+                }
+            } else {
+                if(neighbors[1] != null){
+                    directions.add("Right");
+                    neighbors = neighbors[1].returnNeighbors();
+                    moves++;
+                } else {
+                    for(int i = 0; i < moves; i++){
+                        directions.add("Left");
+                    }
+                    turned = true;
+                }
+            }
+        }
+    }
+
     public void searchAlgorithm(Station end){
         System.out.println(endDest.returnName() + " " + startDest.returnName());
         boolean endFound = false;
         Track[] neighbors = myTrack.returnNeighbors();
         Station trackStation = myTrack.returnStation();
         myTrack.setReserved(trainNumber);
+        int direction = 0; //1 = Right, 2 = Left.
         //Returns Up, Right, Down, Left, Station.
         while(!endFound){
-            for(int i = 0; i < directions.size(); i++){
-//                System.out.println(directions.get(i));
-//                System.out.println(neighbors[0] + " " + neighbors[1] + " " + neighbors [2] + " " + neighbors [3]);
-
-//                System.out.println("----------");
-            }
             if(trackStation != null && trackStation.equals(end)){
                 endFound = true;
             } else if(neighbors[0] != null && neighbors[0].getReserved() != trainNumber){
-//                System.out.println("Added Up");
                 directions.add("Up");
                 neighbors[0].setReserved(trainNumber);
                 if(neighbors[0].returnStation() != null) {
@@ -78,16 +103,18 @@ public class Train extends Thread
                 }
                 neighbors = neighbors[0].returnNeighbors();
             } else if(neighbors[1] != null && neighbors[1].getReserved() != trainNumber){
-//                System.out.println("Added Right");
-//                System.out.println(trainNumber);
-                directions.add("Right");
-                neighbors[1].setReserved(trainNumber);
-                if(neighbors[1].hasStation()) {
-                    trackStation = neighbors[1].returnStation();
+                if(direction == 0) direction++;
+                if(direction == 2){
+                    turnAround(2, neighbors);
+                } else {
+                    directions.add("Right");
+                    neighbors[1].setReserved(trainNumber);
+                    if (neighbors[1].hasStation()) {
+                        trackStation = neighbors[1].returnStation();
+                    }
                 }
                 neighbors = neighbors[1].returnNeighbors();
             } else if(neighbors[2] != null && neighbors[2].getReserved() != trainNumber){
-//                System.out.println("Added Down");
                 directions.add("Down");
                 neighbors[2].setReserved(trainNumber);
                 if(neighbors[2].returnStation() != null) {
@@ -95,13 +122,17 @@ public class Train extends Thread
                 }
                 neighbors = neighbors[2].returnNeighbors();
             } else if(neighbors[3] != null && neighbors[3].getReserved() != trainNumber){
-//                System.out.println("Added Left");
-                directions.add("Left");
-                neighbors[3].setReserved(trainNumber);
-                if(neighbors[3].returnStation() != null) {
-                    trackStation = neighbors[3].returnStation();
+                if(direction == 0) direction += 2;
+                if(direction == 1){
+                    turnAround(1, neighbors);
                 }
-                neighbors = neighbors[3].returnNeighbors();
+                    directions.add("Left");
+                    neighbors[3].setReserved(trainNumber);
+                    if (neighbors[3].returnStation() != null) {
+                        trackStation = neighbors[3].returnStation();
+                    }
+                    neighbors = neighbors[3].returnNeighbors();
+
             } else {
 //                System.out.println("Popping");
 //                System.out.println(neighbors[3]);
