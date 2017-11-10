@@ -59,6 +59,10 @@ public class Train extends Thread
 
     }
 
+    public void clearDirections(){
+        directions.clear();
+    }
+
     public void turnAround(int directionStart, Track[] neighbors){
         boolean turned = false;
         boolean foundStation = false;
@@ -196,8 +200,8 @@ public class Train extends Thread
     public String peekDirection(){
         instruction++;
         if(instruction > directions.size()){
-            //currentDirection = directions.get(1);
-            currentDirection = "End";
+            currentDirection = directions.get(1);
+//            currentDirection = "End";
         } else {
             currentDirection = directions.get(instruction - 1);
         }

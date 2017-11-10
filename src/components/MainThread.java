@@ -64,7 +64,7 @@ public class MainThread extends Thread {
         T4.setTrack(T5, T3, "T4");
         //T3.setSwitchTrackD(T4, T2, B4, "Switch1");
         T3.setTrack(T4, T2, "T3");
-        T2.setSwitchTrackD(T3, T2, B3, 0, "Switch2");
+        T2.setSwitchTrackD(T3, T1, B3, 0, "Switch2");
         //T2.setTrack(T3, T1, "T2");
         T1.setTrackLStation(T2, A, "T1");
 
