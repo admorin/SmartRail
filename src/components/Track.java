@@ -199,11 +199,11 @@ public class Track extends Thread implements Component {
                 + " from " + train.startDest);
 
                     System.out.println("Train has ended");
-                   // moveTrain(false);
                     station.getTrain(train);
                     isOpen = false;
                     begin = false;
-                    moveTrain(false);
+//                    moveTrain(false);
+                    //We commented this out to avoid the train from continuing on after arriving.
                     atEnd = true;
                     hasTrain = false;
 
