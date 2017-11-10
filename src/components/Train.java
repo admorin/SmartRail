@@ -156,6 +156,7 @@ public class Train extends Thread
                 }
             }
 //            for(String s : directions) System.out.println(s);
+            direction = 0;
         }
     }
 
