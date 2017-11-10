@@ -28,6 +28,7 @@ public class Train extends Thread
     public String NAME;
     private ArrayList<String> directions = new ArrayList<>();
     static private int trainNumber = 1;
+    private String currentDirection;
 
 
     public Rectangle train = new Rectangle(width, height);
@@ -178,9 +179,15 @@ public class Train extends Thread
     public String peekDirection(){
         instruction++;
         if(instruction > directions.size()){
-            return directions.get(1);
+            currentDirection = directions.get(1);
+        } else {
+            currentDirection = directions.get(instruction - 1);
         }
-        return directions.get(instruction - 1);
+        return currentDirection;
+    }
+
+    public String returnCurrentDirection(){
+        return currentDirection;
     }
 
     public ArrayList<String> getDirections() {
