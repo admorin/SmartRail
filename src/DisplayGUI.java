@@ -105,9 +105,6 @@ public class DisplayGUI extends AnimationTimer {
                             }
                         }
                     }
-
-
-
                 }
             }
         }
