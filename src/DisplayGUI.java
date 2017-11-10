@@ -82,7 +82,7 @@ public class DisplayGUI extends AnimationTimer {
                 if (map[i][j].getClass().getSimpleName().equals("Track")) {
                     if (((Track) map[i][j]).hasTrain) {
                         Train train = ((Track) map[i][j]).train;
-                        dir = train.peekDirection();
+                        dir = train.returnCurrentDirection();
                         if (newX == -1 && newY == -1) {
                             newX = (i * SIZEX + (SIZEX / 2) + 50);
                         } else {
