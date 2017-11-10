@@ -19,6 +19,7 @@ public class Track extends Thread implements Component {
     public Station station;
     public Object lock = new Object();
     public Station startStation;
+    public int direction;
     //public boolean hasArrived = false;
     public boolean isOpen = true;
     public int isReserved = 0;
@@ -63,7 +64,8 @@ public class Track extends Thread implements Component {
         this.station = nextL;
     }
 
-    public void setSwitchTrackD(Track nextR, Track nextL, Track nextD, String name) {
+    public void setSwitchTrackD(Track nextR, Track nextL, Track nextD, int direction, String name) {
+        this.direction = direction;
         this.nextD = nextD;
         this.nextL = nextL;
         this.nextR = nextR;
@@ -72,7 +74,8 @@ public class Track extends Thread implements Component {
         setName(name);
     }
 
-    public void setSwitchTrackU(Track nextR, Track nextL, Track nextU, String name) {
+    public void setSwitchTrackU(Track nextR, Track nextL, Track nextU, int direction, String name) {
+        this.direction = direction;
         this.nextU = nextU;
         this.nextL = nextL;
         this.nextR = nextR;
@@ -84,6 +87,10 @@ public class Track extends Thread implements Component {
     public Track[] returnNeighbors() {
         Track[] neighbors = new Track[]{nextU, nextR, nextD, nextL};
         return neighbors;
+    }
+
+    public int returnDirection(){
+        return direction;
     }
 
     public synchronized Station returnStation() {
