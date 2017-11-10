@@ -8,7 +8,7 @@ public class Track extends Thread implements Component {
     static private int width = 75;
     static private int height = 2;
     public boolean hasTrain;
-    public boolean isSwitch;
+    public boolean isSwitch = false;
     public Track next;
     public Track nextR;
     public Track nextD;
@@ -19,7 +19,7 @@ public class Track extends Thread implements Component {
     public Station station;
     public Object lock = new Object();
     public Station startStation;
-    public boolean hasArrived = false;
+    //public boolean hasArrived = false;
     public boolean isOpen = true;
     public int isReserved = 0;
     private boolean atEnd = false;
@@ -67,7 +67,7 @@ public class Track extends Thread implements Component {
         this.nextD = nextD;
         this.nextL = nextL;
         this.nextR = nextR;
-        //this.isLight = true;
+        this.isSwitch = true;
         this.NAME = name;
         setName(name);
     }
@@ -76,6 +76,7 @@ public class Track extends Thread implements Component {
         this.nextU = nextU;
         this.nextL = nextL;
         this.nextR = nextR;
+        this.isSwitch = true;
         this.NAME = name;
         setName(name);
     }
@@ -105,17 +106,20 @@ public class Track extends Thread implements Component {
         return isReserved;
     }
 
-    public synchronized void moveTrain() {
+    public synchronized void moveTrain(boolean flag) {
 
 
         try {
+
             train.changeTrack(this);
             this.begin = false;
             isOpen = true;
-            System.out.println("Train is on track " + this.getName());
+
             Thread.sleep(1000);
             System.out.println("Attempting to move Train from Track " + getName() +
                     " to Track " + next.getName());
+            System.out.println("Train is on track " + this.getName());
+
             next.getTrain(train);
             this.hasTrain = false;
 
@@ -129,7 +133,7 @@ public class Track extends Thread implements Component {
 
     public synchronized void findNext() {
 
-        for(int i = 0; i < train.getDirections().size(); i++){
+        for (int i = 0; i < train.getDirections().size(); i++) {
             System.out.println(train.getDirections().get(i));
         }
         System.out.println("------------");
@@ -147,12 +151,15 @@ public class Track extends Thread implements Component {
             } else if (direction.equals("Up")) {
                 next = nextU;
                 //System.out.println("Switching Tracks");
-            } else {
+            } else if (direction.equals("Left")) {
                 next = nextL;
             }
-        }
+            begin = false;
 
+        }
     }
+
+
 
     public void getTrain(Train train) {
         this.train = train;
@@ -166,9 +173,7 @@ public class Track extends Thread implements Component {
 
 
     public void run() {
-
-        //while(isOpen) {
-        while (Thread.currentThread().isAlive()) {
+        while (isAlive()) {
 
             synchronized (this) {
                 try {
@@ -177,79 +182,43 @@ public class Track extends Thread implements Component {
                         this.wait();
 
                     }
-                }
-                catch(InterruptedException e){
+                } catch (InterruptedException e) {
                 }
 
                 findNext();
                 //System.out.println(next);
-                if (station != null && !station.isStarting && station == train.endDest) {
-//                System.out.println("Arrived at " + station.returnName());
+                if (this.station != null && !this.station.isStarting && this.station.equals(train.endDest)) {
+                System.out.println("Arrived at " + station.returnName()
+                + " from " + train.startDest);
 
                     System.out.println("Train has ended");
                     station.getTrain(train);
                     isOpen = false;
                     begin = false;
-                    atEnd = true;
-                    moveTrain();
-                    hasTrain = false;
-                    this.hasArrived = true;
-                } else if (this.next.isOpen) {
-                    System.out.println("entered");
-                    this.hasArrived = false;
-                    hasTrain = true;
-                    moveTrain();
-                    this.next.begin = true;
-                    next.hasTrain = true;
-                    synchronized (next){
 
-                        //next.findNext();
-                        next.notify();
+                    atEnd = true;
+                    moveTrain(true);
+                    hasTrain = false;
+
+                }
+
+                else if (this.next != null && this.next.isOpen) {
+                    System.out.println("Start dest = " + train.startDest);
+                    System.out.println("End dest = " + train.endDest);
+                    //this.station.hasArrived = false;
+                    hasTrain = true;
+                    moveTrain(false);
+
+                    synchronized (next) {
+                        this.next.begin = true;
+                        next.hasTrain = true;
+                        this.next.notify();
                     }
                     // next.hasTrain = true;
                 }
             }
-
-
-//                    if (begin) {
-//                        if (station != null && !station.isStarting) {
-////                System.out.println("Arrived at " + station.returnName());
-//
-//                            station.getTrain(train);
-//                            isOpen = false;
-//                            begin = false;
-//                            atEnd = true;
-//                            moveTrain();
-//                            hasTrain = false;
-//                            this.hasArrived = true;
-//                        } else if (this.next.isOpen) {
-//                            System.out.println("entered");
-//                            this.hasArrived = false;
-//                            hasTrain = true;
-//                            moveTrain();
-//                            this.next.begin = true;
-//                            this.next.notify();
-//                            next.hasTrain = true;
-                            //Thread.currentThread().wait();
-                            //Thread.currentThread().interrupt();
-                        }
-//                    } else {
-//                        System.out.println("Track " + getName() + " is occupied...");
-//                        System.out.println("Waiting...");
-//                        Thread.sleep(2000);
-//                    }
-
-//                    } else {
-//                        wait();
-//                    }
-//                }
-//
-//                catch(Exception e){
-//
-//                }
-            }
-
-
+        }
+    }
 
 }
 
