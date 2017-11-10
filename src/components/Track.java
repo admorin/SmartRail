@@ -115,19 +115,19 @@ public class Track extends Thread implements Component {
 
     public synchronized void moveTrain(boolean flag) {
 
-
         try {
 
             train.changeTrack(this);
             this.begin = false;
             isOpen = true;
 
-            Thread.sleep(1000);
+            Thread.sleep(1300);
+
             System.out.println("Attempting to move Train from Track " + getName() +
                     " to Track " + next.getName());
             System.out.println("Train is on track " + this.getName());
 
-            next.getTrain(train);
+            if(flag) next.getTrain(train);
             this.hasTrain = false;
 
 
@@ -199,12 +199,12 @@ public class Track extends Thread implements Component {
                 + " from " + train.startDest);
 
                     System.out.println("Train has ended");
+                   // moveTrain(false);
                     station.getTrain(train);
                     isOpen = false;
                     begin = false;
-
+                    moveTrain(false);
                     atEnd = true;
-                    moveTrain(true);
                     hasTrain = false;
 
                 }
@@ -214,7 +214,7 @@ public class Track extends Thread implements Component {
                     System.out.println("End dest = " + train.endDest);
                     //this.station.hasArrived = false;
                     hasTrain = true;
-                    moveTrain(false);
+                    moveTrain(true);
 
                     synchronized (next) {
                         this.next.begin = true;

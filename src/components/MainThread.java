@@ -62,13 +62,17 @@ public class MainThread extends Thread {
         //RIGHT LEFT UP/DOWN (0 = Right, 1 = Left) NAME
         T5.setTrackRStation(X, T4, "T5");
         T4.setTrack(T5, T3, "T4");
-        T3.setSwitchTrackD(T4, T2, B4, 0, "Switch1");
-        T2.setTrack(T3, T1, "T2");
+        //T3.setSwitchTrackD(T4, T2, B4, "Switch1");
+        T3.setTrack(T4, T2, "T3");
+        T2.setSwitchTrackD(T3, T2, B3, 0, "Switch2");
+        //T2.setTrack(T3, T1, "T2");
         T1.setTrackLStation(T2, A, "T1");
 
         B5.setTrackRStation(Y, B4, "B5");
-        B4.setSwitchTrackU(B5, B3, T3, 1,"B4");
-        B3.setTrack(B4, B2, "B3");
+        //B4.setSwitchTrackU(B5, B3, T3, "B4");
+        B3.setSwitchTrackU(B4, B2, T2, 1,"Switch2");
+        //B3.setTrack(B4, B2, "B3");
+        B4.setTrack(B5, B3, "B4");
         B2.setTrack(B3, B1, "B2");
         B1.setTrackLStation(B2, B, "B1");
 
