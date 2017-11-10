@@ -24,7 +24,7 @@ public class Train extends Thread
     static private int height = 20;
     public volatile boolean allClear = true;
     public boolean finder;
-    public volatile boolean startTrain = false;
+    public volatile boolean isRunning = false;
     public String NAME;
     private ArrayList<String> directions = new ArrayList<>();
     static private int trainNumber = 1;
@@ -87,7 +87,7 @@ public class Train extends Thread
     }
 
     public void searchAlgorithm(Station end){
-        System.out.println(endDest.returnName() + " " + startDest.returnName());
+        //System.out.println(endDest.returnName() + " " + startDest.returnName());
         boolean endFound = false;
         Track[] neighbors = myTrack.returnNeighbors();
         Station trackStation = myTrack.returnStation();
@@ -195,6 +195,7 @@ public class Train extends Thread
     public void changeTrack(Track newTrack){
         this.myTrack = null;
         this.myTrack = newTrack;
+        System.out.println("My Track = " + myTrack);
 
 
     }
@@ -205,6 +206,9 @@ public class Train extends Thread
     }
 
     public void run() {
+        while(isRunning){
+
+        }
 
     }
 

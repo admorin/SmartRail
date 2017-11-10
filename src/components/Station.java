@@ -8,7 +8,7 @@ public class Station extends Thread implements Component {
     private boolean isStart;
     private String name = "Blank";
     private boolean isLeft;
-    private Train train;
+    public Train train;
     public boolean hasArrived = false;
     public Track next;
     private Station endStation;
@@ -22,6 +22,11 @@ public class Station extends Thread implements Component {
     public Rectangle displayStation = new Rectangle(30, 60);
 
     public Station() {
+
+    }
+
+    public void trainInit(Train train){
+        this.train = train;
 
     }
 
@@ -47,19 +52,12 @@ public class Station extends Thread implements Component {
         return (endStation == null);
     }
 
-    public void begin() {
-        Train train;
-        train = new Train(this, endStation, 1, true);
-        next.getTrain(train);
-        next.start();
-        train.start();
-    }
-
     public void run() {
-        while (!Thread.currentThread().isInterrupted()) {
+        while (isAlive()) {
             synchronized (this){
                 try{
                     while(!selected1){
+                        //hasArrived = false;
                         this.wait();
                     }
                 }
@@ -69,10 +67,9 @@ public class Station extends Thread implements Component {
             }
 
             if(this.selected1){
-                Train train = new Train(this, endStation, 1, true);
-                next.getTrain(train);
-                train.start();
+                //Train train = new Train(this, endStation, 1, true);
                 synchronized (next) {
+                    next.getTrain(train);
                     next.notify();
                     next.begin = true;
                     this.selected1 = false;
@@ -87,6 +84,7 @@ public class Station extends Thread implements Component {
 
     public Rectangle getDisplayStation() {
         this.station = new Rectangle(100, 60);
+
         station.setFill(Color.AQUA);
 
 
@@ -107,6 +105,6 @@ public class Station extends Thread implements Component {
         train.myTrack.hasTrain = false;
         this.hasArrived = true;
 
-        System.out.println(this.isAlive());
+
     }
 }

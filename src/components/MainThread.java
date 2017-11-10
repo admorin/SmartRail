@@ -1,6 +1,7 @@
 package components;
 
 import javafx.scene.layout.Pane;
+import javafx.scene.shape.Rectangle;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -52,11 +53,11 @@ public class MainThread extends Thread {
         Track B5 = new Track();
 
 
-        X = new Station("Station X", T5);
-        A = new Station("Station A", T1);
+        Station X = new Station("Station X", T5);
+        Station A = new Station("Station A", T1);
 
-        Y = new Station("Station Y", B5);
-        B = new Station("Station B", B1);
+        Station Y = new Station("Station Y", B5);
+        Station B = new Station("Station B", B1);
 
         T5.setTrackRStation(X, T4, "T5");
         T4.setTrack(T5, T3, "T4");
@@ -139,14 +140,18 @@ public class MainThread extends Thread {
     public synchronized void pickStation(Station start, Station end){
         start.isStarting = true;
         start.finishLine(end);
+        Train train = new Train(start, end, 1, true);
         synchronized (start){
+            start.train = train;
+            start.train.start();
             start.selected1 = true;
             start.next.begin = true;
             start.notify();
             test();
+
         }
         synchronized (end){
-            test();
+            //test();
         }
     }
 
