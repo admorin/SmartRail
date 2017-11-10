@@ -5,6 +5,8 @@ import javafx.application.Platform;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import util.Logger;
 
@@ -29,6 +31,7 @@ public class Train extends Thread
     private ArrayList<String> directions = new ArrayList<>();
     static private int trainNumber = 1;
     private String currentDirection;
+    public Circle displayTrain;
 
 
     public Rectangle train = new Rectangle(width, height);
@@ -179,7 +182,8 @@ public class Train extends Thread
     public String peekDirection(){
         instruction++;
         if(instruction > directions.size()){
-            currentDirection = directions.get(1);
+            //currentDirection = directions.get(1);
+            currentDirection = "End";
         } else {
             currentDirection = directions.get(instruction - 1);
         }
@@ -194,9 +198,10 @@ public class Train extends Thread
         return directions;
     }
 
-    public Rectangle returnTrain(){
-
-        return train;
+    public Circle returnTrain(){
+        this.displayTrain = new Circle(10);
+        this.displayTrain.setFill(Color.RED);
+        return displayTrain;
     }
 
     public void changeTrack(Track newTrack){
