@@ -145,18 +145,21 @@ public class MainThread extends Thread {
     public synchronized void pickStation(Station start, Station end){
         start.isStarting = true;
         start.finishLine(end);
+
         Train train = new Train(start, end, 1, true);
         synchronized (start){
             start.train = train;
+            start.train.isRunning = true;
             start.train.start();
             start.selected1 = true;
             start.next.begin = true;
             start.notify();
-            test();
+            //test();
 
         }
         synchronized (end){
             //test();
+            if(start.hasArrived) train.interrupt();
         }
     }
 

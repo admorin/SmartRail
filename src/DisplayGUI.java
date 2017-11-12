@@ -11,6 +11,7 @@ import javafx.util.Duration;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.SimpleTimeZone;
 
 /**
  * Created by alexschmidt-gonzales on 10/31/17.
@@ -62,46 +63,11 @@ public class DisplayGUI extends AnimationTimer {
 
     }
 
-    public void animationTrack(){
+    public void animationTrack() {
 
     }
 
-    public boolean trainListener(){
-        boolean flag = false;
-        for (int i = 0; i < WIDTH; i++) {
-            for (int j = 0; j < HEIGHT; j++) {
-                if (map[i][j].getClass().getSimpleName().equals("Track")) {
-                    if (((Track) map[i][j]).hasTrain) {
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
-    }
 
-    public void trackListenerBeta(){
-        for (int i = 0; i < WIDTH; i++) {
-            for (int j = 0; j < HEIGHT; j++) {
-                if (map[i][j].getClass().getSimpleName().equals("Track")) {
-                    if (((Track) map[i][j]).hasTrain) {
-
-                        testTrain.setTranslateX(i * SIZEX);
-                        testTrain.setCenterX(i*SIZEX);
-                        testTrain.setTranslateY((j + 1) * SIZEY);
-                        timeline = new Timeline();
-                        KeyValue keyValue = new KeyValue(testTrain.centerXProperty(),  SIZEX);
-                        KeyFrame keyFrame = new KeyFrame(Duration.seconds(1), keyValue);
-                        timeline.getKeyFrames().add(keyFrame);
-                        timeline.play();
-
-
-                    }
-                }
-            }
-        }
-
-    }
 
     public synchronized void trackListener(){
         Circle displayTrain = new Circle(10);
@@ -109,60 +75,67 @@ public class DisplayGUI extends AnimationTimer {
         for (int i = 0; i < WIDTH; i++) {
             for (int j = 0; j < HEIGHT; j++) {
                 if (map[i][j].getClass().getSimpleName().equals("Track")) {
-
                     if (((Track) map[i][j]).hasTrain) {
                         Train train = ((Track) map[i][j]).train;
                         displayTrain = train.returnTrain();
                         String dir = train.returnCurrentDirection();
-                        if (newX == -1 && newY == -1) {
-                            newX = ((i+1) * SIZEX);
+                        if(train.isInterrupted()){
+                            newX = -1;
+                            newY = -1;
+                        }
+                        else if (train.newX == -1 && train.newY == -1) {
+                            train.newX = (i * SIZEX+150);
+                            train.newY = ((j+1) * SIZEY);
+                            pane.getChildren().add(train.trainDisplay);
 
 
                         }
                         else {
                             if (dir.equals("Down")) {
-                                newX = newX + 2;
-                                newY = newY + 2;
-                                testTrain.setTranslateX(newX);
-                                testTrain.setTranslateY(newY);
-//                                displayTrain.setTranslateX(newX);
-//                                displayTrain.setTranslateY(newY);
-                            } else if (dir.equals("Right")) {
+                                //newX = newX + 2;
+                                // = newY + 2;
+                                train.newX = train.newX + 2;
+                                train.newY = train.newY + 2;
+                                train.moveTrain();
 
-                                newX = newX + 2;
-                                newY = ((j + 1) * SIZEY);
-                                displayTrain.setTranslateX(newX);
-                                displayTrain.setTranslateY(newY);
-
-                            } else if (dir.equals("Left")) {
-                                newX = newX - 2;
-                                newY = ((j+1) * SIZEY);
-                                displayTrain.setTranslateX(newX);
-                                displayTrain.setTranslateY(newY);
-
-                            } else if (dir.equals("Up")) {
-                                newX = newX - 2;
-                                newY = newY - 2;
-                                displayTrain.setTranslateX(newX);
-                                displayTrain.setTranslateY(newY);
                             }
-                            else if(dir.equals("End")){
 
-                                flag = true;
+                            else if (dir.equals("Right")) {
+                                train.newX = train.newX + 2;
+                                train.newY = ((j + 1) * SIZEY);
+                                train.moveTrain();
+
+
+                            }
+
+                            else if (dir.equals("Left")) {
+                                train.newX = train.newX - 2;
+                                train.newY = ((j+1) * SIZEY);
+                                train.moveTrain();
+
+                            }
+
+                            else if (dir.equals("Up")) {
+                                train.newX = train.newX - 2;
+                                train.newY = train.newY - 2;
+                                train.moveTrain();
+
+                            }
+
+                            else if(dir.equals("End")){
+                                newX = -1;
+                                newY = -1;
                                 break;
                             }
-                            testTrain.setTranslateX(newX);
-                            testTrain.setTranslateY(newY);
                         }
                     }
                 }
             }
         }
-        if(flag){
-            newX = -1;
-            newY = -1;
-            pane.getChildren().remove(testTrain);
-        }
+
+
+            //pane.getChildren().remove(testTrain);
+
 
     }
 
@@ -172,7 +145,6 @@ public class DisplayGUI extends AnimationTimer {
 
         for (int i = 0; i < WIDTH; i++) {
             for (int j = 0; j < HEIGHT; j++) {
-
                 if (map[i][j].getClass().getSimpleName().equals("Track")) {
                     if (((Track) map[i][j]).isSwitch) {
                         Line line = new Line();
@@ -184,8 +156,6 @@ public class DisplayGUI extends AnimationTimer {
                         switchLine.setStartY((j+1) * SIZEY);
                         switchLine.setEndX((i*SIZEX) + SIZEX);
                         switchLine.setEndY((j+1) * SIZEY);
-
-
 
                         line.setStartX((i*SIZEX+150));
                         line.setStartY((j+1) * SIZEY);
@@ -264,10 +234,8 @@ public class DisplayGUI extends AnimationTimer {
         for (int i = 0; i < WIDTH; i++) {
             for (int j = 0; j < HEIGHT; j++) {
                 if (map[i][j].getClass().getSimpleName().equals("Station")) {
-                    if(((Station)map[i][j]).hasArrived){
-                        ((Station)map[i][j]).hasArrived = true;
 
-                    }
+
                 }
             }
         }
@@ -292,19 +260,20 @@ public class DisplayGUI extends AnimationTimer {
                     text.setTranslateY(rect.getTranslateY());
                     text.setFont(Font.font(20));
 
-
-                    train.setVisible(true);
-
                     pane.getChildren().add(text);
 
                     rect.setOnMousePressed(event -> {
                         rect.setFill(Color.RED);
                         pickedStations.add(t);
 
+
                         if(pickedStations.size() == 2) {
                             mainT.setStartStation(pickedStations);
-                            pickedStations.getFirst();
 
+                            //pickedStations.getFirst();
+
+                            //newX = pickedStations.getFirst().getDisplayStation().getTranslateX();
+                            System.out.println(newX);
                             //pathGuiTest(pickedStations.getFirst(), pickedStations.getLast());
                             pickedStations.clear();
 
@@ -330,6 +299,7 @@ public class DisplayGUI extends AnimationTimer {
 
     public void handle(long currentNanoTime) {
         trackListener();
+        stationListener();
        //trackListenerBeta();
 
 

@@ -58,7 +58,7 @@ public class Station extends Thread implements Component {
                 try{
                     while(!selected1){
                         //hasArrived = false;
-                        this.wait();
+                        wait();
                     }
                 }
                 catch(Exception e){
@@ -67,8 +67,9 @@ public class Station extends Thread implements Component {
             }
 
             if(this.selected1){
-                //Train train = new Train(this, endStation, 1, true);
+                //train = new Train(this, endStation, 1, true);
                 synchronized (next) {
+                    //train.start();
                     next.getTrain(train);
                     next.notify();
                     next.begin = true;
@@ -104,7 +105,8 @@ public class Station extends Thread implements Component {
         System.out.println(name + " got train.");
         train.myTrack.hasTrain = false;
         this.hasArrived = true;
-
-
+        train.isRunning = false;
+        train.newX = -1;
+        train.newY = -1;
     }
 }

@@ -30,6 +30,7 @@ public class Track extends Thread implements Component {
     public String NAME;
     int index = 1;
     TrainPrinter printer;
+
     //public Circle stopLight = new Circle(20);
 
 
@@ -199,13 +200,14 @@ public class Track extends Thread implements Component {
                 + " from " + train.startDest);
 
                     System.out.println("Train has ended");
+                   // moveTrain(false);
                     station.getTrain(train);
-                    isOpen = false;
+                    isOpen = true;
                     begin = false;
-//                    moveTrain(false);
-                    //We commented this out to avoid the train from continuing on after arriving.
+                    //moveTrain(false);
                     atEnd = true;
                     hasTrain = false;
+                    train.clearDirections();
 
                 }
 

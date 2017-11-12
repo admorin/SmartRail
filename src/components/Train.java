@@ -32,6 +32,9 @@ public class Train extends Thread
     static private int trainNumber = 1;
     private String currentDirection;
     public Circle displayTrain;
+    public double newX = -1;
+    public double newY = -1;
+    public Circle trainDisplay = new Circle(10);
 
 
     public Rectangle train = new Rectangle(width, height);
@@ -58,7 +61,6 @@ public class Train extends Thread
         trainNumber++;
 
     }
-
     public void clearDirections(){
         directions.clear();
     }
@@ -178,6 +180,7 @@ public class Train extends Thread
 //                    trackStation = neighbors[1].returnStation();
                 }
             }
+
 //            for(String s : directions) System.out.println(s);
         }
     }
@@ -200,9 +203,10 @@ public class Train extends Thread
     public String peekDirection(){
         instruction++;
         if(instruction > directions.size()){
-            currentDirection = directions.get(1);
-//            currentDirection = "End";
-        } else {
+            //currentDirection = directions.get(1);
+            currentDirection = "End";
+        }
+        else {
             currentDirection = directions.get(instruction - 1);
         }
         return currentDirection;
@@ -235,9 +239,22 @@ public class Train extends Thread
 
     }
 
+    public void moveTrain(){
+        this.trainDisplay.setTranslateX(newX);
+        this.trainDisplay.setTranslateY(newY);
+    }
+
+
     public void run() {
         while(isRunning){
+            try{
+                System.out.println("Train is alive...");
+                Thread.sleep(2000);
 
+            }
+            catch(InterruptedException e){
+
+            }
         }
 
     }
