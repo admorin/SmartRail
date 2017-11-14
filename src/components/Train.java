@@ -112,7 +112,7 @@ public class Train extends Thread
             if(directionStart%2 == 0){
                 if(neighbors[3] != null){
                     directions.add("Left");
-                    if(neighbors[3].returnStation().equals(endDest)) return true;
+                    if(neighbors[3].returnStation() != null && neighbors[3].returnStation().equals(endDest)) return true;
                     neighbors = neighbors[3].returnNeighbors();
                     moves++;
                 } else {
@@ -125,7 +125,8 @@ public class Train extends Thread
             } else {
                 if(neighbors[1] != null){
                     directions.add("Right");
-                    if(neighbors[1].returnStation().equals(endDest)) return true;
+                    System.out.println(neighbors[1].returnStation());
+                    if(neighbors[1].returnStation() != null && neighbors[1].returnStation().equals(endDest)) return true;
                     neighbors = neighbors[1].returnNeighbors();
                     moves++;
                 } else {

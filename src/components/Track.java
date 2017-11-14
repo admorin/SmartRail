@@ -208,6 +208,7 @@ public class Track extends Thread implements Component {
                 try {
 
                     while (!begin) {
+                        isOpen = true;
                         this.wait();
 
                     }
@@ -216,7 +217,7 @@ public class Track extends Thread implements Component {
                 }
 
                 findNext();
-                if (this.station != null && !this.station.isStarting && this.station.equals(endStation)) {
+                if (this.station != null && this.station.equals(endStation)) {
                 System.out.println("Arrived at " + station.returnName()
                 + " from " + train.startDest.returnName());
 
@@ -229,9 +230,7 @@ public class Track extends Thread implements Component {
                     //moveTrain(false);
 
                     atEnd = true;
-                    hasTrain = false;
                     train.reserveOrReleasePath(false);
-                    train.clearDirections();
                     this.hasTrain = false;
                     train.trainHasArrived = true;
 
