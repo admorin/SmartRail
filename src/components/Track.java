@@ -4,6 +4,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 
+import java.util.PriorityQueue;
+import java.util.Queue;
+
 public class Track extends Thread implements Component {
     static private int width = 75;
     static private int height = 2;
@@ -23,6 +26,7 @@ public class Track extends Thread implements Component {
     //public boolean hasArrived = false;
     public boolean isOpen = true;
     public int isReserved = 0;
+    public Queue<Integer> trainOrder = new PriorityQueue<>();
     private boolean atEnd = false;
     public boolean isLight = false;
     public boolean visited = false;
@@ -167,7 +171,21 @@ public class Track extends Thread implements Component {
         }
     }
 
+    public void trainOnWay(int trainNumber){
+        trainOrder.add(trainNumber);
+    }
 
+    public void trainPassed(int trainNumber){
+        trainOrder.remove(trainNumber);
+    }
+
+    private boolean hasPriority(int trainNumber){
+        if(trainOrder.peek() == trainNumber){
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     public void getTrain(Train train) {
         this.train = train;
@@ -178,6 +196,9 @@ public class Track extends Thread implements Component {
 
     }
 
+    public int peekQ(){
+        return trainOrder.peek();
+    }
 
 
     public void run() {
@@ -194,7 +215,8 @@ public class Track extends Thread implements Component {
                 }
 
                 findNext();
-                //System.out.println(next);
+//                System.out.println(next);
+                System.out.println(this.train.returnTrainNumber());
                 if (this.station != null && !this.station.isStarting && this.station.equals(train.endDest)) {
                 System.out.println("Arrived at " + station.returnName()
                 + " from " + train.startDest);
@@ -207,23 +229,31 @@ public class Track extends Thread implements Component {
                     //moveTrain(false);
                     atEnd = true;
                     hasTrain = false;
+                    train.reserveOrReleasePath(false);
                     train.clearDirections();
 
                 }
+                else if (this.next != null) {
+                    boolean moved = false;
+                    while (!moved) {
+                        if (this.next.isOpen && this.next.hasPriority(this.train.returnTrainNumber())) {
+                            System.out.println("Start dest = " + train.startDest);
+                            System.out.println("End dest = " + train.endDest);
+                            //this.station.hasArrived = false;
+                            hasTrain = true;
+                            moveTrain(true);
 
-                else if (this.next != null && this.next.isOpen) {
-                    System.out.println("Start dest = " + train.startDest);
-                    System.out.println("End dest = " + train.endDest);
-                    //this.station.hasArrived = false;
-                    hasTrain = true;
-                    moveTrain(true);
-
-                    synchronized (next) {
-                        this.next.begin = true;
-                        next.hasTrain = true;
-                        this.next.notify();
+                            synchronized (next) {
+                                this.next.begin = true;
+                                next.hasTrain = true;
+                                this.next.notify();
+                            }
+                            // next.hasTrain = true;
+                            moved = true;
+                        } else {
+                            System.out.println("WAITING FOR OPEN");
+                        }
                     }
-                    // next.hasTrain = true;
                 }
             }
         }

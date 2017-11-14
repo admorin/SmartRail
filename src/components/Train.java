@@ -30,6 +30,7 @@ public class Train extends Thread
     public String NAME;
     private ArrayList<String> directions = new ArrayList<>();
     static private int trainNumber = 1;
+    private int thisTrain;
     private String currentDirection;
     public Circle displayTrain;
     public double newX = -1;
@@ -40,32 +41,56 @@ public class Train extends Thread
     public Rectangle train = new Rectangle(width, height);
     private int instruction = 0;
     public Track myTrack;
-
-    public Train(Station start, Track myTrack, Station end, Pane pane, String name)
-    {
-
-        this.NAME = name;
-        //this.pane = pane;
-        this.myTrack = myTrack;
-        this.startDest = start;
-        this.endDest = end;
-
-
-    }
+    public Track startTrack;
 
     public Train(Station startDest, Station endDest, int dir, boolean isSearcher){
         this.myTrack = startDest.firstTrack();
+        this.startTrack = this.myTrack;
         this.startDest = startDest;
         this.endDest = endDest;
-        searchAlgorithm(endDest);
+        this.thisTrain = trainNumber;
         trainNumber++;
+        searchAlgorithm(endDest);
 
     }
     public void clearDirections(){
         directions.clear();
     }
 
-    public void turnAround(int directionStart, Track[] neighbors){
+    public void reserveOrReleasePath(boolean reserving){
+        if(reserving)startTrack.trainOnWay(thisTrain);
+        else startTrack.trainPassed(thisTrain);
+        Track[] neighbors = startTrack.returnNeighbors();
+        int step = 0;
+        while(step < directions.size()){
+            System.out.println(trainNumber);
+            System.out.println(thisTrain);
+            if(directions.get(step).equals("Up")){
+                if(reserving)neighbors[0].trainOnWay(thisTrain);
+                else neighbors[0].trainPassed(thisTrain);
+
+                neighbors = neighbors[0].returnNeighbors();
+            } else if(directions.get(step).equals("Right")){
+                if(reserving)neighbors[1].trainOnWay(thisTrain);
+                else neighbors[1].trainPassed(thisTrain);
+
+                neighbors = neighbors[1].returnNeighbors();
+            } else if(directions.get(step).equals("Down")){
+                if(reserving)neighbors[2].trainOnWay(thisTrain);
+                else neighbors[2].trainPassed(thisTrain);
+
+                neighbors = neighbors[2].returnNeighbors();
+            } else {
+                if(reserving)neighbors[3].trainOnWay(thisTrain);
+                else neighbors[3].trainPassed(thisTrain);
+
+                neighbors = neighbors[3].returnNeighbors();
+            }
+            step++;
+        }
+    }
+
+    public boolean turnAround(int directionStart, Track[] neighbors){
         boolean turned = false;
         boolean foundStation = false;
         int moves = 0;
@@ -73,6 +98,7 @@ public class Train extends Thread
             if(directionStart%2 == 0){
                 if(neighbors[3] != null){
                     directions.add("Left");
+                    if(neighbors[3].returnStation().equals(endDest)) return true;
                     neighbors = neighbors[3].returnNeighbors();
                     moves++;
                 } else {
@@ -85,6 +111,7 @@ public class Train extends Thread
             } else {
                 if(neighbors[1] != null){
                     directions.add("Right");
+                    if(neighbors[1].returnStation().equals(endDest)) return true;
                     neighbors = neighbors[1].returnNeighbors();
                     moves++;
                 } else {
@@ -96,65 +123,80 @@ public class Train extends Thread
                 }
             }
         }
+        return false;
     }
 
     public void searchAlgorithm(Station end){
         //System.out.println(endDest.returnName() + " " + startDest.returnName());
         boolean endFound = false;
-        Track[] neighbors = myTrack.returnNeighbors();
-        Station trackStation = myTrack.returnStation();
-        myTrack.setReserved(trainNumber);
+        Track[] neighbors = startTrack.returnNeighbors();
+        Station trackStation = startTrack.returnStation();
+        startTrack.setReserved(thisTrain);
+        boolean endEarly = false;
         int direction = 0; //1 = Right, 2 = Left.
         //Returns Up, Right, Down, Left, Station.
         while(!endFound){
             if(trackStation != null && trackStation.equals(end)){
                 endFound = true;
+                reserveOrReleasePath(true);
                 //UP------------------------------------------------------------------------
-            } else if(neighbors[0] != null && neighbors[0].getReserved() != trainNumber){
+            } else if(neighbors[0] != null && neighbors[0].getReserved() != thisTrain){
                 if(neighbors[0].returnDirection() != direction%2){
-                    turnAround(direction, neighbors);
+                    if(turnAround(direction, neighbors)){
+                        reserveOrReleasePath(true);
+                        break;
+                    }
                     direction++;
                 }
                 directions.add("Up");
-                neighbors[0].setReserved(trainNumber);
+                neighbors[0].setReserved(thisTrain);
                 if(neighbors[0].returnStation() != null) {
                     trackStation = neighbors[0].returnStation();
                 }
                 neighbors = neighbors[0].returnNeighbors();
                 //RIGHT---------------------------------------------------------------------
-            } else if(neighbors[1] != null && neighbors[1].getReserved() != trainNumber){
+            } else if(neighbors[1] != null && neighbors[1].getReserved() != thisTrain){
                 if(direction == 0) direction++;
                 if(direction%2 == 0 && direction != 0){
-                    turnAround(direction, neighbors);
+                    if(turnAround(direction, neighbors)){
+                        reserveOrReleasePath(true);
+                        break;
+                    }
                     direction++;
                 }
                 directions.add("Right");
-                neighbors[1].setReserved(trainNumber);
+                neighbors[1].setReserved(thisTrain);
                 if (neighbors[1].hasStation()) {
                     trackStation = neighbors[1].returnStation();
                 }
                 neighbors = neighbors[1].returnNeighbors();
                 //DOWN----------------------------------------------------------------------
-            } else if(neighbors[2] != null && neighbors[2].getReserved() != trainNumber){
+            } else if(neighbors[2] != null && neighbors[2].getReserved() != thisTrain){
                 if(neighbors[2].returnDirection() != direction%2){
-                    turnAround(direction, neighbors);
+                    if(turnAround(direction, neighbors)){
+                        reserveOrReleasePath(true);
+                        break;
+                    }
                     direction++;
                 }
                 directions.add("Down");
-                neighbors[2].setReserved(trainNumber);
+                neighbors[2].setReserved(thisTrain);
                 if(neighbors[2].returnStation() != null) {
                     trackStation = neighbors[2].returnStation();
                 }
                 neighbors = neighbors[2].returnNeighbors();
                 //LEFT----------------------------------------------------------------------
-            } else if(neighbors[3] != null && neighbors[3].getReserved() != trainNumber){
+            } else if(neighbors[3] != null && neighbors[3].getReserved() != thisTrain){
                 if(direction == 0) direction += 2;
                 if(direction%2 == 1){
-                    turnAround(direction, neighbors);
+                    if(turnAround(direction, neighbors)){
+                        reserveOrReleasePath(true);
+                        break;
+                    }
                     direction++;
                 }
                 directions.add("Left");
-                neighbors[3].setReserved(trainNumber);
+                neighbors[3].setReserved(thisTrain);
                 if (neighbors[3].returnStation() != null) {
                     trackStation = neighbors[3].returnStation();
                 }
@@ -232,6 +274,10 @@ public class Train extends Thread
         System.out.println("My Track = " + myTrack);
 
 
+    }
+
+    public int returnTrainNumber(){
+        return thisTrain;
     }
 
     public String currentTrack(){
