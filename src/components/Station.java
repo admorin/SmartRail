@@ -1,5 +1,6 @@
 package components;
 
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
@@ -8,29 +9,30 @@ public class Station extends Thread implements Component {
     private boolean isStart;
     private String name = "Blank";
     private boolean isLeft;
+
     public Train train;
-    public boolean hasArrived = false;
+    public volatile boolean hasArrived = false;
     public Track next;
     private Station endStation;
     private boolean startStation;
-    private Rectangle station;
+    public Rectangle station;
     public Object lock = new Object();
     public boolean isStarting = false;
+    public boolean hasTrain = false;
     public volatile boolean selected1 = false;
     public volatile boolean selected2 = false;
-    private boolean returning = false;
+    public volatile boolean trainArrival = false;
+    public volatile boolean initStation = false;
     public Rectangle displayStation = new Rectangle(30, 60);
+    public Pane pane;
 
     public Station() {
 
     }
 
-    public void trainInit(Train train){
-        this.train = train;
 
-    }
-
-    public Station(String name, Track firstTrack) {
+    public Station(String name, Track firstTrack, Pane pane) {
+        this.pane = pane;
         this.name = name;
         setName(name);
         this.next = firstTrack;
@@ -56,8 +58,8 @@ public class Station extends Thread implements Component {
         while (isAlive()) {
             synchronized (this){
                 try{
-                    while(!selected1){
-                        //hasArrived = false;
+                    while(!initStation){
+
                         wait();
                     }
                 }
@@ -67,12 +69,16 @@ public class Station extends Thread implements Component {
             }
 
             if(this.selected1){
-                //train = new Train(this, endStation, 1, true);
+                Train train = new Train(this, endStation, 1, true, pane);
                 synchronized (next) {
-                    //train.start();
-                    next.getTrain(train);
-                    next.notify();
+                    //trainStarter(train);
+
                     next.begin = true;
+                    //train.start();
+                    next.notify();
+                    next.getTrain(train);
+
+
                     this.selected1 = false;
 
                 }
@@ -82,16 +88,22 @@ public class Station extends Thread implements Component {
         }
 
     }
+    public synchronized void trainStarter(Train train){
+        synchronized (train){
+            train.start();
+        }
+    }
 
     public Rectangle getDisplayStation() {
-        this.station = new Rectangle(100, 60);
+        Rectangle station = new Rectangle(100, 60);
 
         station.setFill(Color.AQUA);
 
 
         station.setOnMousePressed(event -> {
-            //System.out.println(this.getName());
+            System.out.print("event " + event.toString());
         });
+
 
         return station;
     }
@@ -100,13 +112,32 @@ public class Station extends Thread implements Component {
         return name;
     }
 
-    public synchronized void getTrain(Train train) {
-        this.train = train;
-        System.out.println(name + " got train.");
-        train.myTrack.hasTrain = false;
-        this.hasArrived = true;
-        train.isRunning = false;
-        train.newX = -1;
-        train.newY = -1;
+    public synchronized Train returnTrain(){
+        return train;
     }
+
+    public synchronized void getTrainFromTrack(Train train) {
+        this.train = train;
+        this.initStation = false;
+
+        System.out.println(name + " got train.");
+
+        this.train.startDest.hasArrived = true;
+        this.train.endDest.hasArrived = true;
+        this.train.trainHasArrived = true;
+        this.train.interrupt();
+        try{
+            wait(100);
+
+            train.reset();
+
+        }
+        catch (Exception e){
+
+        }
+
+        System.out.println("Train State = " + train.getState());
+
+    }
+
 }

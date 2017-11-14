@@ -10,7 +10,7 @@ import java.util.Queue;
 public class Track extends Thread implements Component {
     static private int width = 75;
     static private int height = 2;
-    public boolean hasTrain;
+    public boolean hasTrain = false;
     public boolean isSwitch = false;
     public Track next;
     public Track nextR;
@@ -31,6 +31,7 @@ public class Track extends Thread implements Component {
     public boolean isLight = false;
     public boolean visited = false;
     public volatile boolean begin = false;
+    public Station endStation;
     public String NAME;
     int index = 1;
     TrainPrinter printer;
@@ -123,17 +124,17 @@ public class Track extends Thread implements Component {
         try {
 
             train.changeTrack(this);
-            this.begin = false;
-            isOpen = true;
+            isOpen = false;
 
             Thread.sleep(1300);
 
-            System.out.println("Attempting to move Train from Track " + getName() +
-                    " to Track " + next.getName());
+            System.out.println("Attempting to move Train from Track " + getName() + " to Track " + next.getName());
             System.out.println("Train is on track " + this.getName());
 
-            if(flag) next.getTrain(train);
+            next.getTrain(train);
             this.hasTrain = false;
+            this.begin = false;
+
 
 
         } catch (Exception e) {
@@ -187,12 +188,10 @@ public class Track extends Thread implements Component {
         }
     }
 
-    public void getTrain(Train train) {
+    public synchronized void getTrain(Train train) {
         this.train = train;
         this.startStation = train.getStartStation();
-    }
-
-    public void trackSwitch(Track track) {
+        this.endStation = train.getEndStation();
 
     }
 
@@ -202,6 +201,7 @@ public class Track extends Thread implements Component {
 
 
     public void run() {
+        boolean test = false;
         while (isAlive()) {
 
             synchronized (this) {
@@ -212,25 +212,33 @@ public class Track extends Thread implements Component {
 
                     }
                 } catch (InterruptedException e) {
+
                 }
 
                 findNext();
-//                System.out.println(next);
-                System.out.println(this.train.returnTrainNumber());
-                if (this.station != null && !this.station.isStarting && this.station.equals(train.endDest)) {
+                if (this.station != null && !this.station.isStarting && this.station.equals(endStation)) {
                 System.out.println("Arrived at " + station.returnName()
-                + " from " + train.startDest);
+                + " from " + train.startDest.returnName());
 
                     System.out.println("Train has ended");
                    // moveTrain(false);
-                    station.getTrain(train);
-                    isOpen = true;
-                    begin = false;
+
+                    this.isOpen = true;
+
+
                     //moveTrain(false);
+
                     atEnd = true;
                     hasTrain = false;
                     train.reserveOrReleasePath(false);
                     train.clearDirections();
+                    this.hasTrain = false;
+                    train.trainHasArrived = true;
+
+                    this.station.getTrainFromTrack(train);
+
+                    this.begin = false;
+
 
                 }
                 else if (this.next != null) {

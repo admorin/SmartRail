@@ -32,10 +32,11 @@ public class Train extends Thread
     static private int trainNumber = 1;
     private int thisTrain;
     private String currentDirection;
-    public Circle displayTrain;
     public double newX = -1;
     public double newY = -1;
+    public volatile boolean trainOver = false;
     public Circle trainDisplay = new Circle(10);
+    public volatile boolean trainHasArrived = false;
 
 
     public Rectangle train = new Rectangle(width, height);
@@ -43,17 +44,30 @@ public class Train extends Thread
     public Track myTrack;
     public Track startTrack;
 
-    public Train(Station startDest, Station endDest, int dir, boolean isSearcher){
+    public Train(Station start, Track myTrack, Station end, Pane pane, String name)
+    {
+
+        this.NAME = name;
+        this.pane = pane;
+        this.myTrack = myTrack;
+        this.startDest = start;
+        this.endDest = end;
+
+
+    }
+
+    public Train(Station startDest, Station endDest, int dir, boolean isSearcher, Pane pane){
         this.myTrack = startDest.firstTrack();
         this.startTrack = this.myTrack;
         this.startDest = startDest;
         this.endDest = endDest;
+        this.pane = pane;
         this.thisTrain = trainNumber;
         trainNumber++;
         searchAlgorithm(endDest);
 
     }
-    public void clearDirections(){
+    public synchronized void clearDirections(){
         directions.clear();
     }
 
@@ -126,7 +140,7 @@ public class Train extends Thread
         return false;
     }
 
-    public void searchAlgorithm(Station end){
+    public synchronized void searchAlgorithm(Station end){
         //System.out.println(endDest.returnName() + " " + startDest.returnName());
         boolean endFound = false;
         Track[] neighbors = startTrack.returnNeighbors();
@@ -227,7 +241,7 @@ public class Train extends Thread
         }
     }
 
-    public  Station getStartStation(){
+    public Station getStartStation(){
 
         return startDest;
     }
@@ -242,7 +256,7 @@ public class Train extends Thread
         this.directions = directions;
     }
 
-    public String peekDirection(){
+    public synchronized String peekDirection(){
         instruction++;
         if(instruction > directions.size()){
             //currentDirection = directions.get(1);
@@ -262,15 +276,12 @@ public class Train extends Thread
         return directions;
     }
 
-    public Circle returnTrain(){
-        this.displayTrain = new Circle(10);
-        this.displayTrain.setFill(Color.RED);
-        return displayTrain;
-    }
 
-    public void changeTrack(Track newTrack){
+
+    public synchronized void changeTrack(Track newTrack){
         this.myTrack = null;
         this.myTrack = newTrack;
+
         System.out.println("My Track = " + myTrack);
 
 
@@ -285,23 +296,72 @@ public class Train extends Thread
 
     }
 
+    public synchronized void addTrain(){
+        pane.getChildren().add(this.trainDisplay);
+    }
+
     public void moveTrain(){
         this.trainDisplay.setTranslateX(newX);
         this.trainDisplay.setTranslateY(newY);
     }
+    public synchronized void moveTrainDown(){
+        newX = newX + 2;
+        newY = newY + 2;
+        trainDisplay.setTranslateX(newX);
+        trainDisplay.setTranslateY(newY);
+
+    }
+    public synchronized void moveTrainRight(double y){
+        newX = newX + 2;
+        newY = y;
+        trainDisplay.setTranslateX(newX);
+        trainDisplay.setTranslateY(newY);
+
+    }
+    public synchronized void moveTrainLeft(double y){
+        newX = newX - 2;
+        newY = y;
+        trainDisplay.setTranslateX(newX);
+        trainDisplay.setTranslateY(newY);
+    }
+
+    public synchronized void moveTrainUp(){
+        newX = newX - 2;
+        newY = newY - 2;
+        trainDisplay.setTranslateX(newX);
+        trainDisplay.setTranslateY(newY);
+
+    }
+    public synchronized void removeDisplay(){
+        pane.getChildren().remove(trainDisplay);
+
+    }
+
+    public synchronized void reset(){
+        this.endDest.hasArrived = false;
+        this.startDest.hasArrived = false;
+        this.trainHasArrived = false;
+        this.clearDirections();
+        this.interrupt();
+    }
 
 
     public void run() {
-        while(isRunning){
-            try{
+
+        while(!isInterrupted()){
+
+            try {
                 System.out.println("Train is alive...");
                 Thread.sleep(2000);
 
-            }
-            catch(InterruptedException e){
+            } catch (Exception e) {
 
             }
+
         }
+        System.out.println("TRAIN HAS DIED");
+        currentThread().interrupt();
+        System.out.println("Current State = " + getState());
 
     }
 
