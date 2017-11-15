@@ -238,7 +238,12 @@ public class Train extends Thread
                 neighbors = neighbors[3].returnNeighbors();
 
             } else {
-//                System.out.println("Popping");
+//                for(int j = 0; j < 4; j++){
+//                    if(neighbors[j] != null){
+//                        System.out.println(neighbors[j].NAME);
+//                    }
+//                }
+//                System.out.println("_-_-_-_-_");
 //                System.out.println(neighbors[3]);
                 String last = directions.get(directions.size()-1);
                 if(last.equals("Up")){
@@ -246,13 +251,21 @@ public class Train extends Thread
 //                    trackStation = neighbors[2].returnStation();
                 } else if(last.equals("Right")){
 //                    System.out.println("Last was Right");
-                    neighbors = neighbors[3].returnNeighbors();
+                    if(neighbors[3] != null) {
+                        neighbors = neighbors[3].returnNeighbors();
+                    } else {
+                        directions.remove(directions.size()-1);
+                    }
 //                    trackStation = neighbors[3].returnStation();
                 } else if(last.equals("Down")){
                     neighbors = neighbors[0].returnNeighbors();
 //                    trackStation = neighbors[0].returnStation();
                 } else {
-                    neighbors = neighbors[1].returnNeighbors();
+                    if(neighbors[1] != null) {
+                        neighbors = neighbors[1].returnNeighbors();
+                    } else {
+                        directions.remove(directions.size()-1);
+                    }
 //                    trackStation = neighbors[1].returnStation();
                 }
                 directions.remove(directions.size()-1);
