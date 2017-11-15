@@ -65,11 +65,13 @@ public class DisplayGUI extends AnimationTimer {
         Circle displayTrain = new Circle(10);
         boolean flag = false;
         Train train;
+        Track track;
         for (int i = 0; i < WIDTH; i++) {
             for (int j = 0; j < HEIGHT; j++) {
                 if (map[i][j].getClass().getSimpleName().equals("Track")) {
                     if (((Track) map[i][j]).hasTrain) {
                         train = ((Track) map[i][j]).train;
+                        track = (Track) map[i][j];
 
                         String dir = train.returnCurrentDirection();
 
@@ -80,19 +82,19 @@ public class DisplayGUI extends AnimationTimer {
                             train.addTrain();
                         } else {
 
-                            if (dir.equals("Down")) {
+                            if (dir.equals("Down") && !track.isWaiting) {
 
                                 train.moveTrainDown();
 
-                            } else if (dir.equals("Right")) {
+                            } else if (dir.equals("Right") && !track.isWaiting) {
 
                                 train.moveTrainRight(((j + 1) * SIZEY));
 
 
-                            } else if (dir.equals("Left")) {
+                            } else if (dir.equals("Left") && !track.isWaiting) {
                                 train.moveTrainLeft(((j + 1) * SIZEY));
 
-                            } else if (dir.equals("Up")) {
+                            } else if (dir.equals("Up") && !track.isWaiting) {
 
                                 train.moveTrainUp();
 

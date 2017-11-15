@@ -33,6 +33,7 @@ public class Track extends Thread implements Component {
     public volatile boolean begin = false;
     public Station endStation;
     public String NAME;
+    public volatile boolean isWaiting = false;
     int index = 1;
     TrainPrinter printer;
 
@@ -249,6 +250,7 @@ public class Track extends Thread implements Component {
                             //this.station.hasArrived = false;
                             hasTrain = true;
                             moveTrain(true);
+                            this.isWaiting = false;
 
                             synchronized (next) {
                                 this.next.begin = true;
@@ -258,7 +260,8 @@ public class Track extends Thread implements Component {
                             // next.hasTrain = true;
                             moved = true;
                         } else {
-                            System.out.println("WAITING FOR OPEN");
+                            this.isWaiting = true;
+                            //System.out.println("WAITING FOR OPEN");
                         }
                     }
                 }

@@ -133,8 +133,6 @@ public class MainThread extends Thread {
             //queue.add(train);
 
             start.finishLine(end);
-            start.isStarting = true;
-
             pickStation(start, end);
 
 
