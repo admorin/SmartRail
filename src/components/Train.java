@@ -18,8 +18,8 @@ import java.util.concurrent.CountDownLatch;
 public class Train extends Thread
 {
     Component curComponent;
-    Station startDest;
-    Station endDest;
+    public Station startDest;
+    public Station endDest;
 
     int testCount = 0;
 
@@ -338,39 +338,37 @@ public class Train extends Thread
     }
 
     public synchronized void moveTrainDown(){
-        System.out.println(newX);
 
-            this.newX += 2;
-            this.newY += 2;
-            this.trainDisplay.setTranslateX(newX);
-            this.trainDisplay.setTranslateY(newY);
+        this.newX += 2;
+        this.newY += 2;
+        this.trainDisplay.setTranslateX(newX);
+        this.trainDisplay.setTranslateY(newY);
 
     }
     public synchronized void moveTrainRight(double y){
 
-        testCount++;
-        System.out.println(testCount);
-            this.newX += 2;
-            this.newY = y;
-            this.trainDisplay.setTranslateX(newX);
-            this.trainDisplay.setTranslateY(newY);
+
+        this.newX += 2;
+        this.newY = y;
+        this.trainDisplay.setTranslateX(newX);
+        this.trainDisplay.setTranslateY(newY);
 
     }
     public synchronized void moveTrainLeft(double y){
 
-            this.newX -= 2;
-            this.newY = y;
-            this.trainDisplay.setTranslateX(newX);
-            this.trainDisplay.setTranslateY(newY);
+        this.newX -= 2;
+        this.newY = y;
+        this.trainDisplay.setTranslateX(newX);
+        this.trainDisplay.setTranslateY(newY);
 
     }
 
     public synchronized void moveTrainUp(){
 
-            this.newX -= 2;
-            this.newY -= 2;
-            this.trainDisplay.setTranslateX(newX);
-            this.trainDisplay.setTranslateY(newY);
+        this.newX -= 2;
+        this.newY -= 2;
+        this.trainDisplay.setTranslateX(newX);
+        this.trainDisplay.setTranslateY(newY);
 
     }
     public synchronized void removeDisplay(){

@@ -59,6 +59,13 @@ public class DisplayGUI extends AnimationTimer {
 
     }
 
+    public boolean trackShift(Station start){
+
+        return (start.getName().equals("Station X") ||
+                start.getName().equals("Station Y"));
+
+    }
+
 
 
     public synchronized void trackListener(){
@@ -70,17 +77,23 @@ public class DisplayGUI extends AnimationTimer {
             for (int j = 0; j < HEIGHT; j++) {
                 if (map[i][j].getClass().getSimpleName().equals("Track")) {
                     if (((Track) map[i][j]).hasTrain) {
+
                         train = ((Track) map[i][j]).train;
                         track = (Track) map[i][j];
-
                         String dir = train.returnCurrentDirection();
 
                         if (train.newX == -1 && train.newY == -1) {
 
-                            train.newX = (i * SIZEX);
-                            train.newY = ((j + 1) * SIZEY);
-                            System.out.println((j + 1) * SIZEY);
-                            train.addTrain();
+                            if(trackShift(train.startDest)) {
+                                train.newX = (i * SIZEX );
+                                train.newY = ((j + 1) * SIZEY);
+                                train.addTrain();
+                            }
+                            else {
+                                train.newX = (i * SIZEX);
+                                train.newY = ((j + 1) * SIZEY);
+                                train.addTrain();
+                            }
 
                         } else {
 
@@ -103,8 +116,9 @@ public class DisplayGUI extends AnimationTimer {
                             } else if (dir.equals("End")) {
                                 train.newX = -1;
                                 train.newY = -1;
+                                System.out.println("DSFSDF");
                                 train.removeDisplay();
-                                break;
+
                             }
 
                         }
@@ -126,6 +140,20 @@ public class DisplayGUI extends AnimationTimer {
         }
 
     }
+
+    public void trackAnimation() {
+        for (int i = 0; i < WIDTH; i++) {
+            for (int j = 0; j < HEIGHT; j++) {
+                if (map[i][j].getClass().getSimpleName().equals("Track")) {
+                    if (((Track) map[i][j]).isSwitch){
+                        
+                    }
+                }
+            }
+        }
+    }
+
+
 
 
     public void initTracks() {

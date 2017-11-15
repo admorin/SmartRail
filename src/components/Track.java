@@ -120,21 +120,13 @@ public class Track extends Thread implements Component {
         return isReserved;
     }
 
-    public synchronized void dockTrain(){
-        try {
-            Thread.sleep(1250);
-        }
-        catch(InterruptedException e){
-
-        }
-    }
 
     public synchronized void moveTrain(boolean flag) {
 
         try {
 
             train.changeTrack(this);
-            isOpen = false;
+            isOpen = true;
 
             Thread.sleep(1250);
 
@@ -165,16 +157,20 @@ public class Track extends Thread implements Component {
         String direction = train.peekDirection();
 
         if (direction != null) {
-            if (direction.equals("Right") && nextR != null) {
+            if (direction.equals("Right")) {
                 next = nextR;
+                isSwitch = false;
             } else if (direction.equals("Down")) {
                 next = nextD;
+                isSwitch = true;
                 //System.out.println("Switching Tracks");
             } else if (direction.equals("Up")) {
                 next = nextU;
+                isSwitch = true;
                 //System.out.println("Switching Tracks");
-            } else if (direction.equals("Left") && nextL != null) {
+            } else if (direction.equals("Left")) {
                 next = nextL;
+                isSwitch = false;
             }
             begin = false;
 
@@ -208,6 +204,32 @@ public class Track extends Thread implements Component {
         return trainOrder.peek();
     }
 
+    public synchronized void operation(boolean flag){
+        boolean moved = false;
+        while (!moved) {
+            if (this.next.isOpen && this.next.hasPriority(this.train.returnTrainNumber())) {
+                System.out.println("Start dest = " + train.startDest);
+                System.out.println("End dest = " + train.endDest);
+                //this.station.hasArrived = false;
+                hasTrain = true;
+
+                moveTrain(flag);
+                this.isWaiting = false;
+
+                synchronized (next) {
+                    this.next.begin = true;
+                    this.next.hasTrain = true;
+                    this.next.notify();
+                }
+                // next.hasTrain = true;
+                moved = true;
+            } else {
+                this.isWaiting = true;
+                //System.out.println("WAITING FOR OPEN");
+            }
+        }
+    }
+
 
     public void run() {
         boolean test = false;
@@ -227,7 +249,6 @@ public class Track extends Thread implements Component {
                 }
 
                 findNext();
-                if(next == null) findNext();
                 if (this.station != null && this.station.equals(endStation)) {
                 System.out.println("Arrived at " + station.returnName()
                 + " from " + train.startDest.returnName());
@@ -238,7 +259,7 @@ public class Track extends Thread implements Component {
                     this.isOpen = true;
 
 
-                    //moveTrain(false);
+                    moveTrain(false);
 
                     atEnd = true;
                     train.reserveOrReleasePath(false);
@@ -253,29 +274,44 @@ public class Track extends Thread implements Component {
 
                 }
                 else if (this.next != null) {
-                    boolean moved = false;
-                    while (!moved) {
-                        if (this.next.isOpen && this.next.hasPriority(this.train.returnTrainNumber())) {
-                            System.out.println("Start dest = " + train.startDest);
-                            System.out.println("End dest = " + train.endDest);
-                            //this.station.hasArrived = false;
-                            hasTrain = true;
-                            moveTrain(true);
-                            this.isWaiting = false;
-
-                            synchronized (next) {
-                                this.next.begin = true;
-                                next.hasTrain = true;
-                                this.next.notify();
-                            }
-                            // next.hasTrain = true;
-                            moved = true;
-                        } else {
-                            this.isWaiting = true;
-                            //System.out.println("WAITING FOR OPEN");
-                        }
-                    }
+                    operation(true);
                 }
+                else if(this.station != null && !this.station.equals(endStation) && !this.station.equals(train.startDest)){
+                    //this.next = this.station.firstTrack();
+
+                    next = this.station.firstTrack();
+                    train.changeTrack(this.station.firstTrack());
+
+                    System.out.println(next);
+                    operation(false);
+                }
+
+
+//
+//
+//                    boolean moved = false;
+//                    while (!moved) {
+//                        if (this.next.isOpen && this.next.hasPriority(this.train.returnTrainNumber())) {
+//                            System.out.println("Start dest = " + train.startDest);
+//                            System.out.println("End dest = " + train.endDest);
+//                            //this.station.hasArrived = false;
+//                            hasTrain = true;
+//                            moveTrain(true);
+//                            this.isWaiting = false;
+//
+//                            synchronized (next) {
+//                                this.next.begin = true;
+//                                next.hasTrain = true;
+//                                this.next.notify();
+//                            }
+//                            // next.hasTrain = true;
+//                            moved = true;
+//                        } else {
+//                            this.isWaiting = true;
+//                            //System.out.println("WAITING FOR OPEN");
+//                        }
+//                    }
+//                }
             }
         }
     }
