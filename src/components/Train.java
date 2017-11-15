@@ -76,7 +76,7 @@ public class Train extends Thread
         else startTrack.trainPassed(thisTrain);
         Track[] neighbors = startTrack.returnNeighbors();
         int step = 0;
-        while(step < directions.size()){
+        while(step < directions.size() - 1){
             System.out.println(trainNumber);
             System.out.println(thisTrain);
             if(directions.get(step).equals("Up")){
@@ -112,7 +112,10 @@ public class Train extends Thread
             if(directionStart%2 == 0){
                 if(neighbors[3] != null){
                     directions.add("Left");
-                    if(neighbors[3].returnStation() != null && neighbors[3].returnStation().equals(endDest)) return true;
+                    if(neighbors[3].returnStation() != null && neighbors[3].returnStation().equals(endDest)){
+                        directions.add("Left");
+                        return true;
+                    }
                     neighbors = neighbors[3].returnNeighbors();
                     moves++;
                 } else {
@@ -126,7 +129,10 @@ public class Train extends Thread
                 if(neighbors[1] != null){
                     directions.add("Right");
                     System.out.println(neighbors[1].returnStation());
-                    if(neighbors[1].returnStation() != null && neighbors[1].returnStation().equals(endDest)) return true;
+                    if(neighbors[1].returnStation() != null && neighbors[1].returnStation().equals(endDest)){
+                        directions.add("Right");
+                        return true;
+                    }
                     neighbors = neighbors[1].returnNeighbors();
                     moves++;
                 } else {
@@ -153,6 +159,8 @@ public class Train extends Thread
         while(!endFound){
             if(trackStation != null && trackStation.equals(end)){
                 endFound = true;
+                if(direction%2 == 0) directions.add("Left");
+                else directions.add("Right");
                 reserveOrReleasePath(true);
                 //UP------------------------------------------------------------------------
             } else if(neighbors[0] != null && neighbors[0].getReserved() != thisTrain){
