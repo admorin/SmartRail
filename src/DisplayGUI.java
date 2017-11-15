@@ -1,16 +1,17 @@
-import components.Component;
-import components.MainThread;
-import components.Station;
-import components.Track;
-import javafx.animation.AnimationTimer;
-import javafx.animation.PathTransition;
+import components.*;
+import javafx.animation.*;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+import javafx.util.Duration;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.SimpleTimeZone;
 
 /**
  * Created by alexschmidt-gonzales on 10/31/17.
@@ -20,18 +21,25 @@ public class DisplayGUI extends AnimationTimer {
     private final int WIDTH = 7;
     private final int HEIGHT = 2;
     private final int SIZEX = 150;
-    private final int SIZEY = 100;
+    private final int SIZEY = 150;
     private final int trackLen = 100;
     public boolean hasArrived = false;
     private Thread[][] map = new Thread[WIDTH][HEIGHT];
-    private Shape[][] guiMap = new Shape[WIDTH][HEIGHT];
-    private Rectangle train = new Rectangle(trackLen, 10);
+    private Shape[][] guiMap2 = new Shape[WIDTH][HEIGHT];
+    private PathTransition[][] guiMap = new PathTransition[WIDTH][HEIGHT];
+    //private Rectangle train = new Rectangle(trackLen, 20);
     private Rectangle station = new Rectangle(30, 40);
     private Circle light = new Circle(5);
     private MainThread mainT;
+    private boolean runDisplay = false;
+    private Circle testTrain = new Circle(10);
     //private ArrayList<Station> stations = new ArrayList<>();
     private LinkedList<Station> pickedStations = new LinkedList<>();
     private LinkedList<Station> stations = new LinkedList<>();
+    double newX = -1;
+    double newY = -1;
+    Timeline timeline = new Timeline();
+    public Train train;
 
 
     public DisplayGUI(Pane pane, MainThread mainT) {
@@ -41,17 +49,76 @@ public class DisplayGUI extends AnimationTimer {
 
         map = mainT.initialize();
         this.stations = mainT.stationList;
+       // pane.getChildren().add(testTrain);
+        initStation();
+        initTracks();
+
+    }
+
+    public void animationTrack() {
+
+    }
+
+
+
+    public synchronized void trackListener(){
+        Circle displayTrain = new Circle(10);
+        boolean flag = false;
+        Train train;
         for (int i = 0; i < WIDTH; i++) {
             for (int j = 0; j < HEIGHT; j++) {
+                if (map[i][j].getClass().getSimpleName().equals("Track")) {
+                    if (((Track) map[i][j]).hasTrain) {
+                        train = ((Track) map[i][j]).train;
 
-                guiMap[i][j] = new Rectangle(trackLen, 2);
-                //guiMap[i][j] = new Path()
+                        String dir = train.returnCurrentDirection();
+
+                        if (train.newX == -1 && train.newY == -1) {
+
+                            train.newX = (i * SIZEX);
+                            train.newY = ((j + 1) * SIZEY);
+                            train.addTrain();
+                        } else {
+
+                            if (dir.equals("Down")) {
+
+                                train.moveTrainDown();
+
+                            } else if (dir.equals("Right")) {
+
+                                train.moveTrainRight(((j + 1) * SIZEY));
+
+
+                            } else if (dir.equals("Left")) {
+                                train.moveTrainLeft(((j + 1) * SIZEY));
+
+                            } else if (dir.equals("Up")) {
+
+                                train.moveTrainUp();
+
+                            } else if (dir.equals("End")) {
+                                train.newX = -1;
+                                train.newY = -1;
+                                train.removeDisplay();
+                                break;
+                            }
+                        }
+                    }
+
+                }
+              if (map[i][j].getClass().getSimpleName().equals("Station")) {
+                    Train train1 = ((Station) map[i][j]).returnTrain();
+
+                    if (((Station) map[i][j]).hasArrived ) {
+                        guiMap2[i][j].setFill(Color.AQUA);
+                        //System.out.println((Station) map[i][j]);
+                        if(train1 != null)
+                        train1.removeDisplay();
+                    }
+                }
             }
         }
-        train.setVisible(false);
-        pane.getChildren().add(train);
-        stationListener();
-        initTracks();
+
     }
 
 
@@ -59,40 +126,32 @@ public class DisplayGUI extends AnimationTimer {
 
         for (int i = 0; i < WIDTH; i++) {
             for (int j = 0; j < HEIGHT; j++) {
-
                 if (map[i][j].getClass().getSimpleName().equals("Track")) {
+                    if (((Track) map[i][j]).isSwitch) {
+                        Line line = new Line();
+                        Line switchLine = new Line();
 
+                        line.setStartX(i*SIZEX);
+                        line.setStartY((j+1) * SIZEY);
+                        line.setEndX((i*SIZEX) + SIZEX);
+                        line.setEndY((j+1) * SIZEY);
 
-                    if (((Track) map[i][j]).hasTrain) {
+                        switchLine.setStartX((i*SIZEX));
+                        switchLine.setStartY((j+1) * SIZEY);
+                        switchLine.setEndX(((i*SIZEX)+150));
+                        switchLine.setEndY(((j+1) * SIZEY)+150);
 
-                        guiMap[i][j].setFill(Color.RED);
-
-                        train.setTranslateX((i * SIZEX) + 50);
-                        train.setTranslateY((j + 1) * SIZEY);
-                        train.setVisible(true);
+                        pane.getChildren().addAll(line, switchLine);
 
                     }
-                    else if(((Track)map[i][j]).hasArrived){
-                        //pane.getChildren().remove(train);
-                        guiMap[i][j].setFill(Color.BLACK);
 
-                    }
                     else if (((Track) map[i][j]).isOpen) {
-                        guiMap[i][j].setTranslateX((i * SIZEX) + 50);
-                        guiMap[i][j].setTranslateY((j + 1) * SIZEY);
-
-                    }
-                    else if (((Track) map[i][j]).isLight) {
-                        guiMap[i][j].setFill(Color.BLACK);
-                        guiMap[i][j].setTranslateX((i * SIZEX) + 50);
-                        guiMap[i][j].setTranslateY((j + 1) * SIZEY);
-
-
-                    } else {
-                        guiMap[i][j].setTranslateX((i * SIZEX) + 50);
-                        guiMap[i][j].setTranslateY((j + 1) * SIZEY);
-                        guiMap[i][j].setFill(Color.BLACK);
-                        //pane.getChildren().remove(train);
+                        Line line = new Line();
+                        line.setStartX(i*SIZEX);
+                        line.setStartY((j+1) * SIZEY);
+                        line.setEndX((i*SIZEX) + SIZEX);
+                        line.setEndY((j+1) * SIZEY);
+                        pane.getChildren().add(line);
 
                     }
                 }
@@ -100,99 +159,18 @@ public class DisplayGUI extends AnimationTimer {
         }
     }
 
-    public void reset(){
-        for(int i = 0; i < WIDTH; i++){
-            for(int j = 0; j < HEIGHT; j++){
-                if((map[i][j].getClass().getSimpleName().equals("Station"))) {
-                    if(!map[i][j].isInterrupted())
-                    guiMap[i][j].setFill(Color.AQUA);
-                }
-            }
-        }
-    }
-
-    public void stationSetter(){
+    public void trainAnimation(){
         for(int i = 0; i < WIDTH; i++){
             for(int j = 0; j < HEIGHT; j++){
                 if(map[i][j].getClass().getSimpleName().equals("Track")){
-
-                    Path path = new Path();
-                    MoveTo location = new MoveTo();
-                    LineTo line = new LineTo();
-                    PathTransition pathTransition = new PathTransition();
-                    location.setX(i*SIZEX);
-                    location.setY(j*SIZEY);
-                    line.setY(j*SIZEY);
-                    line.setX(i*SIZEX+100);
-                    path.getElements().add(location);
-                    path.getElements().add(line);
-                    pathTransition.setPath(path);
-                    pathTransition.setRate(2);
-                    Circle c = new Circle(20);
-                    pathTransition.setNode(train);
-                    pane.getChildren().addAll(path, c);
-                    if(((Track) map[i][j]).hasTrain){
-                        pathTransition.play();
+                    if(((Track)map[i][j]).hasTrain){
+                        guiMap[i][j].play();
 
                     }
-                   // pathMaker((i*SIZEX), (j+1) * SIZEY);
-
                 }
             }
         }
-
     }
-
-    public Path pathMaker(double x, double y){
-        Path path = new Path();
-
-        MoveTo location = new MoveTo();
-        LineTo line = new LineTo();
-        location.setX(x);
-        location.setY(y);
-        line.setY(y);
-        line.setX(x+100);
-        path.getElements().add(location);
-        path.getElements().add(line);
-        pane.getChildren().add(path);
-        return path;
-
-    }
-
-    public void pathGuiTest(Station start, Station end){
-        Path path = new Path();
-        Rectangle rect1 = start.getDisplayStation();
-        Rectangle rect2 = end.getDisplayStation();
-        PathTransition pathTransition = new PathTransition();
-        MoveTo location = new MoveTo();
-
-        location.setX(0);
-        location.setY(200);
-
-        LineTo line = new LineTo();
-        line.setX(0);
-        line.setY(500);
-
-
-
-
-        path.getElements().add(location);
-        path.getElements().add(line);
-        Circle c = new Circle(20);
-        pathTransition.setPath(path);
-        pathTransition.setRate(2);
-        pathTransition.setNode(c);
-        pathTransition.setAutoReverse(true);
-        pane.getChildren().addAll(path, c);
-        pathTransition.play();
-
-    }
-    public Path trackPath(){
-        Path trackP = new Path();
-        return trackP;
-    }
-
-
 
     public void lights() {
         for (int i = 0; i < WIDTH; i++) {
@@ -218,65 +196,82 @@ public class DisplayGUI extends AnimationTimer {
         }
     }
 
-    public void stationListener() {
+
+
+    public void initStation() {
         for (int i = 0; i < WIDTH; i++) {
             for (int j = 0; j < HEIGHT; j++) {
                 Rectangle rect;
                 if (map[i][j].getClass().getSimpleName().equals("Station")) {
+
                     Station t = (Station) map[i][j];
+                    Text text = new Text(t.getName());
 
                     rect = t.getDisplayStation();
-                    train.setTranslateX(rect.getTranslateX());
-                    train.setTranslateY(rect.getTranslateY());
-                    //train.setVisible(false);
-                    //System.out.println(map[i][j]);
-                    rect.setTranslateX((i * SIZEX) + 50);
+
+                    rect.setTranslateX((i* SIZEX)+25);
                     rect.setTranslateY((j + 1) * SIZEY);
-                    //rect.setFill(Color.BLACK);
+
+                    //t.getDisplayStation().setTranslateY((j + 1) * SIZEY);
+                    rect.setFill(Color.AQUA);
+
+                    text.setTranslateX(rect.getTranslateX());
+                    text.setTranslateY(rect.getTranslateY());
+                    text.setFont(Font.font(20));
+
+                    pane.getChildren().add(text);
+
                     rect.setOnMousePressed(event -> {
                         rect.setFill(Color.RED);
                         pickedStations.add(t);
+
+
                         if(pickedStations.size() == 2) {
                             mainT.setStartStation(pickedStations);
-                            pathGuiTest(pickedStations.getFirst(), pickedStations.getLast());
+
+                            //pickedStations.getFirst();
+
+                            //newX = pickedStations.getFirst().getDisplayStation().getTranslateX();
+                            System.out.println(newX);
+                            //pathGuiTest(pickedStations.getFirst(), pickedStations.getLast());
                             pickedStations.clear();
-                            //pane.getChildren().add(train);
 
                         }
 
                     });
 
-                    guiMap[i][j] = rect;
+                    guiMap2[i][j] = rect;
+                    pane.getChildren().add(guiMap2[i][j]);
 
                 }
             }
         }
     }
 
+
+    public void threadListener(){
+        for(int i = 0; i < WIDTH; i++){
+            for(int j = 0; j < HEIGHT; j++){
+
+                    System.out.print(" Thread State = " + map[i][j].getState() + " Name = " + map[i][j].getName());
+
+            }
+            System.out.print('\n');
+        }
+        try{
+            Thread.sleep(1000);
+
+        }
+        catch (InterruptedException e){
+
+        }
+    }
+
     public void handle(long currentNanoTime) {
 
+        trackListener();
 
-        //stationSetter();
-
-        initTracks();
-        redraw();
 
     }
 
-
-    private void redraw() {
-        //pane.getChildren().remove(train);
-        for (int i = 0; i < WIDTH; i++) {
-            for (int j = 0; j < HEIGHT; j++) {
-                pane.getChildren().remove(guiMap[i][j]);
-            }
-        }
-
-        //pane.getChildren().add(train);
-        for (int i = 0; i < WIDTH; i++) {
-            for (int j = 0; j < HEIGHT; j++) {
-                pane.getChildren().add(guiMap[i][j]);
-            }
-        }
-    }
 }

@@ -4,11 +4,14 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 
+import java.util.PriorityQueue;
+import java.util.Queue;
+
 public class Track extends Thread implements Component {
     static private int width = 75;
     static private int height = 2;
-    public boolean hasTrain;
-    public boolean isSwitch;
+    public boolean hasTrain = false;
+    public boolean isSwitch = false;
     public Track next;
     public Track nextR;
     public Track nextD;
@@ -19,16 +22,20 @@ public class Track extends Thread implements Component {
     public Station station;
     public Object lock = new Object();
     public Station startStation;
-    public boolean hasArrived = false;
+    public int direction;
+    //public boolean hasArrived = false;
     public boolean isOpen = true;
     public int isReserved = 0;
+    public Queue<Integer> trainOrder = new PriorityQueue<>();
     private boolean atEnd = false;
     public boolean isLight = false;
     public boolean visited = false;
     public volatile boolean begin = false;
+    public Station endStation;
     public String NAME;
     int index = 1;
     TrainPrinter printer;
+
     //public Circle stopLight = new Circle(20);
 
 
@@ -63,19 +70,22 @@ public class Track extends Thread implements Component {
         this.station = nextL;
     }
 
-    public void setSwitchTrackD(Track nextR, Track nextL, Track nextD, String name) {
+    public void setSwitchTrackD(Track nextR, Track nextL, Track nextD, int direction, String name) {
+        this.direction = direction;
         this.nextD = nextD;
         this.nextL = nextL;
         this.nextR = nextR;
-        //this.isLight = true;
+        this.isSwitch = true;
         this.NAME = name;
         setName(name);
     }
 
-    public void setSwitchTrackU(Track nextR, Track nextL, Track nextU, String name) {
+    public void setSwitchTrackU(Track nextR, Track nextL, Track nextU, int direction, String name) {
+        this.direction = direction;
         this.nextU = nextU;
         this.nextL = nextL;
         this.nextR = nextR;
+        this.isSwitch = true;
         this.NAME = name;
         setName(name);
     }
@@ -83,6 +93,10 @@ public class Track extends Thread implements Component {
     public Track[] returnNeighbors() {
         Track[] neighbors = new Track[]{nextU, nextR, nextD, nextL};
         return neighbors;
+    }
+
+    public int returnDirection(){
+        return direction;
     }
 
     public synchronized Station returnStation() {
@@ -105,19 +119,22 @@ public class Track extends Thread implements Component {
         return isReserved;
     }
 
-    public synchronized void moveTrain() {
-
+    public synchronized void moveTrain(boolean flag) {
 
         try {
+
             train.changeTrack(this);
-            this.begin = false;
-            isOpen = true;
+            isOpen = false;
+
+            Thread.sleep(1300);
+
+            System.out.println("Attempting to move Train from Track " + getName() + " to Track " + next.getName());
             System.out.println("Train is on track " + this.getName());
-            Thread.sleep(1000);
-            System.out.println("Attempting to move Train from Track " + getName() +
-                    " to Track " + next.getName());
+
             next.getTrain(train);
             this.hasTrain = false;
+            this.begin = false;
+
 
 
         } catch (Exception e) {
@@ -129,7 +146,7 @@ public class Track extends Thread implements Component {
 
     public synchronized void findNext() {
 
-        for(int i = 0; i < train.getDirections().size(); i++){
+        for (int i = 0; i < train.getDirections().size(); i++) {
             System.out.println(train.getDirections().get(i));
         }
         System.out.println("------------");
@@ -147,109 +164,107 @@ public class Track extends Thread implements Component {
             } else if (direction.equals("Up")) {
                 next = nextU;
                 //System.out.println("Switching Tracks");
-            } else {
+            } else if (direction.equals("Left")) {
                 next = nextL;
             }
-        }
+            begin = false;
 
+        }
     }
 
-    public void getTrain(Train train) {
+    public void trainOnWay(int trainNumber){
+        trainOrder.add(trainNumber);
+    }
+
+    public void trainPassed(int trainNumber){
+        trainOrder.remove(trainNumber);
+    }
+
+    private boolean hasPriority(int trainNumber){
+        if(trainOrder.peek() == trainNumber){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public synchronized void getTrain(Train train) {
         this.train = train;
         this.startStation = train.getStartStation();
-    }
-
-    public void trackSwitch(Track track) {
+        this.endStation = train.getEndStation();
 
     }
 
+    public int peekQ(){
+        return trainOrder.peek();
+    }
 
 
     public void run() {
-
-        //while(isOpen) {
-        while (Thread.currentThread().isAlive()) {
+        boolean test = false;
+        while (isAlive()) {
 
             synchronized (this) {
                 try {
 
                     while (!begin) {
+                        isOpen = true;
                         this.wait();
 
                     }
-                }
-                catch(InterruptedException e){
+                } catch (InterruptedException e) {
+
                 }
 
                 findNext();
-                //System.out.println(next);
-                if (station != null && !station.isStarting && station == train.endDest) {
-//                System.out.println("Arrived at " + station.returnName());
+                if (this.station != null && this.station.equals(endStation)) {
+                System.out.println("Arrived at " + station.returnName()
+                + " from " + train.startDest.returnName());
 
                     System.out.println("Train has ended");
-                    station.getTrain(train);
-                    isOpen = false;
-                    begin = false;
-                    atEnd = true;
-                    moveTrain();
-                    hasTrain = false;
-                    this.hasArrived = true;
-                } else if (this.next.isOpen) {
-                    System.out.println("entered");
-                    this.hasArrived = false;
-                    hasTrain = true;
-                    moveTrain();
-                    this.next.begin = true;
-                    next.hasTrain = true;
-                    synchronized (next){
+                   // moveTrain(false);
 
-                        //next.findNext();
-                        next.notify();
+                    this.isOpen = true;
+
+
+                    //moveTrain(false);
+
+                    atEnd = true;
+                    train.reserveOrReleasePath(false);
+                    this.hasTrain = false;
+                    train.trainHasArrived = true;
+
+                    this.station.getTrainFromTrack(train);
+
+                    this.begin = false;
+
+
+                }
+                else if (this.next != null) {
+                    boolean moved = false;
+                    while (!moved) {
+                        if (this.next.isOpen && this.next.hasPriority(this.train.returnTrainNumber())) {
+                            System.out.println("Start dest = " + train.startDest);
+                            System.out.println("End dest = " + train.endDest);
+                            //this.station.hasArrived = false;
+                            hasTrain = true;
+                            moveTrain(true);
+
+                            synchronized (next) {
+                                this.next.begin = true;
+                                next.hasTrain = true;
+                                this.next.notify();
+                            }
+                            // next.hasTrain = true;
+                            moved = true;
+                        } else {
+                            System.out.println("WAITING FOR OPEN");
+                        }
                     }
-                    // next.hasTrain = true;
                 }
             }
-
-
-//                    if (begin) {
-//                        if (station != null && !station.isStarting) {
-////                System.out.println("Arrived at " + station.returnName());
-//
-//                            station.getTrain(train);
-//                            isOpen = false;
-//                            begin = false;
-//                            atEnd = true;
-//                            moveTrain();
-//                            hasTrain = false;
-//                            this.hasArrived = true;
-//                        } else if (this.next.isOpen) {
-//                            System.out.println("entered");
-//                            this.hasArrived = false;
-//                            hasTrain = true;
-//                            moveTrain();
-//                            this.next.begin = true;
-//                            this.next.notify();
-//                            next.hasTrain = true;
-                            //Thread.currentThread().wait();
-                            //Thread.currentThread().interrupt();
-                        }
-//                    } else {
-//                        System.out.println("Track " + getName() + " is occupied...");
-//                        System.out.println("Waiting...");
-//                        Thread.sleep(2000);
-//                    }
-
-//                    } else {
-//                        wait();
-//                    }
-//                }
-//
-//                catch(Exception e){
-//
-//                }
-            }
-
-
+        }
+    }
 
 }
 
