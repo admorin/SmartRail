@@ -90,20 +90,24 @@ public class Train extends Thread
 
                 neighbors = neighbors[0].returnNeighbors();
             } else if(directions.get(step).equals("Right")){
-                if(reserving)neighbors[1].trainOnWay(thisTrain);
-                else neighbors[1].trainPassed(thisTrain);
+                if(neighbors[1] != null) {
+                    if (reserving) neighbors[1].trainOnWay(thisTrain);
+                    else neighbors[1].trainPassed(thisTrain);
 
-                neighbors = neighbors[1].returnNeighbors();
+                    neighbors = neighbors[1].returnNeighbors();
+                }
             } else if(directions.get(step).equals("Down")){
                 if(reserving)neighbors[2].trainOnWay(thisTrain);
                 else neighbors[2].trainPassed(thisTrain);
 
                 neighbors = neighbors[2].returnNeighbors();
             } else {
-                if(reserving)neighbors[3].trainOnWay(thisTrain);
-                else neighbors[3].trainPassed(thisTrain);
+                if(neighbors[3] != null) {
+                    if (reserving) neighbors[3].trainOnWay(thisTrain);
+                    else neighbors[3].trainPassed(thisTrain);
 
-                neighbors = neighbors[3].returnNeighbors();
+                    neighbors = neighbors[3].returnNeighbors();
+                }
             }
             step++;
         }

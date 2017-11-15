@@ -165,7 +165,7 @@ public class Track extends Thread implements Component {
         String direction = train.peekDirection();
 
         if (direction != null) {
-            if (direction.equals("Right")) {
+            if (direction.equals("Right") && nextR != null) {
                 next = nextR;
             } else if (direction.equals("Down")) {
                 next = nextD;
@@ -173,8 +173,10 @@ public class Track extends Thread implements Component {
             } else if (direction.equals("Up")) {
                 next = nextU;
                 //System.out.println("Switching Tracks");
-            } else if (direction.equals("Left")) {
+            } else if (direction.equals("Left") && nextL != null) {
                 next = nextL;
+            } else {
+                findNext();
             }
             begin = false;
 
