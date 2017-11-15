@@ -12,6 +12,7 @@ import util.Logger;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.Random;
 import java.util.concurrent.CountDownLatch;
 
 public class Train extends Thread
@@ -19,6 +20,8 @@ public class Train extends Thread
     Component curComponent;
     Station startDest;
     Station endDest;
+
+    int testCount = 0;
 
 
     Pane pane;
@@ -37,6 +40,7 @@ public class Train extends Thread
     public volatile boolean trainOver = false;
     public Circle trainDisplay = new Circle(10);
     public volatile boolean trainHasArrived = false;
+    private Random rand;
 
 
     public Rectangle train = new Rectangle(width, height);
@@ -65,6 +69,7 @@ public class Train extends Thread
         this.thisTrain = trainNumber;
         trainNumber++;
         searchAlgorithm(endDest);
+        rand = new Random();
 
     }
     public synchronized void clearDirections(){
@@ -110,6 +115,7 @@ public class Train extends Thread
         int moves = 0;
         while(!turned){
             if(directionStart%2 == 0){
+
                 if(neighbors[3] != null){
                     directions.add("Left");
                     if(neighbors[3].returnStation() != null && neighbors[3].returnStation().equals(endDest)){
@@ -271,6 +277,7 @@ public class Train extends Thread
             //currentDirection = directions.get(1);
             currentDirection = "End";
         }
+
         else {
             currentDirection = directions.get(instruction - 1);
         }
@@ -304,41 +311,60 @@ public class Train extends Thread
         return myTrack.toString();
 
     }
+    public boolean inBounds(double x, double y){
+        if(x == -1 && y == -1) return true;
+        else
+        return(x >= 900 || x <= 150|| y >= 500 || y <= 150);
+
+    }
 
     public synchronized void addTrain(){
+
+        this.trainDisplay.setFill(Color.rgb(rand.nextInt(255), rand.nextInt(255), rand.nextInt(255)));
         pane.getChildren().add(this.trainDisplay);
     }
 
-    public void moveTrain(){
+    public synchronized void trainWait(double x, double y){
+        this.newX = x;
+        this.newY = y;
         this.trainDisplay.setTranslateX(newX);
         this.trainDisplay.setTranslateY(newY);
     }
+
     public synchronized void moveTrainDown(){
-        newX = newX + 2;
-        newY = newY + 2;
-        trainDisplay.setTranslateX(newX);
-        trainDisplay.setTranslateY(newY);
+        System.out.println(newX);
+
+            this.newX += 2;
+            this.newY += 2;
+            this.trainDisplay.setTranslateX(newX);
+            this.trainDisplay.setTranslateY(newY);
 
     }
     public synchronized void moveTrainRight(double y){
-        newX = newX + 2;
-        newY = y;
-        trainDisplay.setTranslateX(newX);
-        trainDisplay.setTranslateY(newY);
+
+        testCount++;
+        System.out.println(testCount);
+            this.newX += 2;
+            this.newY = y;
+            this.trainDisplay.setTranslateX(newX);
+            this.trainDisplay.setTranslateY(newY);
 
     }
     public synchronized void moveTrainLeft(double y){
-        newX = newX - 2;
-        newY = y;
-        trainDisplay.setTranslateX(newX);
-        trainDisplay.setTranslateY(newY);
+
+            this.newX -= 2;
+            this.newY = y;
+            this.trainDisplay.setTranslateX(newX);
+            this.trainDisplay.setTranslateY(newY);
+
     }
 
     public synchronized void moveTrainUp(){
-        newX = newX - 2;
-        newY = newY - 2;
-        trainDisplay.setTranslateX(newX);
-        trainDisplay.setTranslateY(newY);
+
+            this.newX -= 2;
+            this.newY -= 2;
+            this.trainDisplay.setTranslateX(newX);
+            this.trainDisplay.setTranslateY(newY);
 
     }
     public synchronized void removeDisplay(){
