@@ -175,8 +175,6 @@ public class Track extends Thread implements Component {
                 //System.out.println("Switching Tracks");
             } else if (direction.equals("Left") && nextL != null) {
                 next = nextL;
-            } else {
-                findNext();
             }
             begin = false;
 
@@ -229,6 +227,7 @@ public class Track extends Thread implements Component {
                 }
 
                 findNext();
+                if(next == null) findNext();
                 if (this.station != null && this.station.equals(endStation)) {
                 System.out.println("Arrived at " + station.returnName()
                 + " from " + train.startDest.returnName());
