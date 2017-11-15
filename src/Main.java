@@ -1,3 +1,12 @@
+/**
+ * Andrew Morin
+ * Tyson Craner
+ * Alex Schmidt
+ *
+ * Train System
+ * Project 3
+ * 11/15/2017
+ */
 
 import components.*;
 import javafx.animation.AnimationTimer;

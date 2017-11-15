@@ -1,3 +1,13 @@
+/**
+ * Andrew Morin
+ * Tyson Craner
+ * Alex Schmidt
+ *
+ * Train System
+ * Project 3
+ * 11/15/2017
+ */
+
 package components;
 
 import javafx.scene.layout.Pane;
@@ -69,7 +79,7 @@ public class Station extends Thread implements Component {
             }
 
             if(this.selected1){
-                Train train = new Train(this, endStation, 1, true, pane);
+                Train train = new Train(this, endStation, pane);
                 synchronized (next) {
                     //trainStarter(train);
 

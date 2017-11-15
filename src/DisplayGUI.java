@@ -1,3 +1,13 @@
+/**
+ * Andrew Morin
+ * Tyson Craner
+ * Alex Schmidt
+ *
+ * Train System
+ * Project 3
+ * 11/15/2017
+ */
+
 import components.*;
 import javafx.animation.*;
 import javafx.scene.canvas.GraphicsContext;
@@ -13,9 +23,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.SimpleTimeZone;
 
-/**
- * Created by alexschmidt-gonzales on 10/31/17.
- */
 public class DisplayGUI extends AnimationTimer {
     private Pane pane;
     private final int WIDTH = 7;

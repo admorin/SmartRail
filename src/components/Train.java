@@ -1,35 +1,30 @@
+/**
+ * Andrew Morin
+ * Tyson Craner
+ * Alex Schmidt
+ *
+ * Train System
+ * Project 3
+ * 11/15/2017
+ */
+
 package components;
 
-import javafx.animation.AnimationTimer;
-import javafx.application.Platform;
-import javafx.concurrent.Service;
-import javafx.concurrent.Task;
+
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.Rectangle;
-import util.Logger;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.Random;
-import java.util.concurrent.CountDownLatch;
 
 public class Train extends Thread
 {
-    Component curComponent;
     public Station startDest;
     public Station endDest;
-
-    int testCount = 0;
-
-
     Pane pane;
     static private int width = 75;
     static private int height = 20;
-    public volatile boolean allClear = true;
-    public boolean finder;
-    public volatile boolean isRunning = false;
     public String NAME;
     private ArrayList<String> directions = new ArrayList<>();
     static private int trainNumber = 1;
@@ -37,30 +32,16 @@ public class Train extends Thread
     private String currentDirection;
     public double newX = -1;
     public double newY = -1;
-    public volatile boolean trainOver = false;
     public Circle trainDisplay = new Circle(10);
     public volatile boolean trainHasArrived = false;
     private Random rand;
 
 
-    public Rectangle train = new Rectangle(width, height);
     private int instruction = 0;
     public Track myTrack;
     public Track startTrack;
 
-    public Train(Station start, Track myTrack, Station end, Pane pane, String name)
-    {
-
-        this.NAME = name;
-        this.pane = pane;
-        this.myTrack = myTrack;
-        this.startDest = start;
-        this.endDest = end;
-
-
-    }
-
-    public Train(Station startDest, Station endDest, int dir, boolean isSearcher, Pane pane){
+    public Train(Station startDest, Station endDest, Pane pane){
         this.myTrack = startDest.firstTrack();
         this.startTrack = this.myTrack;
         this.startDest = startDest;
@@ -115,7 +96,6 @@ public class Train extends Thread
 
     public boolean turnAround(int directionStart, Track[] neighbors){
         boolean turned = false;
-        boolean foundStation = false;
         int moves = 0;
         while(!turned){
             if(directionStart%2 == 0){
@@ -160,12 +140,10 @@ public class Train extends Thread
     }
 
     public synchronized void searchAlgorithm(Station end){
-        //System.out.println(endDest.returnName() + " " + startDest.returnName());
         boolean endFound = false;
         Track[] neighbors = startTrack.returnNeighbors();
         Station trackStation = startTrack.returnStation();
         startTrack.setReserved(thisTrain);
-        boolean endEarly = false;
         int direction = 0; //1 = Right, 2 = Left.
         //Returns Up, Right, Down, Left, Station.
         while(!endFound){
@@ -238,35 +216,23 @@ public class Train extends Thread
                 neighbors = neighbors[3].returnNeighbors();
 
             } else {
-//                for(int j = 0; j < 4; j++){
-//                    if(neighbors[j] != null){
-//                        System.out.println(neighbors[j].NAME);
-//                    }
-//                }
-//                System.out.println("_-_-_-_-_");
-//                System.out.println(neighbors[3]);
                 String last = directions.get(directions.size()-1);
                 if(last.equals("Up")){
                     neighbors = neighbors[2].returnNeighbors();
-//                    trackStation = neighbors[2].returnStation();
                 } else if(last.equals("Right")){
-//                    System.out.println("Last was Right");
                     if(neighbors[3] != null) {
                         neighbors = neighbors[3].returnNeighbors();
                     } else {
                         directions.remove(directions.size()-1);
                     }
-//                    trackStation = neighbors[3].returnStation();
                 } else if(last.equals("Down")){
                     neighbors = neighbors[0].returnNeighbors();
-//                    trackStation = neighbors[0].returnStation();
                 } else {
                     if(neighbors[1] != null) {
                         neighbors = neighbors[1].returnNeighbors();
                     } else {
                         directions.remove(directions.size()-1);
                     }
-//                    trackStation = neighbors[1].returnStation();
                 }
                 directions.remove(directions.size()-1);
             }
@@ -284,16 +250,9 @@ public class Train extends Thread
         return endDest;
     }
 
-    public Train(Station startDest, Station endDest){
-        this.startDest = startDest;
-
-        this.directions = directions;
-    }
-
     public synchronized String peekDirection(){
         instruction++;
         if(instruction > directions.size()){
-            //currentDirection = directions.get(1);
             currentDirection = "End";
         }
 
@@ -326,10 +285,6 @@ public class Train extends Thread
         return thisTrain;
     }
 
-    public String currentTrack(){
-        return myTrack.toString();
-
-    }
     public boolean inBounds(double x, double y){
         if(x == -1 && y == -1) return true;
         else
