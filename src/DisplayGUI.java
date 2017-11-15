@@ -79,7 +79,9 @@ public class DisplayGUI extends AnimationTimer {
 
                             train.newX = (i * SIZEX);
                             train.newY = ((j + 1) * SIZEY);
+                            System.out.println((j + 1) * SIZEY);
                             train.addTrain();
+
                         } else {
 
                             if (dir.equals("Down") && !track.isWaiting) {
@@ -104,18 +106,20 @@ public class DisplayGUI extends AnimationTimer {
                                 train.removeDisplay();
                                 break;
                             }
+
                         }
                     }
 
                 }
               if (map[i][j].getClass().getSimpleName().equals("Station")) {
-                    Train train1 = ((Station) map[i][j]).returnTrain();
+                   train = ((Station) map[i][j]).returnTrain();
 
                     if (((Station) map[i][j]).hasArrived ) {
                         guiMap2[i][j].setFill(Color.AQUA);
                         //System.out.println((Station) map[i][j]);
-                        if(train1 != null)
-                        train1.removeDisplay();
+                        if(train != null) {
+                            train.removeDisplay();
+                        }
                     }
                 }
             }
@@ -137,6 +141,7 @@ public class DisplayGUI extends AnimationTimer {
                         line.setStartY((j+1) * SIZEY);
                         line.setEndX((i*SIZEX) + SIZEX);
                         line.setEndY((j+1) * SIZEY);
+
 
                         switchLine.setStartX((i*SIZEX));
                         switchLine.setStartY((j+1) * SIZEY);
@@ -251,23 +256,6 @@ public class DisplayGUI extends AnimationTimer {
     }
 
 
-    public void threadListener(){
-        for(int i = 0; i < WIDTH; i++){
-            for(int j = 0; j < HEIGHT; j++){
-
-                    System.out.print(" Thread State = " + map[i][j].getState() + " Name = " + map[i][j].getName());
-
-            }
-            System.out.print('\n');
-        }
-        try{
-            Thread.sleep(1000);
-
-        }
-        catch (InterruptedException e){
-
-        }
-    }
 
     public void handle(long currentNanoTime) {
 

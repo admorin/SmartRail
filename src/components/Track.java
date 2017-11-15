@@ -120,6 +120,15 @@ public class Track extends Thread implements Component {
         return isReserved;
     }
 
+    public synchronized void dockTrain(){
+        try {
+            Thread.sleep(1250);
+        }
+        catch(InterruptedException e){
+
+        }
+    }
+
     public synchronized void moveTrain(boolean flag) {
 
         try {
@@ -127,7 +136,7 @@ public class Track extends Thread implements Component {
             train.changeTrack(this);
             isOpen = false;
 
-            Thread.sleep(1300);
+            Thread.sleep(1250);
 
             System.out.println("Attempting to move Train from Track " + getName() + " to Track " + next.getName());
             System.out.println("Train is on track " + this.getName());
@@ -151,12 +160,11 @@ public class Track extends Thread implements Component {
             System.out.println(train.getDirections().get(i));
         }
         System.out.println("------------");
-
+        int index = train.getDirections().size()-1;
 
         String direction = train.peekDirection();
 
         if (direction != null) {
-
             if (direction.equals("Right")) {
                 next = nextR;
             } else if (direction.equals("Down")) {
@@ -210,6 +218,7 @@ public class Track extends Thread implements Component {
 
                     while (!begin) {
                         isOpen = true;
+                        hasTrain = false;
                         this.wait();
 
                     }
@@ -232,12 +241,13 @@ public class Track extends Thread implements Component {
 
                     atEnd = true;
                     train.reserveOrReleasePath(false);
-                    this.hasTrain = false;
+                    this.hasTrain = true;
                     train.trainHasArrived = true;
 
                     this.station.getTrainFromTrack(train);
 
                     this.begin = false;
+
 
 
                 }
