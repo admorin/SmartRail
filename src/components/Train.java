@@ -241,7 +241,6 @@ public class Train extends Thread
 //                System.out.println("Popping");
 //                System.out.println(neighbors[3]);
                 String last = directions.get(directions.size()-1);
-                directions.remove(directions.size()-1);
                 if(last.equals("Up")){
                     neighbors = neighbors[2].returnNeighbors();
 //                    trackStation = neighbors[2].returnStation();
@@ -256,6 +255,7 @@ public class Train extends Thread
                     neighbors = neighbors[1].returnNeighbors();
 //                    trackStation = neighbors[1].returnStation();
                 }
+                directions.remove(directions.size()-1);
             }
 
 //            for(String s : directions) System.out.println(s);
