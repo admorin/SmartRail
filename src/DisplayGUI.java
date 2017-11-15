@@ -38,6 +38,8 @@ public class DisplayGUI extends AnimationTimer {
     private LinkedList<Station> stations = new LinkedList<>();
     double newX = -1;
     double newY = -1;
+    double lineX = -1;
+    double lineY = -1;
     Timeline timeline = new Timeline();
     public Train train;
 
@@ -56,6 +58,7 @@ public class DisplayGUI extends AnimationTimer {
     }
 
     public void animationTrack() {
+
 
     }
 
@@ -85,12 +88,12 @@ public class DisplayGUI extends AnimationTimer {
                         if (train.newX == -1 && train.newY == -1) {
 
                             if(trackShift(train.startDest)) {
-                                train.newX = (i * SIZEX );
+                                train.newX = ((i * SIZEX) + SIZEX);
                                 train.newY = ((j + 1) * SIZEY);
                                 train.addTrain();
                             }
                             else {
-                                train.newX = (i * SIZEX);
+                                train.newX = ((i * SIZEX));
                                 train.newY = ((j + 1) * SIZEY);
                                 train.addTrain();
                             }
@@ -110,13 +113,13 @@ public class DisplayGUI extends AnimationTimer {
                                 train.moveTrainLeft(((j + 1) * SIZEY));
 
                             } else if (dir.equals("Up") && !track.isWaiting) {
+                                trackAnimation();
 
                                 train.moveTrainUp();
 
                             } else if (dir.equals("End")) {
                                 train.newX = -1;
                                 train.newY = -1;
-                                System.out.println("DSFSDF");
                                 train.removeDisplay();
 
                             }
@@ -142,11 +145,29 @@ public class DisplayGUI extends AnimationTimer {
     }
 
     public void trackAnimation() {
+        Track track;
         for (int i = 0; i < WIDTH; i++) {
             for (int j = 0; j < HEIGHT; j++) {
                 if (map[i][j].getClass().getSimpleName().equals("Track")) {
                     if (((Track) map[i][j]).isSwitch){
-                        
+                        track = (Track) map[i][j];
+                        Line line = new Line();
+                        Line switchLine = new Line();
+
+
+                        line.setStartY((j+1) * SIZEY);
+                        line.setEndX((i*SIZEX) + SIZEX);
+                        line.setEndY((j+1) * SIZEY);
+
+
+                        switchLine.setStartX((i*SIZEX));
+                        switchLine.setStartY((j+1) * SIZEY);
+                        switchLine.setEndX(track.switchX+=2);
+                        switchLine.setEndY(((j+1) * SIZEY)+150);
+
+                        pane.getChildren().add(switchLine);
+
+
                     }
                 }
             }
@@ -158,10 +179,12 @@ public class DisplayGUI extends AnimationTimer {
 
     public void initTracks() {
 
+        Track track;
         for (int i = 0; i < WIDTH; i++) {
             for (int j = 0; j < HEIGHT; j++) {
                 if (map[i][j].getClass().getSimpleName().equals("Track")) {
                     if (((Track) map[i][j]).isSwitch) {
+                        track = (Track) map[i][j];
                         Line line = new Line();
                         Line switchLine = new Line();
 
@@ -175,6 +198,10 @@ public class DisplayGUI extends AnimationTimer {
                         switchLine.setStartY((j+1) * SIZEY);
                         switchLine.setEndX(((i*SIZEX)+150));
                         switchLine.setEndY(((j+1) * SIZEY)+150);
+
+                        track.switchX = (i*SIZEX)+150;
+
+
 
                         pane.getChildren().addAll(line, switchLine);
 

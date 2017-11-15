@@ -35,7 +35,7 @@ public class Track extends Thread implements Component {
     public String NAME;
     public volatile boolean isWaiting = false;
     int index = 1;
-    TrainPrinter printer;
+    public double switchX = -1;
 
     //public Circle stopLight = new Circle(20);
 
@@ -159,18 +159,17 @@ public class Track extends Thread implements Component {
         if (direction != null) {
             if (direction.equals("Right")) {
                 next = nextR;
-                isSwitch = false;
             } else if (direction.equals("Down")) {
                 next = nextD;
-                isSwitch = true;
+
                 //System.out.println("Switching Tracks");
             } else if (direction.equals("Up")) {
                 next = nextU;
-                isSwitch = true;
+
                 //System.out.println("Switching Tracks");
             } else if (direction.equals("Left")) {
                 next = nextL;
-                isSwitch = false;
+
             }
             begin = false;
 
