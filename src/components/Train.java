@@ -105,7 +105,7 @@ public class Train extends Thread
                 if(neighbors[3] != null){
                     directions.add("Left");
                     if(neighbors[3].returnStation() != null && neighbors[3].returnStation().equals(endDest)){
-                        directions.add("Left");
+//                        directions.add("Left");
                         return true;
                     }
                     neighbors = neighbors[3].returnNeighbors();
@@ -123,7 +123,7 @@ public class Train extends Thread
                     directions.add("Right");
                     System.out.println(neighbors[1].returnStation());
                     if(neighbors[1].returnStation() != null && neighbors[1].returnStation().equals(endDest)){
-                        directions.add("Right");
+//                        directions.add("Right");
                         return true;
                     }
                     neighbors = neighbors[1].returnNeighbors();
@@ -151,8 +151,8 @@ public class Train extends Thread
         while(!endFound){
             if(trackStation != null && trackStation.equals(end)){
                 endFound = true;
-                if(direction%2 == 0) directions.add("Left");
-                else directions.add("Right");
+//                if(direction%2 == 0) directions.add("Left");
+//                else directions.add("Right");
                 reserveOrReleasePath(true);
                 //UP------------------------------------------------------------------------
             } else if(neighbors[0] != null && neighbors[0].getReserved() != thisTrain){
