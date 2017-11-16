@@ -27,9 +27,11 @@ public class Train extends Thread
     static private int height = 20;
     public String NAME;
     private ArrayList<String> directions = new ArrayList<>();
+    private ArrayList<String> GUIdirections = new ArrayList<>();
     static private int trainNumber = 1;
     private int thisTrain;
     private String currentDirection;
+    private String GUIdirection;
     public double newX = -1;
     public double newY = -1;
     public Circle trainDisplay = new Circle(10);
@@ -239,6 +241,12 @@ public class Train extends Thread
 
 //            for(String s : directions) System.out.println(s);
         }
+        GUIdirections.addAll(directions);
+        if(GUIdirections.get(GUIdirections.size()-1).equals("Left")){
+            System.out.println("TESTING");
+            GUIdirections.remove(GUIdirections.size()-1);
+            GUIdirections.add(0, "Left");
+        }
     }
 
     public Station getStartStation(){
@@ -254,16 +262,18 @@ public class Train extends Thread
         instruction++;
         if(instruction > directions.size()){
             currentDirection = "End";
+            GUIdirection = "End";
         }
 
         else {
             currentDirection = directions.get(instruction - 1);
+            GUIdirection = GUIdirections.get(instruction - 1);
         }
         return currentDirection;
     }
 
     public String returnCurrentDirection(){
-        return currentDirection;
+        return GUIdirection;
     }
 
     public ArrayList<String> getDirections() {
