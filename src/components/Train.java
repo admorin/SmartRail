@@ -64,7 +64,7 @@ public class Train extends Thread
         else startTrack.trainPassed(thisTrain);
         Track[] neighbors = startTrack.returnNeighbors();
         int step = 0;
-        while(step < directions.size() - 1){
+        while(step < directions.size()){
             System.out.println(trainNumber);
             System.out.println(thisTrain);
             if(directions.get(step).equals("Up")){
