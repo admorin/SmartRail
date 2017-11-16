@@ -47,6 +47,8 @@ public class Track extends Thread implements Component {
     int index = 1;
     public double switchX = -1;
     public double startX = -1;
+    public double startY = -1;
+    public double switchY = -1;
 
     //public Circle stopLight = new Circle(20);
 
@@ -275,12 +277,8 @@ public class Track extends Thread implements Component {
                     train.reserveOrReleasePath(false);
                     this.hasTrain = false;
                     train.trainHasArrived = true;
-
                     this.station.getTrainFromTrack(train);
-
                     this.begin = false;
-
-
 
                 }
                 else if (this.next != null) {

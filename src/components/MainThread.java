@@ -108,9 +108,6 @@ public class MainThread extends Thread {
         C1.setTrackLStation(C2, C, "C1");
 
 
-
-
-
         myMap = new Thread[LENGTH][WIDTH];
         myMap[0][0] = A;
         myMap[1][0] = T1;
@@ -144,11 +141,6 @@ public class MainThread extends Thread {
 
             }
         }
-
-
-
-
-
         return myMap;
     }
     public synchronized void test(){
