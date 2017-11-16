@@ -99,7 +99,7 @@ public class Track extends Thread implements Component {
         this.nextU = nextU;
         this.nextL = nextL;
         this.nextR = nextR;
-        this.isSwitch = true;
+        //this.isSwitch = true;
         this.NAME = name;
         setName(name);
     }

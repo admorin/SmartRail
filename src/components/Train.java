@@ -23,8 +23,18 @@ public class Train extends Thread
     public Station startDest;
     public Station endDest;
     Pane pane;
-    static private int width = 75;
-    static private int height = 20;
+
+    private final int WIDTH = 7;
+    private final int HEIGHT = 3;
+    private final double T_LENGTH = 150;
+
+    private double DX = T_LENGTH/(WIDTH-3);
+    private double DY = (2*DX) + T_LENGTH;
+
+    private double dx = (DX + T_LENGTH)/75;
+
+
+
     public String NAME;
     private ArrayList<String> directions = new ArrayList<>();
     private ArrayList<String> GUIdirections = new ArrayList<>();
@@ -317,7 +327,8 @@ public class Train extends Thread
 
     public synchronized void moveTrainDown(){
 
-        this.newX += 2.5;
+        //this.newX += 2.5;
+        this.newX += dx;
         this.newY += 2;
         this.trainDisplay.setTranslateX(newX);
         this.trainDisplay.setTranslateY(newY);
@@ -326,7 +337,8 @@ public class Train extends Thread
     public synchronized void moveTrainRight(double y){
 
 
-        this.newX += 2.5;
+        //this.newX += 2.5;
+        this.newX += dx;
         this.newY = y;
         this.trainDisplay.setTranslateX(newX);
         this.trainDisplay.setTranslateY(newY);
@@ -334,7 +346,8 @@ public class Train extends Thread
     }
     public synchronized void moveTrainLeft(double y){
 
-        this.newX -= 2.5;
+        //this.newX -= 2.5;
+        this.newX -= dx;
         this.newY = y;
         this.trainDisplay.setTranslateX(newX);
         this.trainDisplay.setTranslateY(newY);
@@ -343,7 +356,8 @@ public class Train extends Thread
 
     public synchronized void moveTrainUp(){
 
-        this.newX -= 2.5;
+        //this.newX -= 2.5;
+        this.newX -= dx;
         this.newY -= 2;
         this.trainDisplay.setTranslateX(newX);
         this.trainDisplay.setTranslateY(newY);

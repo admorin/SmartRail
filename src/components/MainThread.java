@@ -10,6 +10,7 @@
 
 package components;
 
+import com.sun.xml.internal.ws.handler.HandlerException;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
 
@@ -40,6 +41,7 @@ public class MainThread extends Thread {
     Thread[][] myMap = new Thread[LENGTH][WIDTH];
     public Station start;
     public Station end;
+
 
     public MainThread(Pane pane){
         this.pane = pane;
@@ -73,7 +75,27 @@ public class MainThread extends Thread {
         Track C4 = new Track();
         Track C5 = new Track();
 
+        for(int i = 1; i < LENGTH-2; i++){
+            for(int j = 0; j < WIDTH; j++){
+                myMap[i][j] = new Track();
+            }
+        }
 
+        for(int j = 0; j < WIDTH; j++){
+            myMap[0][j] = new Station();
+            for(int x = 0; x < WIDTH; x++) {
+
+                myMap[LENGTH - 1][x] = new Station();
+            }
+        }
+
+        for(int j = 0; j < WIDTH; j++){
+            myMap[0][j] = new Station("Station " + j, (Track)myMap[LENGTH-2][j] , pane);
+            for(int x = 0; x < WIDTH; x++)
+            myMap[LENGTH-1][x] = new Station("Station " + x, (Track)myMap[1][x], pane);
+        }
+
+//
         Station X = new Station("Station X", T5, pane);
         Station A = new Station("Station A", T1, pane);
 
@@ -130,7 +152,49 @@ public class MainThread extends Thread {
         myMap[4][2] = C4;
         myMap[5][2] = C5;
         myMap[6][2] = Z;
+        for(int i = 1; i < LENGTH-2; i++){
+            for(int j = 0; j < WIDTH; j++){
+                myMap[i][j] = new Track();
+            }
+        }
 
+//        for(int j = 0; j < WIDTH; j++){
+//            myMap[0][j] = new Station();
+//            myMap[LENGTH-1][j] = new Station();
+//        }
+
+        for(int j = 0; j < WIDTH; j++) {
+            myMap[0][j] = new Station("Station " + j, (Track) myMap[1][j], pane);
+            myMap[LENGTH - 1][j] = new Station("Station " + j+4, (Track) myMap[LENGTH-2][j], pane);
+        }
+
+        for(int i = 1; i < LENGTH-1; i++){
+            for(int j = 0; j < WIDTH; j++){
+                if(i % 2 != 0) {
+                    //System.out.println(i);
+                    if (i == 1) {
+                        Track t = (Track) myMap[i][j];
+                        t.setTrackLStation((Track) myMap[2][j], (Station) myMap[0][j], "" + i);
+                        myMap[i][j] = t;
+                    } else if (i < LENGTH-2) {
+                        Track t = (Track) myMap[i][j];
+                        t.setTrack((Track) myMap[i + 1][j], (Track) myMap[i - 1][j], "" + i);
+                        myMap[i][j] = t;
+                    }
+                    else{
+                        Track t = (Track) myMap[i][j];
+                        t.setTrackRStation((Station)myMap[LENGTH -1][j], (Track)myMap[LENGTH-2][j], ""+i);
+                        myMap[i][j] = t;
+                    }
+                }
+                else {
+                    Track t = (Track)myMap[i][j];
+                    t.setTrack((Track)myMap[i+1][j], (Track)myMap[i-1][j], ""+i);
+                    myMap[i][j] = t;
+
+                }
+            }
+        }
 
 //
         stationList.add(X);
@@ -138,7 +202,6 @@ public class MainThread extends Thread {
         for(int i = 0; i < LENGTH; i++){
             for(int j = 0; j < WIDTH; j++){
                 myMap[i][j].start();
-
             }
         }
         return myMap;
