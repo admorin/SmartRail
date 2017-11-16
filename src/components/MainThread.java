@@ -12,8 +12,10 @@ package components;
 
 import com.sun.xml.internal.ws.handler.HandlerException;
 import javafx.scene.layout.Pane;
-import javafx.scene.shape.Rectangle;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.*;
 
 /**
@@ -39,6 +41,7 @@ public class MainThread extends Thread {
     public boolean beenClicked = false;
     public Object lock = new Object();
     Thread[][] myMap = new Thread[LENGTH][WIDTH];
+    Thread[][] myMap2 = new Thread[LENGTH][WIDTH];
     public Station start;
     public Station end;
 
@@ -49,13 +52,34 @@ public class MainThread extends Thread {
     }
 
     public Thread[][] initialize(){
-//        Station station1 = new Station();
-//        Track track1 = new Track();
-//        Track track2 = new Track();
-//        Track track3 = new Track();
-//        Track track4 = new Track();
-//        Track track5 = new Track();
-//        Station station2 = new Station();
+        int stations = 0;
+        int tracks = 0;
+        int other = 0;
+
+        try{
+            BufferedReader reader = new BufferedReader(new InputStreamReader(this.getClass().getClassLoader().getResourceAsStream("components/map/TrackFile.txt")));
+            String str;
+            int row = 0;
+            while ((str = reader.readLine()) != null && !str.equals("END")){
+                for(int i = 0; i < str.length(); i++){
+                    char temp = str.charAt(i);
+                    if(Character.isUpperCase(temp)){
+                        stations++;
+                    } else if(temp == '-' || Character.isDigit(temp)){
+                        tracks++;
+                    } else {
+                        other++;
+                    }
+                }
+                row++;
+            }
+        } catch (IOException e) {
+            System.out.print("File not found.");
+        }
+
+        System.out.println("Stations: " + stations);
+        System.out.println("Tracks: " + tracks);
+        System.out.println("Uh-Ohs: " + other);
 
         //Station A = new Station();
         Track T1 = new Track();
