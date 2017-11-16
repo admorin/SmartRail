@@ -46,6 +46,7 @@ public class Track extends Thread implements Component {
     public volatile boolean isWaiting = false;
     int index = 1;
     public double switchX = -1;
+    public double startX = -1;
 
     //public Circle stopLight = new Circle(20);
 
@@ -144,8 +145,8 @@ public class Track extends Thread implements Component {
             System.out.println("Train is on track " + this.getName());
 
             next.getTrain(train);
-            this.hasTrain = false;
-            this.begin = false;
+            this.hasTrain = true;
+            //this.begin = false;
 
 
 
@@ -220,9 +221,9 @@ public class Track extends Thread implements Component {
                 System.out.println("Start dest = " + train.startDest);
                 System.out.println("End dest = " + train.endDest);
                 //this.station.hasArrived = false;
-                hasTrain = true;
+                this.hasTrain = true;
 
-                moveTrain(flag);
+                moveTrain(true);
                 this.isWaiting = false;
 
                 synchronized (next) {
@@ -272,7 +273,7 @@ public class Track extends Thread implements Component {
 
                     atEnd = true;
                     train.reserveOrReleasePath(false);
-                    this.hasTrain = true;
+                    this.hasTrain = false;
                     train.trainHasArrived = true;
 
                     this.station.getTrainFromTrack(train);
@@ -288,8 +289,8 @@ public class Track extends Thread implements Component {
                 else if(this.station != null && !this.station.equals(endStation) && !this.station.equals(train.startDest)){
                     //this.next = this.station.firstTrack();
 
-                    next = this.station.firstTrack();
-                    train.changeTrack(this.station.firstTrack());
+                    this.next = this.station.firstTrack();
+                    this.train.changeTrack(this.station.firstTrack());
 
                     System.out.println(next);
                     operation(false);

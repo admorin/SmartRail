@@ -87,6 +87,8 @@ public class Station extends Thread implements Component {
                     //train.start();
                     next.notify();
                     next.getTrain(train);
+                    //trainDock(train, true);
+
 
 
                     this.selected1 = false;
@@ -118,6 +120,38 @@ public class Station extends Thread implements Component {
         return station;
     }
 
+
+
+    public synchronized void trainDock(Train train, boolean leaving){
+        this.train = train;
+        try{
+            train.myTrack.hasTrain = true;
+
+            if(train.returnCurrentDirection().equals("Right")){
+                if(leaving){
+                    train.moveTrainRight(150);
+                }
+                else {
+                    train.moveTrainRight(5 * 150);
+                }
+            }
+            else if(train.returnCurrentDirection().equals("Left")){
+                if(leaving){
+                    train.moveTrainLeft(6*150);
+                }
+                else{
+                    train.moveTrainLeft(150);
+                }
+            }
+            Thread.sleep(1250);
+
+        }
+        catch (InterruptedException e){
+
+        }
+        train.myTrack.hasTrain = false;
+    }
+
     public String returnName() {
         return name;
     }
@@ -129,6 +163,7 @@ public class Station extends Thread implements Component {
     public synchronized void getTrainFromTrack(Train train) {
         this.train = train;
         this.initStation = false;
+        //trainDock(train, false);
 
         System.out.println(name + " got train.");
 

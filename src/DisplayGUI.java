@@ -1,7 +1,8 @@
 /**
- * Andrew Morin
- * Tyson Craner
  * Alex Schmidt
+ *
+ * Tyson Craner
+ * Andrew Morin
  *
  * Train System
  * Project 3
@@ -26,7 +27,7 @@ import java.util.SimpleTimeZone;
 public class DisplayGUI extends AnimationTimer {
     private Pane pane;
     private final int WIDTH = 7;
-    private final int HEIGHT = 2;
+    private final int HEIGHT = 3;
     private final int SIZEX = 150;
     private final int SIZEY = 150;
     private final int trackLen = 100;
@@ -44,11 +45,12 @@ public class DisplayGUI extends AnimationTimer {
     private LinkedList<Station> pickedStations = new LinkedList<>();
     private LinkedList<Station> stations = new LinkedList<>();
     double newX = -1;
-    double newY = -1;
-    double lineX = -1;
-    double lineY = -1;
+    private final double DX = 37.5;
+    private final double DY = 225;
+    boolean starting = false;
     Timeline timeline = new Timeline();
     public Train train;
+
 
 
     public DisplayGUI(Pane pane, MainThread mainT) {
@@ -58,14 +60,8 @@ public class DisplayGUI extends AnimationTimer {
 
         map = mainT.initialize();
         this.stations = mainT.stationList;
-       // pane.getChildren().add(testTrain);
-        initStation();
         initTracks();
-
-    }
-
-    public void animationTrack() {
-
+        initStation();
 
     }
 
@@ -76,11 +72,17 @@ public class DisplayGUI extends AnimationTimer {
 
     }
 
+    public void engageTrackSwitchUp(Train train){
+        ArrayList<String> temp = train.getDirections();
+        //LinkedList<String> temp = train.getDirections();
+        if(temp.contains("Up")) trackAnimation();
+    }
 
+
+
+//Finished Method
 
     public synchronized void trackListener(){
-        Circle displayTrain = new Circle(10);
-        boolean flag = false;
         Train train;
         Track track;
         for (int i = 0; i < WIDTH; i++) {
@@ -94,53 +96,41 @@ public class DisplayGUI extends AnimationTimer {
 
                         if (train.newX == -1 && train.newY == -1) {
 
-                            if(trackShift(train.startDest)) {
-                                train.newX = ((i * SIZEX) + SIZEX);
-                                train.newY = ((j + 1) * SIZEY);
-                                train.addTrain();
-                            }
-                            else {
-                                train.newX = ((i * SIZEX));
-                                train.newY = ((j + 1) * SIZEY);
-                                train.addTrain();
-                            }
-
-                        } else {
-
-                            if (dir.equals("Down") && !track.isWaiting) {
-
-                                train.moveTrainDown();
-
-                            } else if (dir.equals("Right") && !track.isWaiting) {
-
-                                train.moveTrainRight(((j + 1) * SIZEY));
-
-
-                            } else if (dir.equals("Left") && !track.isWaiting) {
-                                train.moveTrainLeft(((j + 1) * SIZEY));
-
-                            } else if (dir.equals("Up") && !track.isWaiting) {
-                                trackAnimation();
-
-                                train.moveTrainUp();
-
-                            } else if (dir.equals("End")) {
-                                train.newX = -1;
-                                train.newY = -1;
-                                train.removeDisplay();
-
-                            }
+                            starting = true;
+                            train.newX = (i * SIZEX);
+                            train.newY = ((j + 1) * SIZEY);
+                            train.addTrain();
 
                         }
+                        else {
+                            if (dir.equals("Down") && !track.isWaiting){
+                                train.moveTrainDown();
+                            }
+                            else if (dir.equals("Right") && !track.isWaiting) {
+                                train.moveTrainRight(((j + 1) * SIZEY));
+                            }
+                            else if (dir.equals("Left") && !track.isWaiting) {
+                                if(starting){
+                                    train.newX = i*SIZEX+150;
+                                    starting = false;
+                                 }
+                                train.moveTrainLeft(((j + 1) * SIZEY));
+                            }
+                            else if (dir.equals("Up") && !track.isWaiting) {
+                                train.moveTrainUp();
+                            }
+                            else if (dir.equals("End")) {
+                                System.out.println("GUI train finished...");
+                                break;
+                            }
+                        }
                     }
-
                 }
-              if (map[i][j].getClass().getSimpleName().equals("Station")) {
-                   train = ((Station) map[i][j]).returnTrain();
 
+                if (map[i][j].getClass().getSimpleName().equals("Station")) {
+                    train = ((Station) map[i][j]).returnTrain();
                     if (((Station) map[i][j]).hasArrived ) {
                         guiMap2[i][j].setFill(Color.AQUA);
-                        //System.out.println((Station) map[i][j]);
                         if(train != null) {
                             train.removeDisplay();
                         }
@@ -153,29 +143,26 @@ public class DisplayGUI extends AnimationTimer {
 
     public void trackAnimation() {
         Track track;
+
         for (int i = 0; i < WIDTH; i++) {
             for (int j = 0; j < HEIGHT; j++) {
                 if (map[i][j].getClass().getSimpleName().equals("Track")) {
                     if (((Track) map[i][j]).isSwitch){
                         track = (Track) map[i][j];
-                        Line line = new Line();
+
                         Line switchLine = new Line();
+                        if(track.switchX < (i*SIZEX) +300) {
+                            switchLine.setStartX(track.startX);
+                            switchLine.setStartY((j + 1) * SIZEY);
+                            switchLine.setEndX(track.switchX);
+                            switchLine.setEndY(((j + 1) * SIZEY) + 150);
+                            System.out.print(track.switchX += 2);
 
-
-                        line.setStartY((j+1) * SIZEY);
-                        line.setEndX((i*SIZEX) + SIZEX);
-                        line.setEndY((j+1) * SIZEY);
-
-
-                        switchLine.setStartX((i*SIZEX));
-                        switchLine.setStartY((j+1) * SIZEY);
-                        switchLine.setEndX(track.switchX+=2);
-                        switchLine.setEndY(((j+1) * SIZEY)+150);
-
-                        pane.getChildren().add(switchLine);
-
-
+//                        pane.getChildren().remove(switchLine);
+                            pane.getChildren().add(switchLine);
+                        }
                     }
+
                 }
             }
         }
@@ -201,12 +188,14 @@ public class DisplayGUI extends AnimationTimer {
                         line.setEndY((j+1) * SIZEY);
 
 
-                        switchLine.setStartX((i*SIZEX));
+
+                        switchLine.setStartX((i*SIZEX)+DX);
                         switchLine.setStartY((j+1) * SIZEY);
-                        switchLine.setEndX(((i*SIZEX)+150));
-                        switchLine.setEndY(((j+1) * SIZEY)+150);
+                        switchLine.setEndX(((i*SIZEX)+DY));
+                        switchLine.setEndY(((j+1) * SIZEY)+SIZEY);
 
                         track.switchX = (i*SIZEX)+150;
+                        track.startX = (i*SIZEX);
 
 
 
@@ -228,18 +217,6 @@ public class DisplayGUI extends AnimationTimer {
         }
     }
 
-    public void trainAnimation(){
-        for(int i = 0; i < WIDTH; i++){
-            for(int j = 0; j < HEIGHT; j++){
-                if(map[i][j].getClass().getSimpleName().equals("Track")){
-                    if(((Track)map[i][j]).hasTrain){
-                        guiMap[i][j].play();
-
-                    }
-                }
-            }
-        }
-    }
 
     public void lights() {
         for (int i = 0; i < WIDTH; i++) {
@@ -277,11 +254,8 @@ public class DisplayGUI extends AnimationTimer {
                     Text text = new Text(t.getName());
 
                     rect = t.getDisplayStation();
-
                     rect.setTranslateX((i* SIZEX)+25);
                     rect.setTranslateY((j + 1) * SIZEY);
-
-                    //t.getDisplayStation().setTranslateY((j + 1) * SIZEY);
                     rect.setFill(Color.AQUA);
 
                     text.setTranslateX(rect.getTranslateX());
@@ -291,22 +265,14 @@ public class DisplayGUI extends AnimationTimer {
                     pane.getChildren().add(text);
 
                     rect.setOnMousePressed(event -> {
+
                         rect.setFill(Color.RED);
                         pickedStations.add(t);
 
-
                         if(pickedStations.size() == 2) {
                             mainT.setStartStation(pickedStations);
-
-                            //pickedStations.getFirst();
-
-                            //newX = pickedStations.getFirst().getDisplayStation().getTranslateX();
-                            System.out.println(newX);
-                            //pathGuiTest(pickedStations.getFirst(), pickedStations.getLast());
                             pickedStations.clear();
-
                         }
-
                     });
 
                     guiMap2[i][j] = rect;

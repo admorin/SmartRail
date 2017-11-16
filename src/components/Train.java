@@ -273,7 +273,7 @@ public class Train extends Thread
     }
 
     public String returnCurrentDirection(){
-        return GUIdirection;
+        return currentDirection;
     }
 
     public ArrayList<String> getDirections() {
@@ -317,7 +317,7 @@ public class Train extends Thread
 
     public synchronized void moveTrainDown(){
 
-        this.newX += 2;
+        this.newX += 2.5;
         this.newY += 2;
         this.trainDisplay.setTranslateX(newX);
         this.trainDisplay.setTranslateY(newY);
@@ -326,7 +326,7 @@ public class Train extends Thread
     public synchronized void moveTrainRight(double y){
 
 
-        this.newX += 2;
+        this.newX += 2.5;
         this.newY = y;
         this.trainDisplay.setTranslateX(newX);
         this.trainDisplay.setTranslateY(newY);
@@ -334,7 +334,7 @@ public class Train extends Thread
     }
     public synchronized void moveTrainLeft(double y){
 
-        this.newX -= 2;
+        this.newX -= 2.5;
         this.newY = y;
         this.trainDisplay.setTranslateX(newX);
         this.trainDisplay.setTranslateY(newY);
@@ -343,7 +343,7 @@ public class Train extends Thread
 
     public synchronized void moveTrainUp(){
 
-        this.newX -= 2;
+        this.newX -= 2.5;
         this.newY -= 2;
         this.trainDisplay.setTranslateX(newX);
         this.trainDisplay.setTranslateY(newY);

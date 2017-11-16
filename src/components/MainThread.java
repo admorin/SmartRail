@@ -19,7 +19,9 @@ import java.util.*;
  * Created by alexschmidt-gonzales on 10/31/17.
  */
 public class MainThread extends Thread {
-    public Track[][] trackMap = new Track[2][7];
+    public final int LENGTH = 7;
+    public final int WIDTH = 3;
+    public Track[][] trackMap = new Track[WIDTH][LENGTH];
     public Object[][] trainMap = new Object[7][2];
     public int[] DX = {0, 1, 0, -1, 1};
     public int[] DY = {0, 0, 1, 0, 1};
@@ -28,13 +30,14 @@ public class MainThread extends Thread {
     public Station B;
     public Station Y;
     public Pane pane;
+
     public String[][] temp = new String[7][2];
     public LinkedList<Station> stationList = new LinkedList<>();
     public ArrayList<Station> pickedStations = new ArrayList<>();
     public ArrayList<Track> trackList = new ArrayList<>();
     public boolean beenClicked = false;
     public Object lock = new Object();
-    Thread[][] myMap = new Thread[7][2];
+    Thread[][] myMap = new Thread[LENGTH][WIDTH];
     public Station start;
     public Station end;
 
@@ -64,12 +67,23 @@ public class MainThread extends Thread {
         Track B4 = new Track();
         Track B5 = new Track();
 
+        Track C1 = new Track();
+        Track C2 = new Track();
+        Track C3 = new Track();
+        Track C4 = new Track();
+        Track C5 = new Track();
+
 
         Station X = new Station("Station X", T5, pane);
         Station A = new Station("Station A", T1, pane);
 
         Station Y = new Station("Station Y", B5, pane);
         Station B = new Station("Station B", B1, pane);
+
+        Station Z = new Station("Station Z", C5, pane);
+        Station C = new Station("Station C", C1, pane);
+
+
 
         //RIGHT LEFT UP/DOWN (0 = Right, 1 = Left) NAME
 
@@ -81,14 +95,23 @@ public class MainThread extends Thread {
 
         B5.setTrackRStation(Y, B4, "B5");
         B4.setTrack(B5, B3, "B4");
+        //B4.setSwitchTrackD(B3, B1, C2, 0, "Switch3");
         B3.setSwitchTrackU(B4, B2, T2, 1,"Switch2");
         B2.setTrack(B3, B1, "B2");
         B1.setTrackLStation(B2, B, "B1");
 
+        C5.setTrackRStation(Z, C4, "C5");
+        C4.setTrack(C5, C3, "C4");
+        C3.setTrack(C4, C2, "C3");
+        //C3.setSwitchTrackD(C4, C2, B4, 1, "Switch4");
+        C2.setTrack(C3, C1, "C3");
+        C1.setTrackLStation(C2, C, "C1");
 
 
 
-        myMap = new Thread[7][2];
+
+
+        myMap = new Thread[LENGTH][WIDTH];
         myMap[0][0] = A;
         myMap[1][0] = T1;
         myMap[2][0] = T2;
@@ -103,12 +126,20 @@ public class MainThread extends Thread {
         myMap[4][1] = B4;
         myMap[5][1] = B5;
         myMap[6][1] = Y;
+        myMap[0][2] = C;
+        myMap[1][2] = C1;
+        myMap[2][2] = C2;
+        myMap[3][2] = C3;
+        myMap[4][2] = C4;
+        myMap[5][2] = C5;
+        myMap[6][2] = Z;
+
 
 //
         stationList.add(X);
         stationList.add(A);
-        for(int i = 0; i < 7; i++){
-            for(int j = 0; j < 2; j++){
+        for(int i = 0; i < LENGTH; i++){
+            for(int j = 0; j < WIDTH; j++){
                 myMap[i][j].start();
 
             }
