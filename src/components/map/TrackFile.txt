@@ -1,3 +1,5 @@
+9
+9
 A-1-----J
 B--12---K
 C---32--L
@@ -14,3 +16,12 @@ END
 //Dashes are tracks
 //u is top of switch
 //d is bottom of switch
+
+Other versions:
+
+A--1--C
+B---1-D
+
+A---1---D
+B----12-E
+C----2--F
