@@ -111,7 +111,7 @@ public class Train extends Thread
                     neighbors = neighbors[3].returnNeighbors();
                     moves++;
                 } else {
-                    directions.add("Left");
+//                    directions.add("Left");
                     for(int i = 0; i < moves; i++){
                         directions.add("Right");
                         neighbors = neighbors[1].returnNeighbors();
@@ -129,7 +129,7 @@ public class Train extends Thread
                     neighbors = neighbors[1].returnNeighbors();
                     moves++;
                 } else {
-                    directions.add("Right");
+//                    directions.add("Right");
                     for(int i = 0; i < moves; i++){
                         directions.add("Left");
                         neighbors = neighbors[3].returnNeighbors();
