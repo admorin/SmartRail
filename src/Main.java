@@ -35,8 +35,12 @@ public class Main extends Application {
     private static Rectangle station = new Rectangle(30, 40);
     private Canvas canvas = new Canvas();
     private GraphicsContext gc = canvas.getGraphicsContext2D();
-   // private static Circle station = new Circle(25);
 
+    /**
+     * This is our primary stage. We set up the window and start the main game thread from here.
+     * @param primaryStage
+     * @throws Exception
+     */
 
     @Override
     public void start(Stage primaryStage) throws Exception {

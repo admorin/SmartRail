@@ -1,9 +1,8 @@
 /**
  * Alex Schmidt
- * <p>
  * Tyson Craner
  * Andrew Morin
- * <p>
+ *
  * Train System
  * Project 3
  * 11/15/2017
@@ -20,6 +19,14 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 
+import javafx.animation.AnimationTimer;
+import javafx.animation.PathTransition;
+import javafx.animation.Timeline;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Line;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Shape;
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.SimpleTimeZone;
@@ -27,23 +34,27 @@ import java.util.SimpleTimeZone;
 
 public class DisplayGUI extends AnimationTimer {
     private Pane pane;
-    private final int WIDTH = 9;
-    private final int HEIGHT = 9;
+    private final int WIDTH;
+    private final int HEIGHT;
     private final int SIZEX = 150;
     private final int SIZEY = 150;
 
     private final double X_LENGTH = 125;
     private final double Y_LENGTH = 75;
 
-    private Thread[][] map = new Thread[WIDTH][HEIGHT];
-    private Shape[][] guiMap = new Shape[WIDTH][HEIGHT];
+    private LinkedList<Light> lightArray = new LinkedList<>();
+    private LinkedList<Circle> circleArray = new LinkedList<>();
+
+    private Thread[][] map;
+    private Shape[][] guiMap;
     private MainThread mainT;
     private LinkedList<Station> pickedStations = new LinkedList<>();
     private LinkedList<Station> stations = new LinkedList<>();
     //private final double DX = 37.5;
     //private final double DY = 225;
-    private double DX = X_LENGTH / (WIDTH - 3);
-    private double DY = (2 * DX) + X_LENGTH;
+    private double DX;
+    private double DY;
+    private static int lightCount = 0;
 
     private double tempX = 0;
     private double tempY = 0;
@@ -52,16 +63,25 @@ public class DisplayGUI extends AnimationTimer {
     private double M = 0;
 
 
-    public DisplayGUI(Pane pane, MainThread mainT) {
+    DisplayGUI(Pane pane, MainThread mainT) {
 
         this.pane = pane;
         this.mainT = mainT;
+
+        WIDTH = mainT.LENGTH;
+        HEIGHT = mainT.WIDTH;
+
+        DX = X_LENGTH / (WIDTH - 3);
+        DY = (2 * DX) + X_LENGTH;
+
+        map = new Thread[WIDTH][HEIGHT];
+        guiMap = new Shape[WIDTH][HEIGHT];
 
         map = mainT.initialize();
         this.stations = mainT.stationList;
         initTracks();
         initStation();
-
+        initLights();
 
     }
 
@@ -72,7 +92,7 @@ public class DisplayGUI extends AnimationTimer {
 
     }
 
-    public boolean engageTrackSwitchUp(Train train) {
+    private boolean engageTrackSwitchUp(Train train) {
         ArrayList<String> temp = train.getDirections();
         //LinkedList<String> temp = train.getDirections();
         if (temp.contains("Up")) return true;
@@ -87,7 +107,8 @@ public class DisplayGUI extends AnimationTimer {
         Track track;
         for (int i = 0; i < WIDTH; i++) {
             for (int j = 0; j < HEIGHT; j++) {
-                if (map[i][j] != null && map[i][j].getClass().getSimpleName().equals("Track")) {
+                if (map[i][j] != null && (map[i][j].getClass().getSimpleName().equals("Track")
+                        || map[i][j].getClass().getSimpleName().equals("Light"))) {
                     if (((Track) map[i][j]).hasTrain) {
 
                         train = ((Track) map[i][j]).train;
@@ -118,6 +139,7 @@ public class DisplayGUI extends AnimationTimer {
                             } else if (dir.equals("Up") && !track.isWaiting) {
                                 train.moveTrainUp();
                             } else if (dir.equals("End")) {
+
                                 //System.out.println("GUI train finished...");
 
                                 break;
@@ -226,24 +248,35 @@ public class DisplayGUI extends AnimationTimer {
     }
 
 
-    public void lights() {
+    public void initLights() {
         for (int i = 0; i < WIDTH; i++) {
             for (int j = 0; j < HEIGHT; j++) {
-                if (map[i][j].getClass().getSimpleName().equals("Track")) {
-                    Circle light = new Circle(10);
-                    Line line = new Line();
-                    if (((Track) map[i][j]).isLight) {
+                if (map[i][j] != null && map[i][j].getClass().getSimpleName().equals("Track")) {
+                    Track temp = (Track)map[i][j];
+                    if(temp.isSwitchD || temp.isSwitchU) {
+                        int lightHeightOffset = 50;
+                        Line line = new Line();
 
-                        line.setStartX((i + 1) * 70);
-                        line.setStartY((j + 1) * 30);
-                        line.setEndX((i + 1) * 70);
-                        line.setEndY(i * 30);
-                        light.setTranslateX((i + 1) * 70);
-                        light.setTranslateY((j + 1) * 30);
-                        pane.getChildren().addAll(light, line);
-                        if (!((Track) map[i][j]).nextR.isOpen) {
-                            light.setFill(Color.RED);
-                        } else light.setFill(Color.GREEN);
+                        line.setStartX(i * X_LENGTH + (X_LENGTH/2));
+                        line.setStartY((j + 1) * Y_LENGTH);
+                        line.setEndX((i * X_LENGTH) + X_LENGTH);
+                        line.setEndY((j + 1) * Y_LENGTH);
+
+                        temp.setLightId(lightCount);
+                        lightCount++;
+
+                        Circle light = new Circle(12);
+                        Line lightStick = new Line();
+                        light.setCenterX((line.getStartX() + line.getEndX()) / 2);
+                        light.setCenterY(((line.getStartY() + line.getEndY()) / 2) - lightHeightOffset);
+                        lightStick.setStartX(light.getCenterX());
+                        lightStick.setStartY(light.getCenterY());
+                        lightStick.setEndX(light.getCenterX());
+                        lightStick.setEndY(light.getCenterY() + lightHeightOffset);
+                        circleArray.add(light);
+                        pane.getChildren().add(line);
+                        pane.getChildren().add(lightStick);
+                        pane.getChildren().add(light);
                     }
                 }
             }
@@ -291,11 +324,26 @@ public class DisplayGUI extends AnimationTimer {
     }
 
 
+    public void lightListener() {
+        for (int i = 0; i < WIDTH; i++) {
+            for (int j = 0; j < HEIGHT; j++) {
+                if (map[i][j] != null && map[i][j].getClass().getSimpleName().equals("Track")) {
+                    Track temp = (Track) map[i][j];
+                    if (temp.isSwitchU || temp.isSwitchD) {
+                        if (temp.isRed())
+                            circleArray.get(temp.getLightId()).setFill(Color.RED);
+                        else
+                            circleArray.get(temp.getLightId()).setFill(Color.GREEN);
+                    }
+                }
+            }
+        }
+    }
+
     public void handle(long currentNanoTime) {
 
         trackListener();
-
-
+        lightListener();
     }
 
 }

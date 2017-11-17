@@ -12,6 +12,7 @@ package components;
 
 import com.sun.org.apache.regexp.internal.CharacterArrayCharacterIterator;
 import com.sun.xml.internal.ws.handler.HandlerException;
+import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
 import javafx.scene.layout.Pane;
 
 import java.io.BufferedReader;
@@ -30,6 +31,8 @@ public class MainThread extends Thread {
 
     public Pane pane;
 
+    private BufferedReader reader;
+
     public LinkedList<Station> stationList = new LinkedList<>();
     public ArrayList<Station> pickedStations = new ArrayList<>();
 
@@ -44,7 +47,17 @@ public class MainThread extends Thread {
 
     public MainThread(Pane pane) {
         this.pane = pane;
+        getDimensions();
+    }
 
+    public void getDimensions(){
+        reader = new BufferedReader(new InputStreamReader(this.getClass().getClassLoader().getResourceAsStream("components/map/TrackFile.txt")));
+        try {
+            LENGTH = Character.getNumericValue(reader.readLine().charAt(0));
+            WIDTH = Character.getNumericValue(reader.readLine().charAt(0));
+        } catch (IOException e){
+            System.out.println("File not found.");
+        }
     }
 
 
@@ -52,14 +65,9 @@ public class MainThread extends Thread {
         int counter = 1;
         int index = 0;
         try {
-
-            BufferedReader reader = new BufferedReader(new InputStreamReader(this.getClass().getClassLoader().getResourceAsStream("components/map/TrackFile.txt")));
             String str;
-            LENGTH = Character.getNumericValue(reader.readLine().charAt(0));
-            WIDTH = Character.getNumericValue(reader.readLine().charAt(0));
             inputArr = new Character[LENGTH][WIDTH];
             myMap = new Thread[LENGTH][WIDTH];
-
             while ((str = reader.readLine()) != null && !str.equals("END")) {
                 for (int i = 0; i < str.length(); i++) {
                     char temp = str.charAt(i);

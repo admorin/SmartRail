@@ -173,7 +173,7 @@ public class Station extends Thread implements Component {
         this.train.interrupt();
         try{
             wait(100);
-
+            train.myTrack.isRed = true;
             train.reset();
 
         }

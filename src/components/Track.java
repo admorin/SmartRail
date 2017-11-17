@@ -33,19 +33,21 @@ public class Track extends Thread implements Component {
     public Station station;
     public Object lock = new Object();
     public Station startStation;
-    public int direction;
+    public int direction  ;
     //public boolean hasArrived = false;
     public boolean isOpen = true;
     public int isReserved = 0;
     public Queue<Integer> trainOrder = new PriorityQueue<>();
     private boolean atEnd = false;
     public boolean isLight = false;
+    private int lightId;
     public boolean visited = false;
     public volatile boolean begin = false;
     public Station endStation;
     public String NAME;
     public volatile boolean isWaiting = false;
     int index = 1;
+    public boolean isRed = true;
     public double switchX = -1;
     public double startX = -1;
     public double startY = -1;
@@ -118,6 +120,28 @@ public class Track extends Thread implements Component {
 
     public synchronized Station returnStation() {
         return station;
+    }
+
+    public void setLightId (int lightId){
+        this.lightId = lightId;
+    }
+
+    public boolean isRed()
+    {
+        return isRed;
+    }
+
+    public void setRed(boolean red)
+    {
+        if (red)
+            isRed = true;
+        else
+            isRed = false;
+    }
+
+    public int getLightId()
+    {
+        return lightId;
     }
 
     public boolean hasStation() {
@@ -239,6 +263,9 @@ public class Track extends Thread implements Component {
                 // next.hasTrain = true;
                 moved = true;
             } else {
+                if(next.isSwitchD || next.isSwitchU){
+                    next.setRed(true);
+                }
                 this.isWaiting = true;
                 //System.out.println("WAITING FOR OPEN");
             }
@@ -256,6 +283,7 @@ public class Track extends Thread implements Component {
                     while (!begin) {
                         isOpen = true;
                         hasTrain = false;
+                        this.isRed = true;
                         this.wait();
 
                     }
@@ -263,6 +291,9 @@ public class Track extends Thread implements Component {
 
                 }
 
+                if((this.isSwitchU || this.isSwitchD) && (nextR != null && nextL != null)){
+                    this.setRed(false);
+                }
                 findNext();
                 if (this.station != null && this.station.equals(endStation)) {
                     System.out.println("Arrived at " + station.returnName()
@@ -275,6 +306,7 @@ public class Track extends Thread implements Component {
 
 
                     moveTrain(false);
+
 
                     atEnd = true;
                     train.reserveOrReleasePath(false);
