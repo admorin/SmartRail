@@ -1,7 +1,8 @@
 /**
- * Andrew Morin
- * Tyson Craner
  * Alex Schmidt
+ *
+ * Tyson Craner
+ * Andrew Morin
  *
  * Train System
  * Project 3
@@ -33,7 +34,7 @@ public class Track extends Thread implements Component {
     public Station station;
     public Object lock = new Object();
     public Station startStation;
-    public int direction;
+    public int direction = -1;
     //public boolean hasArrived = false;
     public boolean isOpen = true;
     public int isReserved = 0;
@@ -50,7 +51,7 @@ public class Track extends Thread implements Component {
     public double startX = -1;
     public double startY = -1;
     public double switchY = -1;
-    public int getDirection = -1;
+    //public int getDirection = -1;
 
     //public Circle stopLight = new Circle(20);
 
@@ -101,7 +102,7 @@ public class Track extends Thread implements Component {
         this.nextU = nextU;
         this.nextL = nextL;
         this.nextR = nextR;
-        this.isSwitchD = true;
+        //this.isSwitchD = true;
 
         this.NAME = name;
         setName(name);
