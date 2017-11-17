@@ -121,7 +121,7 @@ public class MainThread extends Thread {
 
                     }
 
-                    else if(Character.isDigit(inputArr[i][j]) && counter != 3 ){
+                    else if(Character.isDigit(inputArr[i][j]) && counter != 5){
                         flag++;
                         System.out.println("ASDASDASDASD");
                         if(j < WIDTH -1 && (inputArr[i-1][j+1] != null || inputArr[i+1][j+1] != null)){

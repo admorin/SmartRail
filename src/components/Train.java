@@ -158,9 +158,7 @@ public class Train extends Thread
         startTrack.setReserved(thisTrain);
         int direction = 0; //1 = Right, 2 = Left.
         //Returns Up, Right, Down, Left, Station.
-        int testing = 0;
         while(!endFound){
-            System.out.println(testing);
             if(trackStation != null && trackStation.equals(end)){
                 endFound = true;
 //                if(direction%2 == 0) directions.add("Left");
@@ -230,7 +228,6 @@ public class Train extends Thread
                 neighbors = neighbors[3].returnNeighbors();
 
             } else {
-                System.out.println(testing);
                 String last = directions.get(directions.size()-1);
                 if(last.equals("Up")){
                     neighbors = neighbors[2].returnNeighbors();
@@ -252,10 +249,14 @@ public class Train extends Thread
                 directions.remove(directions.size()-1);
             }
 
-            for(String s : directions) System.out.println(s);
+//            for(String s : directions) System.out.println(s);
         }
         GUIdirections.addAll(directions);
-
+        if(GUIdirections.get(GUIdirections.size()-1).equals("Left")){
+            System.out.println("TESTING");
+            GUIdirections.remove(GUIdirections.size()-1);
+            GUIdirections.add(0, "Left");
+        }
     }
 
     public Station getStartStation(){
@@ -307,7 +308,7 @@ public class Train extends Thread
     public boolean inBounds(double x, double y){
         if(x == -1 && y == -1) return true;
         else
-        return(x >= 900 || x <= 150|| y >= 500 || y <= 150);
+            return(x >= 900 || x <= 150|| y >= 500 || y <= 150);
 
     }
 
@@ -396,4 +397,5 @@ public class Train extends Thread
     }
 
 }
+
 
