@@ -2,7 +2,7 @@
  * Andrew Morin
  * Tyson Craner
  * Alex Schmidt
- *
+ * <p>
  * Train System
  * Project 3
  * 11/15/2017
@@ -11,14 +11,15 @@
 package components;
 
 import javafx.scene.layout.Pane;
-import javafx.scene.shape.Rectangle;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
 
 /**
  * Created by alexschmidt-gonzales on 10/31/17.
  */
-public class MainThread extends Thread {
+public class MainThread extends Thread
+{
     public Track[][] trackMap = new Track[2][7];
     public Object[][] trainMap = new Object[7][2];
     public int[] DX = {0, 1, 0, -1, 1};
@@ -37,13 +38,35 @@ public class MainThread extends Thread {
     Thread[][] myMap = new Thread[7][2];
     public Station start;
     public Station end;
+    private LinkedList<String> stringMap;
+    private int lightCount = 0;
 
-    public MainThread(Pane pane){
+    public MainThread(Pane pane)
+    {
         this.pane = pane;
 
     }
 
-    public Thread[][] initialize(){
+    private void makeMap()
+    {
+        int index = 0;
+        int row = 0;
+        for (String s : stringMap)
+        {
+            if (s.equals("track"))
+            {
+                Track track = new Track();
+                trackMap[index][row] = track;
+            }
+            index++;
+        }
+    }
+
+    public Thread[][] initialize()
+    {
+//        MapFromXML mapMaker = new MapFromXML();
+//        stringMap = mapMaker.createMap();
+//        makeMap();
 //        Station station1 = new Station();
 //        Track track1 = new Track();
 //        Track track2 = new Track();
@@ -56,14 +79,15 @@ public class MainThread extends Thread {
         Track T1 = new Track();
         Track T2 = new Track();
         Track T3 = new Track();
-        Track T4 = new Track();
+        Track T4 = new Light(2); //LIGHT
         Track T5 = new Track();
         Track B1 = new Track();
-        Track B2 = new Track();
-        Track B3 = new Track();
+        Track B2 = new Light(0);
+        //Track B2 = new Light(0);
+        Track B3 = new Light(1);
         Track B4 = new Track();
         Track B5 = new Track();
-
+        //TODO there is lightCount int already so need to use that maybe?
 
         Station X = new Station("Station X", T5, pane);
         Station A = new Station("Station A", T1, pane);
@@ -81,11 +105,9 @@ public class MainThread extends Thread {
 
         B5.setTrackRStation(Y, B4, "B5");
         B4.setTrack(B5, B3, "B4");
-        B3.setSwitchTrackU(B4, B2, T2, 1,"Switch2");
+        B3.setSwitchTrackU(B4, B2, T2, 1, "Switch2");
         B2.setTrack(B3, B1, "B2");
         B1.setTrackLStation(B2, B, "B1");
-
-
 
 
         myMap = new Thread[7][2];
@@ -98,7 +120,7 @@ public class MainThread extends Thread {
         myMap[6][0] = X;
         myMap[0][1] = B;
         myMap[1][1] = B1;
-        myMap[2][1]= B2;
+        myMap[2][1] = B2;
         myMap[3][1] = B3;
         myMap[4][1] = B4;
         myMap[5][1] = B5;
@@ -107,32 +129,35 @@ public class MainThread extends Thread {
 //
         stationList.add(X);
         stationList.add(A);
-        for(int i = 0; i < 7; i++){
-            for(int j = 0; j < 2; j++){
+        for (int i = 0; i < 7; i++)
+        {
+            for (int j = 0; j < 2; j++)
+            {
                 myMap[i][j].start();
-
             }
         }
 
 
-
-
-
         return myMap;
     }
-    public synchronized void test(){
-        for(int i = 1; i < 6; i++){
-            for(int j = 0; j < 2; j++){
+
+    public synchronized void test()
+    {
+        for (int i = 1; i < 6; i++)
+        {
+            for (int j = 0; j < 2; j++)
+            {
                 System.out.println("Track States = " + myMap[i][j].getState());
             }
         }
     }
 
 
+    public synchronized void setStartStation(LinkedList<Station> stations)
+    {
 
-    public synchronized void setStartStation(LinkedList<Station> stations){
-
-        if(stations.size() == 2){
+        if (stations.size() == 2)
+        {
             Station start = stations.getFirst();
             Station end = stations.getLast();
 
@@ -149,11 +174,14 @@ public class MainThread extends Thread {
         }
 
     }
-    public synchronized void pickStation(Station start, Station end){
+
+    public synchronized void pickStation(Station start, Station end)
+    {
 
         start.initStation = end.initStation = true;
 
-        synchronized (start){
+        synchronized (start)
+        {
 
             start.selected1 = true;
             //start.setPriority(1);
@@ -165,7 +193,8 @@ public class MainThread extends Thread {
 
     }
 
-    public void run(){
+    public void run()
+    {
 
     }
 }
