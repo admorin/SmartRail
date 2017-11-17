@@ -1,0 +1,27 @@
+9 MAX width is 9
+9 MAX height is 9
+A-1-----J
+B--12---K
+C---32--L
+D----34-M
+E---54--N
+F--56---O
+G-76----P
+H--78---Q
+I--8
+END
+
+//RULES
+//Uppercase is Stations
+//Dashes are tracks
+//u is top of switch
+//d is bottom of switch
+
+Other versions:
+
+A--1--C
+B---1-D
+
+A---1---D
+B----12-E
+C----2--F

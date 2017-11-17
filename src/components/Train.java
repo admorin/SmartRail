@@ -23,13 +23,25 @@ public class Train extends Thread
     public Station startDest;
     public Station endDest;
     Pane pane;
-    static private int width = 75;
-    static private int height = 20;
+
+    private final int WIDTH = 7;
+    private final int HEIGHT = 3;
+    private final double T_LENGTH = 150;
+
+    private double DX = T_LENGTH/(WIDTH-3);
+    private double DY = (2*DX) + T_LENGTH;
+
+    private double dx = (DX + T_LENGTH)/75;
+
+
+
     public String NAME;
     private ArrayList<String> directions = new ArrayList<>();
+    private ArrayList<String> GUIdirections = new ArrayList<>();
     static private int trainNumber = 1;
     private int thisTrain;
     private String currentDirection;
+    private String GUIdirection;
     public double newX = -1;
     public double newY = -1;
     public Circle trainDisplay = new Circle(10);
@@ -62,7 +74,7 @@ public class Train extends Thread
         else startTrack.trainPassed(thisTrain);
         Track[] neighbors = startTrack.returnNeighbors();
         int step = 0;
-        while(step < directions.size() - 1){
+        while(step < directions.size()){
             System.out.println(trainNumber);
             System.out.println(thisTrain);
             if(directions.get(step).equals("Up")){
@@ -103,13 +115,13 @@ public class Train extends Thread
                 if(neighbors[3] != null){
                     directions.add("Left");
                     if(neighbors[3].returnStation() != null && neighbors[3].returnStation().equals(endDest)){
-                        directions.add("Left");
+//                        directions.add("Left");
                         return true;
                     }
                     neighbors = neighbors[3].returnNeighbors();
                     moves++;
                 } else {
-                    directions.add("Left");
+//                    directions.add("Left");
                     for(int i = 0; i < moves; i++){
                         directions.add("Right");
                         neighbors = neighbors[1].returnNeighbors();
@@ -121,13 +133,13 @@ public class Train extends Thread
                     directions.add("Right");
                     System.out.println(neighbors[1].returnStation());
                     if(neighbors[1].returnStation() != null && neighbors[1].returnStation().equals(endDest)){
-                        directions.add("Right");
+//                        directions.add("Right");
                         return true;
                     }
                     neighbors = neighbors[1].returnNeighbors();
                     moves++;
                 } else {
-                    directions.add("Right");
+//                    directions.add("Right");
                     for(int i = 0; i < moves; i++){
                         directions.add("Left");
                         neighbors = neighbors[3].returnNeighbors();
@@ -149,8 +161,8 @@ public class Train extends Thread
         while(!endFound){
             if(trackStation != null && trackStation.equals(end)){
                 endFound = true;
-                if(direction%2 == 0) directions.add("Left");
-                else directions.add("Right");
+//                if(direction%2 == 0) directions.add("Left");
+//                else directions.add("Right");
                 reserveOrReleasePath(true);
                 //UP------------------------------------------------------------------------
             } else if(neighbors[0] != null && neighbors[0].getReserved() != thisTrain){
@@ -239,6 +251,12 @@ public class Train extends Thread
 
 //            for(String s : directions) System.out.println(s);
         }
+        GUIdirections.addAll(directions);
+        if(GUIdirections.get(GUIdirections.size()-1).equals("Left")){
+            System.out.println("TESTING");
+            GUIdirections.remove(GUIdirections.size()-1);
+            GUIdirections.add(0, "Left");
+        }
     }
 
     public Station getStartStation(){
@@ -254,10 +272,12 @@ public class Train extends Thread
         instruction++;
         if(instruction > directions.size()){
             currentDirection = "End";
+            GUIdirection = "End";
         }
 
         else {
             currentDirection = directions.get(instruction - 1);
+            GUIdirection = GUIdirections.get(instruction - 1);
         }
         return currentDirection;
     }
@@ -307,7 +327,8 @@ public class Train extends Thread
 
     public synchronized void moveTrainDown(){
 
-        this.newX += 2;
+        //this.newX += 2.5;
+        this.newX += dx;
         this.newY += 2;
         this.trainDisplay.setTranslateX(newX);
         this.trainDisplay.setTranslateY(newY);
@@ -316,7 +337,8 @@ public class Train extends Thread
     public synchronized void moveTrainRight(double y){
 
 
-        this.newX += 2;
+        //this.newX += 2.5;
+        this.newX += dx;
         this.newY = y;
         this.trainDisplay.setTranslateX(newX);
         this.trainDisplay.setTranslateY(newY);
@@ -324,7 +346,8 @@ public class Train extends Thread
     }
     public synchronized void moveTrainLeft(double y){
 
-        this.newX -= 2;
+        //this.newX -= 2.5;
+        this.newX -= dx;
         this.newY = y;
         this.trainDisplay.setTranslateX(newX);
         this.trainDisplay.setTranslateY(newY);
@@ -333,7 +356,8 @@ public class Train extends Thread
 
     public synchronized void moveTrainUp(){
 
-        this.newX -= 2;
+        //this.newX -= 2.5;
+        this.newX -= dx;
         this.newY -= 2;
         this.trainDisplay.setTranslateX(newX);
         this.trainDisplay.setTranslateY(newY);
