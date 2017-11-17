@@ -133,11 +133,11 @@ public class MainThread extends Thread {
 
         //RIGHT LEFT UP/DOWN (0 = Right, 1 = Left) NAME
 
+        T1.setTrackLStation(T2, A, "T1");
+        T2.setSwitchTrackD(T3, T1, B3, 0, "Switch2");
+        T3.setTrack(T4, T2, "T3");
         T5.setTrackRStation(X, T4, "T5");
         T4.setTrack(T5, T3, "T4");
-        T3.setTrack(T4, T2, "T3");
-        T2.setSwitchTrackD(T3, T1, B3, 0, "Switch2");
-        T1.setTrackLStation(T2, A, "T1");
 
         B5.setTrackRStation(Y, B4, "B5");
         B4.setTrack(B5, B3, "B4");
@@ -228,13 +228,15 @@ public class MainThread extends Thread {
                 myMap[i][j].start();
             }
         }
+        test();
         return myMap;
     }
     public synchronized void test(){
-        for(int i = 1; i < 6; i++){
-            for(int j = 0; j < 2; j++){
-                System.out.println("Track States = " + myMap[i][j].getState());
+        for(int i = 0; i < LENGTH; i++){
+            for(int j = 0; j < WIDTH; j++){
+                System.out.print(myMap[i][j].getClass().getSimpleName() + " ");
             }
+            System.out.println();
         }
     }
 
