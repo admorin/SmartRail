@@ -12,26 +12,21 @@ I--8
 END
 
 
-
-A-1-----J
-B--12---K
-C---32--L
-D----34-M
-E---54--N
-F--56---O
-G-76----P
-H--78---Q
-I--8
-END
-
-//RULES
-//Uppercase is Stations
-//Dashes are tracks
-//u is top of switch
-//d is bottom of switch
+//RULES FOR THE FILE CONVERTER:
+// 1) Uppercase is Stations
+// 2) Dashes are tracks
+// 3) Number pairs are switches (THEY CANNOT BE ABOVE EACH OTHER, MUST BE OFFSET BY ONE. Placing them next to stations
+//    is also not advised.
+// 4) Line one should be the WIDTH of the map, Line two should be the HEIGHT, and whenever you are done with the map
+//    the word "END" should be the next line.
+// 5) The starting map is a 17 station map to prove that our code will meet all the requirements. Below, we have a few
+//    pre-made other maps. You could also just build your own to test.
+// 6) MAXIMUM DIMENSIONS 9x9, otherwise it won't fit correctly on the screen.
 
 Other versions:
 
+7
+2
 A--1--C
 B---1-D
 
@@ -41,11 +36,14 @@ A---1---D
 B----12-E
 C----2--F
 
-7
+9
 2
 A--1----C
 B---1---D
 
-A---1---D
-B----12-E
-C----2--F
+9
+4
+A---1---E
+B----12-F
+C---32--G
+D--3----H
