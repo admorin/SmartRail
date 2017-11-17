@@ -39,6 +39,8 @@ public class MainThread extends Thread {
     public Station end;
     public Character[][] inputArr;
 
+    public int testing = 0;
+
 
     public MainThread(Pane pane) {
         this.pane = pane;
@@ -58,54 +60,51 @@ public class MainThread extends Thread {
             inputArr = new Character[LENGTH][WIDTH];
             myMap = new Thread[LENGTH][WIDTH];
 
-
-            int row = 0;
-
-
             while ((str = reader.readLine()) != null && !str.equals("END")) {
                 for (int i = 0; i < str.length(); i++) {
                     char temp = str.charAt(i);
                     if (Character.isUpperCase(temp)) {
+                        testing++;
                         myMap[i][index] = new Station();
                         inputArr[i][index] = temp;
 
                     } else if (temp == '-' || Character.isDigit(temp)) {
-
                         myMap[i][index] = new Track();
                         inputArr[i][index] = temp;
-
+                        testing++;
                     } else {
 
                     }
                 }
                 index++;
-                row++;
-
             }
         } catch (IOException e) {
             System.out.print("File not found.");
         }
 
+        int flag = 1;
 
         for (int i = 0; i < LENGTH; i++) {
             for (int j = 0; j < WIDTH; j++) {
                 if (inputArr[i][j] != null) {
                     if (Character.isUpperCase(inputArr[i][j])) {
-                        myMap[0][j] = new Station("Station " + inputArr[0][j], (Track) myMap[1][j], pane);
-                        myMap[LENGTH - 1][j] = new Station("Station " + inputArr[LENGTH - 1][j], (Track) myMap[LENGTH - 2][j], pane);
-
+                        if(i == 0) {
+                            myMap[0][j] = new Station("Station " + inputArr[0][j], (Track) myMap[1][j], pane);
+                            if(myMap[LENGTH - 1][j] != null) {
+                                myMap[LENGTH - 1][j] = new Station("Station " + inputArr[LENGTH - 1][j], (Track) myMap[LENGTH - 2][j], pane);
+                            }
+                        }
                     }
                     else if (inputArr[i][j] == '-') {
-
-
+                        flag++;
                         if (i == 1) {
                             Track t = (Track) myMap[1][j];
-                            t.setTrackLStation((Track) myMap[2][j], (Station) myMap[0][j], "" + i);
-                            myMap[1][j] = t;
+                            t.setTrackLStation((Track) myMap[i+1][j], (Station) myMap[i-1][j], "" + i);
+                            myMap[i][j] = t;
 
                         } else if (i == LENGTH - 2) {
                             Track t = (Track) myMap[i][j];
-                            t.setTrackRStation((Station) myMap[LENGTH - 1][j], (Track) myMap[LENGTH - 2][j], "" + i);
+                            t.setTrackRStation((Station) myMap[i+1][j], (Track) myMap[i-1][j], "" + i);
                             myMap[i][j] = t;
 
                         } else  {
@@ -122,7 +121,8 @@ public class MainThread extends Thread {
 
                     }
 
-                    else if(Character.isDigit(inputArr[i][j]) && counter != 2 ){
+                    else if(Character.isDigit(inputArr[i][j]) && counter != 3 ){
+                        flag++;
                         System.out.println("ASDASDASDASD");
                         if(j < WIDTH -1 && (inputArr[i-1][j+1] != null || inputArr[i+1][j+1] != null)){
                             if(inputArr[i][j] == inputArr[i-1][j+1]) {
@@ -155,6 +155,7 @@ public class MainThread extends Thread {
             }
         }
         fuck();
+        System.out.println(testing);
         return myMap;
     }
 
