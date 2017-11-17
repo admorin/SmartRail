@@ -27,8 +27,7 @@ END
 //RULES
 //Uppercase is Stations
 //Dashes are tracks
-//u is top of switch
-//d is bottom of switch
+//Number pairs are switches (THEY CANNOT BE ABOVE EACH OTHER, MUST BE OFFSET BY ONE
 
 Other versions:
 
