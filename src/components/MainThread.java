@@ -107,17 +107,11 @@ public class MainThread extends Thread {
                             t.setTrackRStation((Station) myMap[i+1][j], (Track) myMap[i-1][j], "" + i);
                             myMap[i][j] = t;
 
-                        } else  {
-                            System.out.print("i = " + i);
-                            System.out.print("j = " + j);
-                            System.out.println();
+                        } else {
                             Track t = (Track) myMap[i][j];
                             t.setTrack((Track) myMap[i + 1][j], (Track) myMap[i - 1][j], "" + i);
                             myMap[i][j] = t;
                         }
-
-
-
 
                     }
 
@@ -125,7 +119,6 @@ public class MainThread extends Thread {
                         flag++;
                         if(j < WIDTH -1 && (inputArr[i-1][j+1] != null || inputArr[i+1][j+1] != null)){
                             if(inputArr[i][j] == inputArr[i-1][j+1]) {
-                                System.out.println("ASDASDASDASD");
                                 Track t = (Track) myMap[i][j];
                                 Track t2 = (Track) myMap[i - 1][j + 1];
                                 t.setSwitchTrackD((Track) myMap[i + 1][j], (Track) myMap[i - 1][j], (Track) myMap[i - 1][j + 1], 1, i + "");
@@ -138,7 +131,6 @@ public class MainThread extends Thread {
 
 
                         else if(inputArr[i][j] == inputArr[i+1][j+1]) {
-                                System.out.println("adkfsadkjf;as");
                                 Track t = (Track) myMap[i][j];
                                 Track t2 = (Track) myMap[i + 1][j + 1];
                                 t.setSwitchTrackD((Track) myMap[i + 1][j], (Track) myMap[i - 1][j], (Track) myMap[i + 1][j + 1], 0, i + "T");
@@ -147,27 +139,15 @@ public class MainThread extends Thread {
                                 myMap[i+1][j+1] = t2;
                                 counter++;
                             }
-
-
                         }
-
                     }
                 }
             }
         }
-        fuck();
         System.out.println(testing);
         return myMap;
     }
 
-    public void fuck(){
-        for(int i = 0; i < LENGTH; i++){
-            for(int j = 0; j < WIDTH; j++){
-                if(myMap[i][j] != null)System.out.print(myMap[i][j].getClass().getSimpleName());
-            }
-            System.out.println();
-        }
-    }
 
 
 
