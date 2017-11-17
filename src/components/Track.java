@@ -21,7 +21,8 @@ public class Track extends Thread implements Component {
     static private int width = 75;
     static private int height = 2;
     public boolean hasTrain = false;
-    public boolean isSwitch = false;
+    public boolean isSwitchD = false;
+    public boolean isSwitchU = false;
     public Track next;
     public Track nextR;
     public Track nextD;
@@ -49,6 +50,7 @@ public class Track extends Thread implements Component {
     public double startX = -1;
     public double startY = -1;
     public double switchY = -1;
+    public int getDirection = -1;
 
     //public Circle stopLight = new Circle(20);
 
@@ -89,7 +91,7 @@ public class Track extends Thread implements Component {
         this.nextD = nextD;
         this.nextL = nextL;
         this.nextR = nextR;
-        this.isSwitch = true;
+        this.isSwitchD = true;
         this.NAME = name;
         setName(name);
     }
@@ -99,7 +101,8 @@ public class Track extends Thread implements Component {
         this.nextU = nextU;
         this.nextL = nextL;
         this.nextR = nextR;
-        //this.isSwitch = true;
+        this.isSwitchD = true;
+
         this.NAME = name;
         setName(name);
     }

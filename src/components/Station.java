@@ -107,7 +107,7 @@ public class Station extends Thread implements Component {
     }
 
     public Rectangle getDisplayStation() {
-        Rectangle station = new Rectangle(100, 60);
+        Rectangle station = new Rectangle(70, 40);
 
         station.setFill(Color.AQUA);
 

@@ -24,9 +24,9 @@ public class Train extends Thread
     public Station endDest;
     Pane pane;
 
-    private final int WIDTH = 7;
-    private final int HEIGHT = 3;
-    private final double T_LENGTH = 150;
+    private final int WIDTH = 9;
+    private final int HEIGHT = 2;
+    private final double T_LENGTH = 125;
 
     private double DX = T_LENGTH/(WIDTH-3);
     private double DY = (2*DX) + T_LENGTH;
@@ -329,7 +329,7 @@ public class Train extends Thread
 
         //this.newX += 2.5;
         this.newX += dx;
-        this.newY += 2;
+        this.newY += 1;
         this.trainDisplay.setTranslateX(newX);
         this.trainDisplay.setTranslateY(newY);
 
@@ -358,7 +358,7 @@ public class Train extends Thread
 
         //this.newX -= 2.5;
         this.newX -= dx;
-        this.newY -= 2;
+        this.newY -= 1;
         this.trainDisplay.setTranslateX(newX);
         this.trainDisplay.setTranslateY(newY);
 

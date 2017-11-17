@@ -27,12 +27,13 @@ import java.util.SimpleTimeZone;
 
 public class DisplayGUI extends AnimationTimer {
     private Pane pane;
-    private final int WIDTH = 7;
+    private final int WIDTH = 9;
     private final int HEIGHT = 3;
     private final int SIZEX = 150;
     private final int SIZEY = 150;
 
-    private final double T_LENGTH = 150;
+    private final double X_LENGTH = 125;
+    private final double Y_LENGTH = 75;
 
     private Thread[][] map = new Thread[WIDTH][HEIGHT];
     private Shape[][] guiMap = new Shape[WIDTH][HEIGHT];
@@ -41,8 +42,8 @@ public class DisplayGUI extends AnimationTimer {
     private LinkedList<Station> stations = new LinkedList<>();
     //private final double DX = 37.5;
     //private final double DY = 225;
-    private double DX = T_LENGTH / (WIDTH - 3);
-    private double DY = (2 * DX) + T_LENGTH;
+    private double DX = X_LENGTH / (WIDTH - 3);
+    private double DY = (2 * DX) + X_LENGTH;
 
     private double tempX = 0;
     private double tempY = 0;
@@ -86,7 +87,7 @@ public class DisplayGUI extends AnimationTimer {
         Track track;
         for (int i = 0; i < WIDTH; i++) {
             for (int j = 0; j < HEIGHT; j++) {
-                if (map[i][j].getClass().getSimpleName().equals("Track")) {
+                if (map[i][j] != null && map[i][j].getClass().getSimpleName().equals("Track")) {
                     if (((Track) map[i][j]).hasTrain) {
 
                         train = ((Track) map[i][j]).train;
@@ -96,23 +97,24 @@ public class DisplayGUI extends AnimationTimer {
                         if (train.newX == -1 && train.newY == -1) {
 
                             starting = true;
-                            train.newX = (i * SIZEX);
-                            train.newY = ((j + 1) * SIZEY);
+                            train.newX = ((i * X_LENGTH));
+                            train.newY = ((j + 1) * (X_LENGTH -Y_LENGTH));
                             c = engageTrackSwitchUp(train);
                             train.addTrain();
-                        } else {
+                        }
+                        else {
                             //engageTrackSwitchUp(train);
                             if (dir.equals("Down") && !track.isWaiting) {
                                 train.moveTrainDown();
                             } else if (dir.equals("Right") && !track.isWaiting) {
-                                train.moveTrainRight(((j + 1) * SIZEY));
+                                train.moveTrainRight(((j + 1) * Y_LENGTH));
                             } else if (dir.equals("Left") && !track.isWaiting) {
                                 engageTrackSwitchUp(train);
                                 if (starting) {
-                                    train.newX = (i * SIZEX) + 150;
+                                    train.newX = (i * X_LENGTH) + X_LENGTH;
                                     this.starting = false;
                                 }
-                                train.moveTrainLeft(((j + 1) * SIZEY));
+                                train.moveTrainLeft(((j + 1) * Y_LENGTH));
                             } else if (dir.equals("Up") && !track.isWaiting) {
                                 train.moveTrainUp();
                             } else if (dir.equals("End")) {
@@ -132,7 +134,7 @@ public class DisplayGUI extends AnimationTimer {
                 }
 
 
-                if (map[i][j].getClass().getSimpleName().equals("Station")) {
+                if (map[i][j] != null && map[i][j].getClass().getSimpleName().equals("Station")) {
                     train = ((Station) map[i][j]).returnTrain();
                     if (((Station) map[i][j]).hasArrived) {
                         guiMap[i][j].setFill(Color.AQUA);
@@ -172,38 +174,49 @@ public class DisplayGUI extends AnimationTimer {
         Track track;
         for (int i = 0; i < WIDTH; i++) {
             for (int j = 0; j < HEIGHT; j++) {
-                if (map[i][j].getClass().getSimpleName().equals("Track")) {
-                    if (((Track) map[i][j]).isSwitch) {
+                if (map[i][j] != null && map[i][j].getClass().getSimpleName().equals("Track")) {
+                    if (((Track) map[i][j]).isSwitchD){
                         track = (Track) map[i][j];
                         Line line = new Line();
                         Line switchLine = new Line();
 
-                        line.setStartX(i * SIZEX);
-                        line.setStartY((j + 1) * SIZEY);
-                        line.setEndX((i * SIZEX) + SIZEX);
-                        line.setEndY((j + 1) * SIZEY);
+                        line.setStartX(i * X_LENGTH);
+                        line.setStartY((j + 1) * Y_LENGTH);
+                        line.setEndX((i * X_LENGTH) + X_LENGTH);
+                        line.setEndY((j + 1) * Y_LENGTH);
+
+                        if(track.getDirection == 0) {
+                            switchLine.setStartX(((i * X_LENGTH) + X_LENGTH + (i * DX)));
+                            switchLine.setStartY(((j + 1) * Y_LENGTH) + Y_LENGTH);
+                            switchLine.setEndX((i * X_LENGTH) + (i - 1) * DX);
+                            switchLine.setEndY((j + 1) * Y_LENGTH);
+
+                        }
+                        else {
+
+                            switchLine.setStartX(((i * X_LENGTH) + X_LENGTH + (i * DX)));
+                            switchLine.setStartY(((j + 1) * Y_LENGTH) + Y_LENGTH);
+                            switchLine.setEndX((i * X_LENGTH) + (i - 1) * DX);
+                            switchLine.setEndY((j + 1) * Y_LENGTH);
+                        }
 
 
-                        System.out.println(i);
-                        switchLine.setStartX((i * SIZEX) + (i-1)*DX);
-                        switchLine.setStartY((j + 1) * SIZEY);
-                        switchLine.setEndX(((i * SIZEX) + 150 + (i *DX)));
-                        switchLine.setEndY(((j + 1) * SIZEY) + SIZEY);
-
-//                        track.startX = (i*SIZEX) + DX;
-//                        track.startY = tempY = ((j+1) * SIZEY);
-//                        track.switchX = tempX = (i*SIZEX)+DY;
-//                        track.switchY = ((j+1) * SIZEY);
 
 
                         pane.getChildren().addAll(line, switchLine);
 
-                    } else if (((Track) map[i][j]).isOpen) {
+                    }
+
+                    else if(((Track) map[i][j]).isSwitchU){
+
+                    }
+
+                    else if (((Track) map[i][j]).isOpen) {
                         Line line = new Line();
-                        line.setStartX(i * SIZEX);
-                        line.setStartY((j + 1) * SIZEY);
-                        line.setEndX((i * SIZEX) + SIZEX);
-                        line.setEndY((j + 1) * SIZEY);
+                        line.setStartX(i * X_LENGTH);
+                        line.setStartY((j + 1) * Y_LENGTH);
+                        line.setEndX((i * X_LENGTH) + X_LENGTH);
+                        line.setEndY((j + 1) * Y_LENGTH);
                         pane.getChildren().add(line);
 
                     }
@@ -242,14 +255,14 @@ public class DisplayGUI extends AnimationTimer {
         for (int i = 0; i < WIDTH; i++) {
             for (int j = 0; j < HEIGHT; j++) {
                 Rectangle rect;
-                if (map[i][j].getClass().getSimpleName().equals("Station")) {
+                if (map[i][j] != null && map[i][j].getClass().getSimpleName().equals("Station")) {
 
                     Station t = (Station) map[i][j];
                     Text text = new Text(t.getName());
 
                     rect = t.getDisplayStation();
-                    rect.setTranslateX((i * SIZEX) + 25);
-                    rect.setTranslateY((j + 1) * SIZEY);
+                    rect.setTranslateX((i * X_LENGTH) + 25);
+                    rect.setTranslateY(((j + 1) * Y_LENGTH));
                     rect.setFill(Color.AQUA);
 
                     text.setTranslateX(rect.getTranslateX());
