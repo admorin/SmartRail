@@ -26,15 +26,7 @@ import javafx.stage.Stage;
 
 public class Main extends Application {
     private Group root = new Group();
-    private static final int WIDTH = 7;
-    private static final int HEIGHT = 2;
     private static Pane pane = new Pane();
-    private static Component[][] map = new Component[WIDTH][HEIGHT];
-    private static Shape[][] guiMap = new Shape[WIDTH][HEIGHT];
-    private static Rectangle train = new Rectangle(50, 10);
-    private static Rectangle station = new Rectangle(30, 40);
-    private Canvas canvas = new Canvas();
-    private GraphicsContext gc = canvas.getGraphicsContext2D();
 
     /**
      * This is our primary stage. We set up the window and start the main game thread from here.
@@ -46,13 +38,11 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
 
         MainThread mainT = new MainThread(pane);
-
         root.getChildren().add(pane);
-
-        primaryStage.setTitle("Train Sim 2018");
+        primaryStage.setTitle("Train Simulator 2017");
         primaryStage.setScene(new Scene(root, 1280, 720));
         primaryStage.setResizable(false);
-        DisplayGUI GUI = new DisplayGUI(pane,mainT );
+        DisplayGUI GUI = new DisplayGUI(pane, mainT);
         GUI.start();
         primaryStage.show();
 

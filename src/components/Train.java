@@ -25,7 +25,7 @@ public class Train extends Thread
     Pane pane;
 
     private final int WIDTH = 9;
-    private final int HEIGHT = 2;
+    private final int HEIGHT = 3;
     private final double T_LENGTH = 125;
 
     private double DX = T_LENGTH/(WIDTH-3);
@@ -251,12 +251,7 @@ public class Train extends Thread
 
 //            for(String s : directions) System.out.println(s);
         }
-        GUIdirections.addAll(directions);
-        if(GUIdirections.get(GUIdirections.size()-1).equals("Left")){
-            System.out.println("TESTING");
-            GUIdirections.remove(GUIdirections.size()-1);
-            GUIdirections.add(0, "Left");
-        }
+
     }
 
     public Station getStartStation(){
@@ -296,21 +291,12 @@ public class Train extends Thread
         this.myTrack = null;
         this.myTrack = newTrack;
 
-        System.out.println("My Track = " + myTrack);
-
-
     }
 
     public int returnTrainNumber(){
         return thisTrain;
     }
 
-    public boolean inBounds(double x, double y){
-        if(x == -1 && y == -1) return true;
-        else
-            return(x >= 900 || x <= 150|| y >= 500 || y <= 150);
-
-    }
 
     public synchronized void addTrain(){
 
@@ -357,7 +343,7 @@ public class Train extends Thread
     public synchronized void moveTrainUp(){
 
         //this.newX -= 2.5;
-        this.newX -= dx;
+        this.newX += dx;
         this.newY -= 1;
         this.trainDisplay.setTranslateX(newX);
         this.trainDisplay.setTranslateY(newY);
