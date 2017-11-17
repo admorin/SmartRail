@@ -27,8 +27,8 @@ import java.util.SimpleTimeZone;
 
 public class DisplayGUI extends AnimationTimer {
     private Pane pane;
-    private final int WIDTH = 7;
-    private final int HEIGHT = 3;
+    private final int WIDTH = 9;
+    private final int HEIGHT = 9;
     private final int SIZEX = 150;
     private final int SIZEY = 150;
 
@@ -86,7 +86,7 @@ public class DisplayGUI extends AnimationTimer {
         Track track;
         for (int i = 0; i < WIDTH; i++) {
             for (int j = 0; j < HEIGHT; j++) {
-                if (map[i][j].getClass().getSimpleName().equals("Track")) {
+                if (map[i][j] != null && map[i][j].getClass().getSimpleName().equals("Track")) {
                     if (((Track) map[i][j]).hasTrain) {
 
                         train = ((Track) map[i][j]).train;
@@ -132,7 +132,7 @@ public class DisplayGUI extends AnimationTimer {
                 }
 
 
-                if (map[i][j].getClass().getSimpleName().equals("Station")) {
+                if (map[i][j] != null && map[i][j].getClass().getSimpleName().equals("Station")) {
                     train = ((Station) map[i][j]).returnTrain();
                     if (((Station) map[i][j]).hasArrived) {
                         guiMap[i][j].setFill(Color.AQUA);
@@ -172,7 +172,7 @@ public class DisplayGUI extends AnimationTimer {
         Track track;
         for (int i = 0; i < WIDTH; i++) {
             for (int j = 0; j < HEIGHT; j++) {
-                if (map[i][j].getClass().getSimpleName().equals("Track")) {
+                if (map[i][j] != null && map[i][j].getClass().getSimpleName().equals("Track")) {
                     if (((Track) map[i][j]).isSwitch) {
                         track = (Track) map[i][j];
                         Line line = new Line();
@@ -242,7 +242,7 @@ public class DisplayGUI extends AnimationTimer {
         for (int i = 0; i < WIDTH; i++) {
             for (int j = 0; j < HEIGHT; j++) {
                 Rectangle rect;
-                if (map[i][j].getClass().getSimpleName().equals("Station")) {
+                if (map[i][j] != null && map[i][j].getClass().getSimpleName().equals("Station")) {
 
                     Station t = (Station) map[i][j];
                     Text text = new Text(t.getName());

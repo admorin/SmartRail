@@ -121,15 +121,15 @@ public class MainThread extends Thread {
 
                     }
 
-                    else if(Character.isDigit(inputArr[i][j]) && counter != 5){
+                    else if(Character.isDigit(inputArr[i][j]) && counter != WIDTH){
                         flag++;
-                        System.out.println("ASDASDASDASD");
                         if(j < WIDTH -1 && (inputArr[i-1][j+1] != null || inputArr[i+1][j+1] != null)){
                             if(inputArr[i][j] == inputArr[i-1][j+1]) {
+                                System.out.println("ASDASDASDASD");
                                 Track t = (Track) myMap[i][j];
                                 Track t2 = (Track) myMap[i - 1][j + 1];
                                 t.setSwitchTrackD((Track) myMap[i + 1][j], (Track) myMap[i - 1][j], (Track) myMap[i - 1][j + 1], 1, i + "");
-                                t2.setSwitchTrackU((Track) myMap[i - 2][j + 1], (Track) myMap[i][j + 1], (Track) myMap[i][j], 0, 2 + i + "");
+                                t2.setSwitchTrackU((Track) myMap[i][j + 1], (Track) myMap[i - 2][j + 1], (Track) myMap[i][j], 0, i + "");
                                 myMap[i][j] = t;
                                 myMap[i - 1][j + 1] = t2;
                                 counter++;
@@ -138,6 +138,7 @@ public class MainThread extends Thread {
 
 
                         else if(inputArr[i][j] == inputArr[i+1][j+1]) {
+                                System.out.println("adkfsadkjf;as");
                                 Track t = (Track) myMap[i][j];
                                 Track t2 = (Track) myMap[i + 1][j + 1];
                                 t.setSwitchTrackD((Track) myMap[i + 1][j], (Track) myMap[i - 1][j], (Track) myMap[i + 1][j + 1], 0, i + "T");
@@ -162,7 +163,7 @@ public class MainThread extends Thread {
     public void fuck(){
         for(int i = 0; i < LENGTH; i++){
             for(int j = 0; j < WIDTH; j++){
-                System.out.print(myMap[i][j].getClass().getSimpleName());
+                if(myMap[i][j] != null)System.out.print(myMap[i][j].getClass().getSimpleName());
             }
             System.out.println();
         }
@@ -331,8 +332,7 @@ public class MainThread extends Thread {
 
         for(int i = 0; i < LENGTH; i++){
             for(int j = 0; j < WIDTH; j++){
-
-                myMap[i][j].start();
+                if(myMap[i][j] != null) myMap[i][j].start();
             }
         }
         return myMap;
