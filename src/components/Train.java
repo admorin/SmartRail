@@ -33,6 +33,8 @@ public class Train extends Thread
 
     private double dx = (DX + T_LENGTH)/75;
 
+    private int direction;
+
 
 
     public String NAME;
@@ -156,7 +158,7 @@ public class Train extends Thread
         Track[] neighbors = startTrack.returnNeighbors();
         Station trackStation = startTrack.returnStation();
         startTrack.setReserved(thisTrain);
-        int direction = 0; //1 = Right, 2 = Left.
+        direction = 0; //1 = Right, 2 = Left.
         //Returns Up, Right, Down, Left, Station.
         while(!endFound){
             if(trackStation != null && trackStation.equals(end)){
@@ -312,7 +314,11 @@ public class Train extends Thread
     public synchronized void moveTrainDown(){
 
         //this.newX += 2.5;
-        this.newX += dx;
+        if(myTrack.direction == 0) {
+            this.newX += dx;
+        } else {
+            this.newX -= dx;
+        }
         this.newY += 1;
         this.trainDisplay.setTranslateX(newX);
         this.trainDisplay.setTranslateY(newY);
@@ -341,7 +347,11 @@ public class Train extends Thread
     public synchronized void moveTrainUp(){
 
         //this.newX -= 2.5;
-        this.newX += dx;
+        if(myTrack.direction == 0){
+            this.newX += dx;
+        } else {
+            this.newX -= dx;
+        }
         this.newY -= 1;
         this.trainDisplay.setTranslateX(newX);
         this.trainDisplay.setTranslateY(newY);
