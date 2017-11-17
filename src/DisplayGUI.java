@@ -27,7 +27,7 @@ import java.util.SimpleTimeZone;
 public class DisplayGUI extends AnimationTimer {
     private Pane pane;
     private final int WIDTH = 7;
-    private final int HEIGHT = 3;
+    private final int HEIGHT = 2;
     private final int SIZEX = 150;
     private final int SIZEY = 150;
 

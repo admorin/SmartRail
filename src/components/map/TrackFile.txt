@@ -1,5 +1,11 @@
-9 MAX width is 9
-9 MAX height is 9
+7
+2
+A-----C
+B-----D
+END
+
+
+
 A-1-----J
 B--12---K
 C---32--L
