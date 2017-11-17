@@ -267,12 +267,10 @@ public class Train extends Thread
         instruction++;
         if(instruction > directions.size()){
             currentDirection = "End";
-            GUIdirection = "End";
         }
 
         else {
             currentDirection = directions.get(instruction - 1);
-            GUIdirection = GUIdirections.get(instruction - 1);
         }
         return currentDirection;
     }

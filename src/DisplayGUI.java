@@ -74,7 +74,6 @@ public class DisplayGUI extends AnimationTimer {
         guiMap = new Shape[WIDTH][HEIGHT];
 
         map = mainT.initialize();
-        this.stations = mainT.stationList;
         initTracks();
         initStation();
         initLights();
